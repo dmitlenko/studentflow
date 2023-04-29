@@ -3,7 +3,7 @@
     {% csrf_token %} {{ form.as_p }}
     <input type="submit" />
     <p>
-        Already a user? Then proceed to <a href="{% url 'login_view' %}">login</a>.
+        Already a user? Then proceed to <a href="{% url 'login' %}">login</a>.
     </p>
 </form>
 {% endblock %}

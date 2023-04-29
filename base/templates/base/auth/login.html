@@ -3,7 +3,7 @@
     {% csrf_token %} {{ form.as_p }}
     <input type="submit" />
     <p>
-        Not a user? <a href="{% url 'registration_view' %}">Register</a> then.
+        Not a user? <a href="{% url 'signup' %}">Register</a> then.
     </p>
 </form>
 {% endblock %}

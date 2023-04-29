@@ -15,11 +15,11 @@ class IndexView(View):
 
 
 class LoginView(View):
-    template_name = 'base/login_view.html'
+    template_name = 'base/auth/login.html'
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('index_view')
+            return redirect('home')
         
         return render(request, self.template_name, {'form':AuthenticationForm})
     
@@ -35,18 +35,18 @@ class LoginView(View):
                 login(request, user)
                 messages.success(request, "Authorization successful")
 
-                return redirect('index_view')
+                return redirect('home')
         
         messages.error(request, "Unsuccessful authentication. Invalid information.")
 
-        return redirect('login_view')
+        return redirect('login')
     
-class RegistrationView(View):
-    template_name = 'base/registration_view.html'
+class SignupView(View):
+    template_name = 'base/auth/signup.html'
 
     def get(self, request, form:RegistrationForm=None):
         if request.user.is_authenticated:
-            return redirect('index_view')
+            return redirect('home')
         
         if form is None:
             form = RegistrationForm
@@ -60,7 +60,7 @@ class RegistrationView(View):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful")    
-            return redirect('index_view')
+            return redirect('home')
         
         messages.error(request, "Unsuccessful registration. Invalid information.")
 
@@ -70,4 +70,4 @@ class RegistrationView(View):
 # FIXME: maybe this is a bad practice to mix class-base views and function-base views
 def logout_view(request):
     logout(request)
-    return redirect('index_view')
+    return redirect('home')
