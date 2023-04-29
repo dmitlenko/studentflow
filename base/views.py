@@ -6,7 +6,7 @@ from django.contrib import messages
 from .forms import RegistrationForm
 
 class IndexView(View):
-    template_name = 'index.html'
+    template_name = 'base/home.html'
 
     def get(self, request):
         context = {}
