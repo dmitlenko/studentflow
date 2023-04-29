@@ -1,0 +1,15 @@
+<header>
+    <div class="header-menu">
+        <a href="{% url 'index_view' %}">Home</a>
+    </div>
+
+    <div class="user-profile">
+        {% if user.is_authenticated %}
+        <!-- TODO: add link to user profile -->
+        <a href="#">@{{ user.username }}</a>
+        <a href="{% url 'logout_view' %}">Log out</a>
+        {% else %}
+        <a href="{% url 'login_view' %}">Log in</a>
+        {% endif %}
+    </div>
+</header>
