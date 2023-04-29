@@ -17,11 +17,14 @@ class IndexView(View):
 class LoginView(View):
     template_name = 'base/auth/login.html'
 
-    def get(self, request):
+    def get(self, request, form=None):
         if request.user.is_authenticated:
             return redirect('home')
         
-        return render(request, self.template_name, {'form':AuthenticationForm})
+        if form is None:
+            form = AuthenticationForm()
+        
+        return render(request, self.template_name, {'form':form})
     
     def post(self, request): 
         form = AuthenticationForm(data=request.POST)
@@ -39,7 +42,7 @@ class LoginView(View):
         
         messages.error(request, "Unsuccessful authentication. Invalid information.")
 
-        return redirect('login')
+        return self.get(request, form)
     
 class SignupView(View):
     template_name = 'base/auth/signup.html'
@@ -49,7 +52,7 @@ class SignupView(View):
             return redirect('home')
         
         if form is None:
-            form = RegistrationForm
+            form = RegistrationForm()
 
         return render(request, self.template_name, {'form':form})
     
