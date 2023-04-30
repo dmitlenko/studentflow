@@ -8,7 +8,7 @@ class UserProfile(models.Model):
     bio = models.CharField(max_length=2000, null=True)
 
 
-class PostModel(models.Model):
+class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     body = models.TextField()
@@ -25,7 +25,7 @@ class PostModel(models.Model):
         ordering = ['date_created']
 
 
-class PostCommentModel(models.Model):
+class PostComment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     body = models.CharField(max_length=500)
     date_created = models.DateTimeField(auto_now_add=True)
