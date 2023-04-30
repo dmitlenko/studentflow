@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import RegistrationForm, PostForm
 from .models import Post
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 class IndexView(View):
     template_name = 'base/home.html'
@@ -92,6 +92,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'base/form/post.html'
     success_url = reverse_lazy('home')
     login_url = 'login'
+        
 
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
@@ -99,6 +100,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
+        self.success_url = reverse('detail_post', kwargs={'pk':self.kwargs['pk']})
         if request.user != obj.author:
             return self.handle_no_permission()
         

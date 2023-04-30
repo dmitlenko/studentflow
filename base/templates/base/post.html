@@ -15,7 +15,7 @@
             <a href="{% url 'update_post' pk=object.id %}">Edit</a>
             <a href="{% url 'delete_post' pk=object.id %}">Delete</a>
             {% endif %}
-            <div class="card-text">
+            <div class="card-text" style="white-space: pre-line;">
                 {{object.body}}
             </div>
         </div>
