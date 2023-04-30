@@ -19,7 +19,25 @@
                 {{object.body}}
             </div>
         </div>
-        
+        <div class="list-group">
+            {% for comment in comments %}
+            <a class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{comment.body}}</h5>
+                    <small>{{comment.date_created|timesince}} ago</small>
+                </div>
+                <small>@{{comment.author.username}}</small>
+            </a>
+            {% endfor %}
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="input-group mt-3">
+                <input type="text" class="form-control" placeholder="Comment text..."
+                    aria-label="Comment text" aria-describedby="button-addon2" required name="body">
+                <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i class="bi bi-send"></i> Comment</button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
