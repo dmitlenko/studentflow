@@ -1,0 +1,17 @@
+{% extends 'index.html' %} {% block content %}
+
+{% load crispy_forms_tags %}
+<div>
+    <h1>
+        {{object.title}}
+    </h1>
+    <div>
+        <a href="#">@{{object.author}}</a><br>
+        {{object.date_created|date}}<br>
+        {{object.date_edited|date}}<br>
+    </div>
+    <p>
+        {{object.body}}
+    </p>
+</div>
+{% endblock %}

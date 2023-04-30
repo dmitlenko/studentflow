@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import RegistrationForm, PostForm
@@ -115,6 +115,11 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs )
         context['obj'] = get_object_or_404(self.model, pk=self.kwargs['pk'])
         return context
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'base/post.html'
 
 
 # FIXME: maybe this is a bad practice to mix class-base views and function-base views
