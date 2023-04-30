@@ -6,5 +6,9 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='home'),
     path('auth/login', views.LoginView.as_view(), name='login'),
     path('auth/logout', views.logout_view, name='logout'),
-    path('auth/signup', views.SignupView.as_view(), name='signup')
+    path('auth/signup', views.SignupView.as_view(), name='signup'),
+
+    path('post/create', views.PostCreateView.as_view(), name='create_post'),
+    path('post/update/<int:pk>', views.PostUpdateView.as_view(), name='update_post'),
+    path('post/delete/<int:pk>', views.PostDeleteView.as_view(), name='delete_post')
 ]

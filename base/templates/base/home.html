@@ -1,5 +1,13 @@
-{% extends 'index.html' %}
+{% extends 'index.html' %} 
+{% block content %} 
 
-{% block content %}
+    {% for post in posts %}
+        <div class="post">
+            <a href="#">
+                <h1 class="title">{{ post.title }}</h1>
+            </a>
+            <p class="body">{{post.body|slice:':50'}}...</p>
+        </div>
+    {% endfor %} 
 
 {% endblock %}
