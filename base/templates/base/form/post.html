@@ -1,8 +1,11 @@
 {% extends 'index.html' %} {% block content %}
 
 {% load crispy_forms_tags %}
-<form action="" method="post">
-    {% csrf_token %} {{ form|crispy }}
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div class="card p-3">
+    <h5>Create/update post</h5>
+    <form action="" method="post" enctype="multipart/form-data" >
+        {% csrf_token %} {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 {% endblock %}
