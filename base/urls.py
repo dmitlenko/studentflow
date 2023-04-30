@@ -15,6 +15,8 @@ urlpatterns = [
     path('post/delete/<int:pk>', views.PostDeleteView.as_view(), name='delete_post'),
     path('post/detail/<int:pk>', views.PostDetailView.as_view(), name='detail_post'),
     path('post/deletecomment/<int:pk>', views.PostDetailView.as_view(), name='delete_comment'),
+
+    path('profile/detail/<int:pk>', views.ProfileView.as_view(), name='profile'),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,58 @@
+{% extends 'index.html' %} {% block content %}
+{% load static %}
+<div class="row justify-content-md-center">
+    <div class="card col-md-6 p-2">
+        <div class="card-body">
+            <div class="d-flex text-black">
+                {% if object.image %}
+                <div class="flex-shrink-0">
+                    <img src="{% get_media_prefix %}{{ object.image }}" alt="Generic placeholder image"
+                        class="img-fluid" style="width: 180px; border-radius: 10px; height: 180px; object-fit: cover;">
+                </div>
+                {% endif %}
+                <div class="flex-grow-1 ms-3">
+                    <h5 class="mb-1">{{object.username}}</h5>
+                    <div class="d-flex justify-content-start rounded-3 p-2 mb-2" style="background-color: #efefef;">
+                        <div class="flex-fill">
+                            <p class="small text-muted mb-1">Posts</p>
+                            <p class="mb-0">{{posts.count}}</p>
+                        </div>
+                        <div class="flex-fill">
+                            <p class="small text-muted mb-1">Comments</p>
+                            <p class="mb-0">{{comments_count}}</p>
+                        </div>
+                    </div>
+                    <p class="mb-2 pb-1" style="color: #2b2a2a;">{{object.bio}}</p>
+                    <div class="d-flex pt-1">
+                        <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
+                        <button type="button" class="btn btn-primary flex-grow-1">Follow</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if posts %}
+<h5 class="text-center mt-3">Posts by {{object.username}}:</h5>
+{% for post in posts %}
+<div class="row justify-content-md-center mt-3">
+    <div class="col-md-6">
+        <div class="card">
+            {% if post.image %}
+            <img src="{% get_media_prefix %}{{ post.image }}" class="card-img-top" alt="{{post.title}} thumbnail" />
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{post.title}}</h5>
+                <p class="card-text">
+                    {{post.body|slice:':50'}}
+                </p>
+                <a href="{% url 'detail_post' pk=post.id %}" class="btn btn-primary"><i class="bi bi-book-half"></i>
+                    Read</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

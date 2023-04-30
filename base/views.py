@@ -6,7 +6,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import RegistrationForm, PostForm
-from .models import Post, PostComment
+from .models import Post, PostComment, User
 from django.urls import reverse_lazy, reverse
 from datetime import datetime
 
@@ -166,6 +166,18 @@ class PostDetailView(LoginRequiredMixin, DetailView):
         )
 
         return redirect(reverse('detail_post', kwargs={'pk': self.kwargs['pk']}))
+
+
+class ProfileView(DetailView):
+    model = User
+    template_name = 'base/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments_count'] = PostComment.objects.filter(author=self.get_object()).count()
+        context['posts'] = Post.objects.filter(author=self.get_object())
+        return context
+
 
 
 # FIXME: maybe this is a bad practice to mix class-base views and function-base views
