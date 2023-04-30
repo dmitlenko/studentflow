@@ -43,8 +43,8 @@ INSTALLED_APPS = [
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
-
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+AUTH_USER_MODEL = 'base.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
