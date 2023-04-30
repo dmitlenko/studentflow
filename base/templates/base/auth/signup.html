@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 <form action="" method="post">
     {% csrf_token %} {{ form|crispy }}
-    <input type="submit" />
+    <button type="submit" class="btn btn-primary">Submit</button>
     <p>
         Already a user? Then proceed to <a href="{% url 'login' %}">login</a>.
     </p>
