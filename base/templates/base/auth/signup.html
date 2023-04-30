@@ -6,8 +6,8 @@
         <div class="card-body">
             <form action="" method="post">
                 {% csrf_token %} {{ form|crispy }}
-                <button type="submit" class="btn btn-primary">Submit</button>
-                Already a user? Then proceed to <a href="{% url 'login' %}">login</a>.
+                <button type="submit" class="btn btn-primary">Sign up</button>
+                Already have an account? Then proceed to <a href="{% url 'login' %}">login</a>
             </form>
         </div>
     </div>

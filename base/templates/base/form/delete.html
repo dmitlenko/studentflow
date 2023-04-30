@@ -9,7 +9,7 @@
             <p>Are you sure you want to delete "{{object}}"</p>
             <form action="" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger">Yes</button>
+                <button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash-fill"></i> Yes</button>
                 <button type="button" class="btn btn-primary" onclick="history.back();">No</button>
             </form>
         </div>
