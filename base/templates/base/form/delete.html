@@ -1,10 +1,18 @@
 {% extends 'index.html' %} {% block content %}
 
 {% load crispy_forms_tags %}
-<form action="" method="post">
-    {% csrf_token %}
-    <h2>Are you sure you want to delete "{{obj}}"</h2>
-    <button type="submit" class="btn btn-outline-secondary">Yes</button>
-    <button type="button" class="btn btn-primary" onclick="history.back();">No</button>
-</form>
+
+<div class="row justify-content-md-center">
+    <div class="card col-md-5">
+        <div class="card-body">
+            <h5 class="card-title">Deletion confirmation</h5>
+            <p>Are you sure you want to delete "{{obj}}"</p>
+            <form action="" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="history.back();">No</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
