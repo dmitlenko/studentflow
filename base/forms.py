@@ -24,3 +24,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = '__all__'
         exclude = ['author']
+
+    def __init__(self, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.fields['image'].required = False

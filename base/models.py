@@ -25,6 +25,10 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         super().save()
+
+        if not self.image.name:
+            return
+        
         img = Image.open(self.image.path)
         new_width, new_height = 1200, 560
 
