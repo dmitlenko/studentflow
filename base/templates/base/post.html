@@ -10,7 +10,7 @@
     <div class="card-body">
         <h5 class="card-title">{{object.title}}</h5>
         <div class="card-body">
-            <a href="#">@{{object.author}}</a> on {{object.date_edited|date}}
+            <a href="#">@{{object.author.username}}</a> on {{object.date_edited|date}}
             {% if object.author == request.user %}
             <a href="{% url 'update_post' pk=object.id %}">Edit</a>
             <a href="{% url 'delete_post' pk=object.id %}">Delete</a>
