@@ -18,7 +18,7 @@ class Post(models.Model):
     body = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
     date_edited = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to='images', null=True, default=None)
+    image = models.ImageField(upload_to='images', null=True, blank=True)
 
     def __str__(self):
         return self.title
