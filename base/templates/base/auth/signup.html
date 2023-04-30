@@ -1,6 +1,8 @@
 {% extends 'index.html' %} {% block content %}
+
+{% load crispy_forms_tags %}
 <form action="" method="post">
-    {% csrf_token %} {{ form.as_p }}
+    {% csrf_token %} {{ form|crispy }}
     <input type="submit" />
     <p>
         Already a user? Then proceed to <a href="{% url 'login' %}">login</a>.
