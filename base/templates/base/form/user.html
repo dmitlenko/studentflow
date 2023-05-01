@@ -1,0 +1,16 @@
+{% extends 'index.html' %} {% block content %}
+
+{% load crispy_forms_tags %}
+<div class="row justify-content-md-center">
+    <div class="card col-md-5">
+        <div class="card-body">
+            <h5 class="card-title">Edit profile</h5>
+            <form action="" method="post" enctype="multipart/form-data" >
+                {% csrf_token %} {{ form|crispy }}
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save</button>
+                <button type="button" class="btn btn-secondary" onclick="history.back();">Back</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

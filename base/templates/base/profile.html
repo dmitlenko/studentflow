@@ -24,8 +24,12 @@
                     </div>
                     <p class="mb-2 pb-1" style="color: #2b2a2a;">{{object.bio}}</p>
                     <div class="d-flex pt-1">
+                        {% if request.user == object %}
+                        <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Edit profile</a>
+                        {% else %}
                         <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
                         <button type="button" class="btn btn-primary flex-grow-1">Follow</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

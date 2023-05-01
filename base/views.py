@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from .forms import RegistrationForm, PostForm
+from .forms import RegistrationForm, PostForm, UserForm
 from .models import Post, PostComment, User
 from django.urls import reverse_lazy, reverse
 from datetime import datetime
@@ -174,11 +174,29 @@ class ProfileView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comments_count'] = PostComment.objects.filter(author=self.get_object()).count()
+        context['comments_count'] = PostComment.objects.filter(
+            author=self.get_object()).count()
         context['posts'] = Post.objects.filter(author=self.get_object())
         return context
 
 
+class UserUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserForm
+    template_name = 'base/form/user.html'
+    success_url = reverse_lazy('home')
+    login_url = 'login'
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
+        return obj
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if request.user != obj:
+            return self.handle_no_permission()
+
+        return super().dispatch(request, *args, **kwargs)
 
 # FIXME: maybe this is a bad practice to mix class-base views and function-base views
 def logout_view(request):
