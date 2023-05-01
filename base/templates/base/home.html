@@ -1,8 +1,9 @@
 {% extends 'index.html' %} {% block content %}
 {% load static %}
 
-<div class="row">
+
 {% for post in posts %}
+{% cycle '<div class="row">' '' %}
     <div class="col-md-6 mb-4">
         <div class="card">
             {% if post.image %}
@@ -17,7 +18,8 @@
             </div>
         </div>
     </div>
+{% cycle '' '</div>' %}
 {% endfor %} 
-</div>
+
 
 {% endblock %}
