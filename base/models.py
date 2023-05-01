@@ -7,7 +7,7 @@ class User(AbstractUser):
     name = models.CharField(max_length=300, null=True)
     email = models.EmailField(unique=True, null=True)
     image = models.ImageField(default='default_user.png', upload_to='profile_pics', null=True)
-    bio = models.TextField(null=True)
+    bio = models.TextField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
