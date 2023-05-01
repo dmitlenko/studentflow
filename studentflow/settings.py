@@ -32,7 +32,9 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'base',
+    'chat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 AUTH_USER_MODEL = 'base.User'
+ASGI_APPLICATION = 'studentflow.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
