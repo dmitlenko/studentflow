@@ -5,10 +5,12 @@
     <div class="card col-md-5">
         <div class="card-body">
             <h5 class="card-title">Create/update post</h5>
-            <form action="" method="post" enctype="multipart/form-data" >
+            <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %} {{ form|crispy }}
-                <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i> Submit</button>
-                <button type="button" class="btn btn-secondary" onclick="history.back();">Back</button>
+                <div class="input-group mb-3">
+                    <button type="submit" class="btn btn-outline-primary "><i class="bi bi-send-fill"></i> Submit</button>
+                    <button type="button" class="btn btn-secondary" onclick="history.back();">Back</button>
+                </div>
             </form>
         </div>
     </div>
