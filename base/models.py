@@ -4,7 +4,7 @@ from PIL import Image
 
 # Create your models here.
 class User(AbstractUser):
-    name = models.CharField(max_length=300, null=True)
+    name = models.CharField(max_length=300, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
     image = models.ImageField(default='default_user.png', upload_to='profile_pics', null=True)
     bio = models.TextField(null=True, blank=True)
