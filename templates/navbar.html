@@ -23,8 +23,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                         <!-- TODO: add link to user profile -->
-                        <li><a class="dropdown-item" href="{% url 'profile' pk=user.id %}">Profile</a></li>
-                        <li><a class="dropdown-item" href="{% url 'update_profile' pk=user.id %}">Edit profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'profile' pk=request.user.id %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'update_profile' pk=request.user.id %}">Edit profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
