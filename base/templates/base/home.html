@@ -12,7 +12,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{post.title}}</h5>
                 <p class="card-text">
-                    {{post.body|slice:':50'}}
+                    {{post.body|truncatechars:50 }}
                 </p>
                 <div class="input-group w-100">
                     <a href="{% url 'detail_post' pk=post.id %}" class="btn btn-primary"><i class="bi bi-book-half"></i> Read</a>
