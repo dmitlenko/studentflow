@@ -114,7 +114,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
-    template_name = 'base/form/delete.html'
+    template_name = 'delete.html'
     success_url = reverse_lazy('home')
     login_url = 'login'
 
@@ -125,7 +125,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
 class PostCommentDeleteView(LoginRequiredMixin, DeleteView):
     model = PostComment
-    template_name = 'base/form/delete.html'
+    template_name = 'delete.html'
     success_url = reverse_lazy('home')
     login_url = 'login'
 
