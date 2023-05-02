@@ -79,7 +79,7 @@
                     <button type="button" class="btn btn-outline-primary flex-grow-1" data-bs-dismiss="modal"
                         style="box-shadow: none!important;">Close</button>
                     {% if request.user == object.creator %}
-                    <a class="btn btn-outline-danger" href="{% url 'chat_update' pk=object.id %}"
+                    <a class="btn btn-outline-danger" href="{% url 'chat_delete' pk=object.id %}"
                         style="box-shadow: none!important;">
                         <i class="bi bi-trash-fill"></i>
                     </a>

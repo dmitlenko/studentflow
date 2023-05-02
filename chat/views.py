@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import DetailView, UpdateView, CreateView
+from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ChatGroup, ChatGroupMessage
 from .forms import ChatGroupForm
@@ -52,6 +52,10 @@ class UpdateChatGroupView(LoginRequiredMixin, UpdateView):
     form_class = ChatGroupForm
     success_url = reverse_lazy('home')
 
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
+        return obj
+
     def dispatch(self, request, **kwargs):
         obj = self.get_object()
 
@@ -74,3 +78,22 @@ class CreateChatGroupView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.creator = self.request.user
         return super().form_valid(form)
+
+
+class DeleteChatGroupView(LoginRequiredMixin, DeleteView):
+    model = ChatGroup
+    template_name = 'delete.html'
+    success_url = reverse_lazy('chat_home')
+    login_url = 'login'
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
+        return obj
+
+    def dispatch(self, request, **kwargs):
+        obj = self.get_object()
+
+        if request.user != obj.creator:
+            return self.handle_no_permission()
+        
+        return super().dispatch(request, **kwargs)
