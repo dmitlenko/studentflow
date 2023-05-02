@@ -5,4 +5,4 @@ class ChatGroupForm(forms.ModelForm):
     class Meta:
         model = ChatGroup
         fields = '__all__'
-        exclude = ['creator']
+        exclude = ['creator', 'private']

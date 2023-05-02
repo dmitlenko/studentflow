@@ -1,10 +1,12 @@
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ChatGroup, ChatGroupMessage
 from .forms import ChatGroupForm
+from base.models import User
 
 # Create your views here.
 class HomeView(LoginRequiredMixin, View):
@@ -97,3 +99,26 @@ class DeleteChatGroupView(LoginRequiredMixin, DeleteView):
             return self.handle_no_permission()
         
         return super().dispatch(request, **kwargs)
+
+
+class CreatePrivateChatView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return redirect('home')
+        
+        if user == request.user:
+            return redirect('home')
+        
+        chat_group = ChatGroup.objects.filter(creator=None, participants__in=[user, request.user], private=True)
+        if chat_group.exists():
+            chat_group = chat_group.first()
+        else:
+            chat_group = ChatGroup.objects.create(
+                name = f'Chat with @{request.user.username} and @{user.username}',
+                private = True
+            )
+            chat_group.participants.add(request.user, user)
+
+        return redirect(reverse('chat', kwargs={'pk': chat_group.id}))
