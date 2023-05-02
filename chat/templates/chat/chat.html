@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+{{ object.id|json_script:"chat-id" }}
 <div class="d-flex flex-column border-start border-end h-100 p-0">
     <div class="d-flex border-bottom mb-2">
         <div class="d-flex flex-grow-1 p-2">
@@ -24,7 +25,7 @@
             {% endif %}
         </div>
     </div>
-    <div class="d-flex flex-grow-1 gap-2 px-2 justify-content-end flex-column">
+    <div class="d-flex flex-grow-1 gap-2 px-2 justify-content-end flex-column" id="chatLog">
         {% for message in messages %}
         <div href="#" class="list-group-item list-group-item-action" aria-current="true">
             <div class="d-flex w-100 justify-content-between">
@@ -73,4 +74,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/chat.js' %}"></script>
 {% endblock %}
