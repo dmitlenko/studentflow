@@ -1,12 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from PIL import Image
+from django.core.exceptions import ValidationError
+
 
 # Create your models here.
 class User(AbstractUser):
+    def validate_image(fieldfile_obj):
+        filesize = fieldfile_obj.file.size
+        megabyte_limit = 5.0
+        if filesize > megabyte_limit*1024*1024:
+            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+        
     name = models.CharField(max_length=300, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
-    image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True)
+    image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True, validators=[validate_image])
     bio = models.TextField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
@@ -19,7 +27,14 @@ class Post(models.Model):
     body = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
     date_edited = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to='images/post', null=True, blank=True)
+
+    def validate_image(fieldfile_obj):
+        filesize = fieldfile_obj.file.size
+        megabyte_limit = 5.0
+        if filesize > megabyte_limit*1024*1024:
+            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+
+    image = models.ImageField(upload_to='images/post', null=True, blank=True, validators=[validate_image])
 
     def __str__(self):
         return self.title

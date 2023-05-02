@@ -1,11 +1,18 @@
 from base.models import User
 from django.db import models
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class ChatGroup(models.Model):
+    def validate_image(fieldfile_obj):
+        filesize = fieldfile_obj.file.size
+        megabyte_limit = 5.0
+        if filesize > megabyte_limit*1024*1024:
+            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+        
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     participants = models.ManyToManyField(User, related_name='participants', blank=True)
-    image = models.ImageField(default='default_chatgroup.png', upload_to='images/groups', blank=True)
+    image = models.ImageField(default='default_chatgroup.png', upload_to='images/groups', blank=True, validators=[validate_image])
     description = models.CharField(max_length=2000, blank=True)
     name = models.CharField(max_length=200)
 
