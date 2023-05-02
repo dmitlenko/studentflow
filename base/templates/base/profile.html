@@ -1,6 +1,6 @@
 {% extends 'index.html' %} {% block content %}
 {% load static %}
-<div class="d-flex justify-content-md-center">
+<div class="d-flex justify-content-md-center my-3">
     <div class="card col-md-6">
         <div class="card-body">
             <div class="d-flex text-black">
@@ -40,7 +40,7 @@
 </div>
 {% if posts %}
 <h5 class="text-center mt-3">Posts by {{object.username}}:</h5>
-<div class="d-flex flex-column gap-4">
+<div class="d-flex flex-column gap-4 mb-3">
     {% for post in posts %}
     <div class="row justify-content-md-center">
         <div class="col-md-6">

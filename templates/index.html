@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 
 <head>
     <meta charset="UTF-8" />
@@ -11,12 +11,15 @@
     {% include 'styles.html' %}
 </head>
 
-<body style="padding-top: 56px;">
+<body style="padding-top: 56px;" class="body-bg h-100">
     {% include 'navbar.html' %}
 
-    <div class="container px-3 py-5 bg-gray-900">
-        {% block content %} {% endblock %}
+    <div class="h-100 d-flex flex-column" style="overflow-y: auto;">
+        <div class="container flex-grow-1">
+            {% block content %} {% endblock %}
+        </div>
     </div>
+    
 
     {% include 'scripts.html' %}
 </body>
