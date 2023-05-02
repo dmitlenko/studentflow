@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import DetailView, UpdateView
+from django.views.generic import DetailView, UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ChatGroup, ChatGroupMessage
 from .forms import ChatGroupForm
@@ -62,4 +62,11 @@ class UpdateChatGroupView(LoginRequiredMixin, UpdateView):
             return self.handle_no_permission()
         
         return super().dispatch(request, **kwargs)
-            
+    
+
+class CreateChatGroupView(LoginRequiredMixin, CreateView):
+    model = ChatGroup
+    template_name = 'chat/form/update.html'
+    login_url = 'login'
+    form_class = ChatGroupForm
+    success_url = reverse_lazy('chat_home')
