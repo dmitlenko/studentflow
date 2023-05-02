@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import ChatGroup, ChatGroupMessage
 
 # Create your views here.
 class HomeView(LoginRequiredMixin, View):
@@ -8,4 +9,11 @@ class HomeView(LoginRequiredMixin, View):
     template_name = 'chat/home.html'
 
     def get(self, request):
-        return render(request, self.template_name, {})
+        chats = [{
+            'chat':chat,
+            'last_message':chat.chatgroupmessage_set.last()
+        } for chat in ChatGroup.objects.filter(participants=request.user)]
+
+        return render(request, self.template_name, {
+            'chats':chats
+        })
