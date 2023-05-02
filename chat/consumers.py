@@ -28,6 +28,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         author = await sync_to_async(User.objects.get)(id=author_id)
         chat_group = await sync_to_async(ChatGroup.objects.get)(id=chat_group_id)
 
+        if not (author == chat_group.creator or author in await sync_to_async(chat_group.participants.all)()):
+            return
+
         message = await sync_to_async(ChatGroupMessage.objects.create)( author = author, chat_group = chat_group,body = body)
         response_data = {
             'userId': message.author.id,
