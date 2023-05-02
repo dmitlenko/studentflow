@@ -28,6 +28,3 @@ class ChatGroupMessage(models.Model):
 
     def __str__(self):
         return self.body
-    
-    class Meta:
-        ordering = ['-date_created']
