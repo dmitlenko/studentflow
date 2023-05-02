@@ -70,3 +70,7 @@ class CreateChatGroupView(LoginRequiredMixin, CreateView):
     login_url = 'login'
     form_class = ChatGroupForm
     success_url = reverse_lazy('chat_home')
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super().form_valid(form)
