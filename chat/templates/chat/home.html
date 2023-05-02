@@ -5,12 +5,13 @@
 <div class="d-flex flex-column border-start border-end h-100 p-0">
     <div class="list-group rounded-0">
         {% for chat in chats %}
-        <a href="{% url 'chat' pk=chat.chat.id %}" class="list-group-item list-group-item-action border-end-0 border-start-0" aria-current="true">
+        <a href="{% url 'chat' pk=chat.chat.id %}"
+            class="list-group-item list-group-item-action border-end-0 border-start-0" aria-current="true">
             <div class="d-flex gap-3">
                 {% if chat.chat.image %}
                 <div class="flex-shrink-0">
-                    <img src="{% get_media_prefix %}{{ chat.chat.image }}"
-                        class="w-auto rounded-circle border" style="height: 96px; width: 96px;" alt="">
+                    <img src="{% get_media_prefix %}{{ chat.chat.image }}" class="w-auto rounded-circle border"
+                        style="height: 96px; width: 96px!important;object-fit: cover;" alt="">
                 </div>
                 {% endif %}
                 <div class="flex-grow-1">
