@@ -1,28 +1,31 @@
-{% extends 'index.html' %}
+{% extends 'chat.html' %}
 
 {% block content %}
 {% load static %}
-<div class="list-group">
-    {% for chat in chats %}
-    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-        <div class="d-flex gap-3">
-            {% if chat.chat.image %}
-            <div class="flex-shrink-0">
-                <img src="{% get_media_prefix %}{{ chat.chat.image }}" class="w-auto rounded-circle border border-light" style="height: 100px;" alt="">
-            </div>
-            {% endif %}
-            <div class="flex-grow-1">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{chat.chat}}</h5>
+<div class="d-flex flex-column border-start border-end h-100 p-0">
+    <div class="list-group rounded-0">
+        {% for chat in chats %}
+        <a href="{% url 'chat' pk=chat.chat.id %}" class="list-group-item list-group-item-action border-end-0 border-start-0" aria-current="true">
+            <div class="d-flex gap-3">
+                {% if chat.chat.image %}
+                <div class="flex-shrink-0">
+                    <img src="{% get_media_prefix %}{{ chat.chat.image }}"
+                        class="w-auto rounded-circle border" style="height: 96px; width: 96px;" alt="">
                 </div>
-                {% if chat.last_message %}
-                <p class="mb-1">@{{chat.last_message.author.username}}</p>
-                <small>{{chat.last_message.body|truncatechars:23}}</small>
                 {% endif %}
+                <div class="flex-grow-1">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{chat.chat}}</h5>
+                    </div>
+                    {% if chat.last_message %}
+                    <p class="mb-1">@{{chat.last_message.author.username}}</p>
+                    <small>{{chat.last_message.body|truncatechars:23}}</small>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </a>
-    {% endfor %}
+        </a>
+        {% endfor %}
+    </div>
 </div>
 
 {% endblock %}
