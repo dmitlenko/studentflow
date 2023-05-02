@@ -195,6 +195,9 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         obj = self.get_object()
         if request.user != obj:
             return self.handle_no_permission()
+        
+        self.success_url = reverse('profile', kwargs={
+                                   'pk': self.kwargs['pk']})
 
         return super().dispatch(request, *args, **kwargs)
 
