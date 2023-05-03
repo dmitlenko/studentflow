@@ -2,21 +2,37 @@
 
 {% block content %}
 {% load static %}
+{% load custom_tags %}
 <div class="d-flex flex-column border-start border-end h-100 p-0">
     <div class="list-group rounded-0">
         {% for chat in chats %}
         <a href="{% url 'chat' pk=chat.chat.id %}"
             class="list-group-item list-group-item-action border-end-0 border-start-0" aria-current="true">
             <div class="d-flex gap-3">
-                {% if chat.chat.image %}
                 <div class="flex-shrink-0">
+                    {% if chat.chat.private %}
+                        {% with other_participant=chat.chat|other_participant:request.user %}
+                            {% if other_participant %}
+                            <img src="{% get_media_prefix %}{{ other_participant.image}}" class="w-auto rounded-circle border"
+                                style="height: 96px; width: 96px!important;object-fit: cover;" alt="">
+                            {% endif %}
+                        {% endwith %}
+                    {% elif chat.chat.image %}
                     <img src="{% get_media_prefix %}{{ chat.chat.image }}" class="w-auto rounded-circle border"
                         style="height: 96px; width: 96px!important;object-fit: cover;" alt="">
+                    {% endif %}
                 </div>
-                {% endif %}
                 <div class="flex-grow-1">
                     <div class="d-flex w-100 justify-content-between">
+                        {% if chat.chat.private %}
+                            {% with other_participant=chat.chat|other_participant:request.user %}
+                                {% if other_participant %}
+                                    <h5 class="mb-1">{% firstof other_participant.name other_participant.username %}</h5>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
                         <h5 class="mb-1">{{chat.chat}}</h5>
+                        {% endif %}
                     </div>
                     {% if chat.last_message %}
                     <p class="mb-1">@{{chat.last_message.author.username}}</p>
