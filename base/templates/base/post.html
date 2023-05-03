@@ -33,7 +33,7 @@
         </div>
         <div class="list-group">
             {% for comment in comments %}
-            <a class="list-group-item">
+            <a class="list-group-item" href="{% url 'profile' pk=comment.author.id %}">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{comment.body}}</h5>
                     <small>{{comment.date_created|timesince}} ago</small>
