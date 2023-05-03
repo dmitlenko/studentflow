@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, ListView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import RegistrationForm, PostForm, UserForm
@@ -11,13 +11,15 @@ from django.urls import reverse_lazy, reverse
 from datetime import datetime
 
 
-class IndexView(View):
+class IndexView(ListView):
     template_name = 'base/home.html'
+    paginate_by = 6
+    model = Post
 
-    def get(self, request):
-        posts = Post.objects.all().order_by('-date_created')[:10]
+    # def get(self, request):
+    #     posts = Post.objects.all().order_by('-date_created')[:10]
 
-        return render(request, self.template_name, {'posts': posts})
+    #     return render(request, self.template_name, {'posts': posts})
 
 
 class LoginView(View):

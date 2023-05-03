@@ -2,7 +2,7 @@
 {% load static %}
 
 <div class="my-3">
-    {% for post in posts %}
+    {% for post in object_list %}
     {% cycle '<div class="row">' '' %}
         <div class="col-md-6 mb-4">
             <div class="card">
@@ -11,7 +11,8 @@
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{post.title}}</h5>
-                    <span>by <a href="{% url 'profile' pk=post.author.id %}" class="card-title">@{{post.author.username}}</a></span>
+                    <span>by <a href="{% url 'profile' pk=post.author.id %}"
+                            class="card-title">@{{post.author.username}}</a></span>
                     <p class="card-text">
                         {{post.body|truncatechars:50 }}
                     </p>
@@ -30,5 +31,54 @@
     {% endfor %}
 </div>
 
+{% if page_obj.has_other_pages %}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">
+                        First
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                        Previous
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for page_number in page_obj.paginator.page_range %}
+                {% if page_number <= page_obj.number|add:3 and page_number >= page_obj.number|add:-3 %}
+                    {% if page_obj.number == page_number %}
+                        <li class="page-item active">
+                            <a class="page-link" href="?page={{ page_number }}">
+                                {{ page_number }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_number }}">
+                                {{ page_number }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                        Next
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                        Last
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
 
 {% endblock %}
