@@ -60,7 +60,7 @@ class Post(models.Model):
             img.save(self.image.path)
 
     class Meta:
-        ordering = ['date_created']
+        ordering = ['-date_created']
 
 
 class PostComment(models.Model):
