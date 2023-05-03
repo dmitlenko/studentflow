@@ -30,9 +30,15 @@
                         <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Edit
                             profile</a>
                         {% else %}
-                        <a href="{% url 'chat_with' user_id=object.id %}"
-                            class="btn btn-outline-primary flex-grow-1"><i class="bi bi-chat"></i> Chat</a>
-                        <button type="button" class="btn btn-secondary flex-grow-1"><i class="bi bi-person-fill-add"></i> Follow</button>
+                        <a href="{% url 'chat_with' user_id=object.id %}" class="btn btn-outline-primary w-50">
+                            <i class="bi bi-chat"></i> Chat</a>
+                        {% if object in request.user.following.all %}
+                        <a href="{% url 'unfollow_user' pk=object.pk %}" class="btn btn-secondary w-50">
+                            <i class="bi bi-person-fill-dash"></i> Unfollow</a>
+                        {% else %}
+                        <a href="{% url 'follow_user' pk=object.pk %}" class="btn btn-secondary w-50">
+                            <i class="bi bi-person-fill-add"></i> Follow</a>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>

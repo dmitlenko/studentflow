@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 # url patterns for the base app
 urlpatterns = [
     path('', views.IndexView.as_view(), name='home'),
+    path('feed/', views.FeedView.as_view(), name='feed'),
     path('auth/login', views.LoginView.as_view(), name='login'),
     path('auth/logout', views.logout_view, name='logout'),
     path('auth/signup', views.SignupView.as_view(), name='signup'),
@@ -18,6 +19,9 @@ urlpatterns = [
 
     path('profile/detail/<int:pk>', views.ProfileView.as_view(), name='profile'),
     path('profile/update/<int:pk>', views.UserUpdateView.as_view(), name='update_profile'),
+
+    path('user/follow/<int:pk>', views.UserFollowView.as_view(), name='follow_user'),
+    path('user/unfollow/<int:pk>', views.UserUnfollowView.as_view(), name='unfollow_user'),
 ]
 
 if settings.DEBUG:

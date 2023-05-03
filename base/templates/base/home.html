@@ -2,6 +2,10 @@
 {% load static %}
 
 <div class="my-3">
+    {% if not object_list %}
+    <h5 class="text-center">Looks like there is nothing to see 😥</h5>
+    {% endif %}
+    
     {% for post in object_list %}
     {% cycle '<div class="row">' '' %}
         <div class="col-md-6 mb-4">

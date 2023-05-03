@@ -203,6 +203,52 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
         return super().dispatch(request, *args, **kwargs)
 
+
+class UserFollowView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        if pk == request.user.id:
+            return redirect('home')
+        
+        try:
+            user = User.objects.get(id=pk)
+        except:
+            return redirect('home')
+
+        if request.user.following.filter(id=pk).count() == 0:
+            request.user.following.add(user)
+        else:
+            # TODO: add "already following error"
+            pass
+        
+        return redirect(reverse('profile', kwargs={'pk': self.kwargs['pk']}))
+
+class UserUnfollowView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        if pk == request.user.id:
+            return redirect('home')
+        
+        try:
+            user = User.objects.get(id=pk)
+        except:
+            return redirect('home')
+
+        if request.user.following.filter(id=pk).count() >= 1:
+            request.user.following.remove(user)
+        else:
+            # TODO: add "not following error"
+            pass
+        
+        return redirect(reverse('profile', kwargs={'pk': self.kwargs['pk']}))
+        
+
+class FeedView(LoginRequiredMixin,ListView):
+    template_name = 'base/home.html'
+    paginate_by = 6
+    model = Post
+
+    def get_queryset(self):
+        return Post.objects.filter(author__in=self.request.user.following.all())
+
 # FIXME: maybe this is a bad practice to mix class-base views and function-base views
 def logout_view(request):
     logout(request)

@@ -16,6 +16,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True, validators=[validate_image])
     bio = models.TextField(null=True, blank=True)
+    following = models.ManyToManyField('self', blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
