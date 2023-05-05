@@ -159,6 +159,10 @@ class PostDetailView(LoginRequiredMixin, DetailView):
         context['comments'] = PostComment.objects.filter(
             post=self.get_object()).order_by('-date_created')
         return context
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.get_object().views.add(request.user)
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, **kwargs):
         comment = PostComment.objects.create(
@@ -234,6 +238,24 @@ class FeedView(LoginRequiredMixin, ListView):
         followed_posts = Post.objects.filter(author__in=followed_users).order_by('-date_created')
 
         return followed_posts
+
+
+class LikePostView(LoginRequiredMixin, RedirectView):
+    login_url = 'login'
+
+    def get_redirect_url(self, *args, **kwargs):
+        post_to_like = get_object_or_404(Post, pk=self.kwargs.get('pk'))
+        post_to_like.likes.add(self.request.user)
+        return reverse_lazy('detail_post', kwargs={'pk':post_to_like.id})
+
+
+class UnlikePostView(LoginRequiredMixin, RedirectView):
+    login_url = 'login'
+
+    def get_redirect_url(self, *args, **kwargs):
+        post_to_like = get_object_or_404(Post, pk=self.kwargs.get('pk'))
+        post_to_like.likes.remove(self.request.user)
+        return reverse_lazy('home' )
 
 # FIXME: maybe this is a bad practice to mix class-base views and function-base views
 def logout_view(request):

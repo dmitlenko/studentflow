@@ -31,7 +31,8 @@
                 {{object.body}}
             </div>
         </div>
-        <div class="list-group">
+        <h5 class="card-title">Comments:</h5>
+        <div class="list-group" id="comments">
             {% for comment in comments %}
             <a class="list-group-item" href="{% url 'profile' pk=comment.author.id %}">
                 <div class="d-flex w-100 justify-content-between">

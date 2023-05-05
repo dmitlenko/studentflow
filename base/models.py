@@ -37,6 +37,9 @@ class Post(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_edited = models.DateTimeField(auto_now=True)
 
+    views = models.ManyToManyField(User, related_name='views')
+    likes = models.ManyToManyField(User, related_name='likes')
+
     def validate_image(fieldfile_obj):
         filesize = fieldfile_obj.file.size
         megabyte_limit = 5.0
