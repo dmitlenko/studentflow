@@ -1,8 +1,8 @@
 {% extends 'index.html' %} {% block content %}
 {% load static %}
 {% load base_tags %}
-<div class="d-flex justify-content-center my-3">
-    <div class="card col-md-6">
+<div class="d-flex justify-content-center m-3 row">
+    <div class="card col-md-6 p-1">
         <div class="card-body">
             <div class="d-flex text-black">
                 {% if object.image %}
@@ -21,8 +21,12 @@
                             <p class="mb-0">{{posts.count}}</p>
                         </div>
                         <div class="flex-fill">
-                            <p class="small text-muted mb-1">Comments</p>
-                            <p class="mb-0">{{comments_count}}</p>
+                            <p class="small text-muted mb-1">Followers</p>
+                            <p class="mb-0">{{object|followers}}</p>
+                        </div>
+                        <div class="flex-fill">
+                            <p class="small text-muted mb-1">Following</p>
+                            <p class="mb-0">{{object|following}}</p>
                         </div>
                     </div>
                     <p class="mb-2 pb-1 flex-grow-1" style="color: #2b2a2a;">{{object.bio}}</p>
@@ -31,13 +35,13 @@
                         <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Edit
                             profile</a>
                         {% else %}
-                        <a href="{% url 'chat_with' user_id=object.id %}" class="btn btn-outline-primary w-50">
+                        <a href="{% url 'chat_with' user_id=object.id %}" class="btn btn-primary w-50">
                             <i class="bi bi-chat"></i> Chat</a>
                         {% if object|is_followed:request.user %}
                         <a href="{% url 'unfollow_user' pk=object.pk %}" class="btn btn-secondary w-50">
                             <i class="bi bi-person-fill-dash"></i> Unfollow</a>
                         {% else %}
-                        <a href="{% url 'follow_user' pk=object.pk %}" class="btn btn-secondary w-50">
+                        <a href="{% url 'follow_user' pk=object.pk %}" class="btn btn-outline-secondary w-50">
                             <i class="bi bi-person-fill-add"></i> Follow</a>
                         {% endif %}
                         {% endif %}

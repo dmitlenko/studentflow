@@ -6,9 +6,9 @@
     <h5 class="text-center">Looks like there is nothing to see 😥</h5>
     {% endif %}
     
-    <div class="row row-cols-3 mb-4">
+    <div class="row mb-4">
     {% for post in object_list %}    
-        {{post|post_card}}
+        {{post|post_card:'-md-4'}}
     {% endfor %}
     </div>
 </div>
