@@ -8,7 +8,7 @@
         {% endif %}
         <div class="card-body">
             <h5 class="card-title">{{post.title}}
-                {% if post.author == request.use %}
+                {% if post.author == request.user %}
                 <a href="{% url 'update_post' pk=post.id %}">
                     <span class="fs-6 text">
                         <i class="bi bi-pencil-fill"></i>
