@@ -16,11 +16,19 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True, validators=[validate_image])
     bio = models.TextField(null=True, blank=True)
-    following = models.ManyToManyField('self', blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+
+class UserFollow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    follower = models.ForeignKey(User, related_name='follower', on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'follower'], name="%(app_label)s_%(class)s_unique")
+        ]
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)

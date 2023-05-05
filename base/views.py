@@ -3,10 +3,11 @@ from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, ListView
+from django.views.generic.base import RedirectView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import RegistrationForm, PostForm, UserForm
-from .models import Post, PostComment, User
+from .models import Post, PostComment, User, UserFollow
 from django.urls import reverse_lazy, reverse
 from datetime import datetime
 
@@ -18,7 +19,6 @@ class IndexView(ListView):
 
     # def get(self, request):
     #     posts = Post.objects.all().order_by('-date_created')[:10]
-
     #     return render(request, self.template_name, {'posts': posts})
 
 
@@ -204,50 +204,36 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class UserFollowView(LoginRequiredMixin, View):
-    def get(self, request, pk):
-        if pk == request.user.id:
-            return redirect('home')
-        
-        try:
-            user = User.objects.get(id=pk)
-        except:
-            return redirect('home')
+class UserFollowView(LoginRequiredMixin, RedirectView):
+    login_url = 'login'
 
-        if request.user.following.filter(id=pk).count() == 0:
-            request.user.following.add(user)
-        else:
-            # TODO: add "already following error"
-            pass
-        
-        return redirect(reverse('profile', kwargs={'pk': self.kwargs['pk']}))
+    def get_redirect_url(self, *args, **kwargs):
+        user_to_follow = get_object_or_404(User, id=self.kwargs.get('pk'))
+        UserFollow.objects.get_or_create(user=user_to_follow, follower=self.request.user)
+        return reverse_lazy('profile', kwargs={'pk': user_to_follow.id})
 
-class UserUnfollowView(LoginRequiredMixin, View):
-    def get(self, request, pk):
-        if pk == request.user.id:
-            return redirect('home')
-        
-        try:
-            user = User.objects.get(id=pk)
-        except:
-            return redirect('home')
 
-        if request.user.following.filter(id=pk).count() >= 1:
-            request.user.following.remove(user)
-        else:
-            # TODO: add "not following error"
-            pass
-        
-        return redirect(reverse('profile', kwargs={'pk': self.kwargs['pk']}))
+class UserUnfollowView(LoginRequiredMixin, RedirectView):
+    login_url = 'login'
+
+    def get_redirect_url(self, *args, **kwargs):
+        user_to_unfollow = get_object_or_404(User, id=self.kwargs.get('pk'))
+        UserFollow.objects.filter(user=user_to_unfollow, follower=self.request.user).delete()
+        return reverse_lazy('profile', kwargs={'pk': user_to_unfollow.id})
         
 
-class FeedView(LoginRequiredMixin,ListView):
+class FeedView(LoginRequiredMixin, ListView):
     template_name = 'base/home.html'
     paginate_by = 6
     model = Post
+    login_url = 'login'
 
     def get_queryset(self):
-        return Post.objects.filter(author__in=self.request.user.following.all())
+        current_user = self.request.user
+        followed_users = UserFollow.objects.filter(follower=current_user).values_list('user', flat=True)
+        followed_posts = Post.objects.filter(author__in=followed_users).order_by('-date_created')
+
+        return followed_posts
 
 # FIXME: maybe this is a bad practice to mix class-base views and function-base views
 def logout_view(request):

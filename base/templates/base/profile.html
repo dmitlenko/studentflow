@@ -1,5 +1,6 @@
 {% extends 'index.html' %} {% block content %}
 {% load static %}
+{% load base_tags %}
 <div class="d-flex justify-content-center my-3">
     <div class="card col-md-6">
         <div class="card-body">
@@ -10,7 +11,7 @@
                         class="img-fluid h-100" style="width: 180px; border-radius: 10px; object-fit: cover;">
                 </div>
                 {% endif %}
-                <div class="flex-grow-1 ms-3">
+                <div class="d-flex flex-column flex-grow-1 ms-3">
                     <h5 class="mb-1">
                         {% firstof object.name object.username %}
                     </h5>
@@ -24,7 +25,7 @@
                             <p class="mb-0">{{comments_count}}</p>
                         </div>
                     </div>
-                    <p class="mb-2 pb-1" style="color: #2b2a2a;">{{object.bio}}</p>
+                    <p class="mb-2 pb-1 flex-grow-1" style="color: #2b2a2a;">{{object.bio}}</p>
                     <div class="d-flex pt-1 input-group">
                         {% if request.user == object %}
                         <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Edit
@@ -32,7 +33,7 @@
                         {% else %}
                         <a href="{% url 'chat_with' user_id=object.id %}" class="btn btn-outline-primary w-50">
                             <i class="bi bi-chat"></i> Chat</a>
-                        {% if object in request.user.following.all %}
+                        {% if object|is_followed:request.user %}
                         <a href="{% url 'unfollow_user' pk=object.pk %}" class="btn btn-secondary w-50">
                             <i class="bi bi-person-fill-dash"></i> Unfollow</a>
                         {% else %}
