@@ -7,8 +7,8 @@
     {% endif %}
     
     <div class="row mb-4">
-    {% for post in object_list %}    
-        {{post|post_card:'-md-4'}}
+    {% for post in object_list %}
+        {% include 'base/items/post_card.html' with prefix='-md-4' post=post %}
     {% endfor %}
     </div>
 </div>
