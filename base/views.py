@@ -246,7 +246,7 @@ class LikePostView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post_to_like = get_object_or_404(Post, pk=self.kwargs.get('pk'))
         post_to_like.likes.add(self.request.user)
-        return reverse_lazy('detail_post', kwargs={'pk':post_to_like.id})
+        return self.request.META.get('HTTP_REFERER') + f'#post_{post_to_like.id}'
 
 
 class UnlikePostView(LoginRequiredMixin, RedirectView):
@@ -255,7 +255,7 @@ class UnlikePostView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         post_to_like = get_object_or_404(Post, pk=self.kwargs.get('pk'))
         post_to_like.likes.remove(self.request.user)
-        return reverse_lazy('home' )
+        return self.request.META.get('HTTP_REFERER') + f'#post_{post_to_like.id}'
 
 # FIXME: maybe this is a bad practice to mix class-base views and function-base views
 def logout_view(request):
