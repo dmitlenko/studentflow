@@ -257,7 +257,10 @@ class UnlikePostView(LoginRequiredMixin, RedirectView):
         post_to_like.likes.remove(self.request.user)
         return self.request.META.get('HTTP_REFERER') + f'#post_{post_to_like.id}'
 
-# FIXME: maybe this is a bad practice to mix class-base views and function-base views
-def logout_view(request):
-    logout(request)
-    return redirect('home')
+
+class LogoutView(RedirectView):
+    url = reverse_lazy('home')
+
+    def get_redirect_url(self, *args, **kwargs):
+        logout(self.request)
+        return super().get_redirect_url(*args, **kwargs)
