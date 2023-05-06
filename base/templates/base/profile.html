@@ -17,7 +17,9 @@
                             {% firstof object.name object.username %}
                         </h5>
                         <span class="fs-6 text fs-light fst-italic text-body-secondary">
-                            {% if object.role == 1 %}
+                            {% if object.is_staff %}
+                            <i class="bi bi-person-badge-fill">Персонал</i>
+                            {% elif object.role == 1 %}
                             Студент
                             {% elif object.role == 2 %}
                             Викладач
