@@ -1,3 +1,4 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
@@ -7,7 +8,7 @@ from django.views.generic.base import RedirectView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import RegistrationForm, PostForm, UserForm
-from .models import Post, PostComment, User, UserFollow
+from .models import Post, PostComment, User, UserFollow, PostTopic
 from django.urls import reverse_lazy, reverse
 from django.db.models import Q
 
@@ -93,7 +94,22 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+
+        if super().form_valid(form):
+            self.object = form.save(commit=False)
+            topic_name = self.request.POST.get('topic')
+            topic, created = PostTopic.objects.get_or_create(name=topic_name)
+            self.object.topic = topic
+            self.object.save()
+
+            return redirect(reverse('detail_post', kwargs={'pk':self.object.id}))
+
+        return False
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['topics'] = PostTopic.objects.all()
+        return context
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
@@ -106,15 +122,28 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
         return obj
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['topics'] = PostTopic.objects.all()
+        return context
 
     def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        self.success_url = reverse('detail_post', kwargs={
-                                   'pk': self.kwargs['pk']})
-        if request.user != obj.author:
+        if request.user != self.get_object().author:
             return self.handle_no_permission()
-
         return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        if super().form_valid(form):
+            self.object = form.save(commit=False)
+            topic_name = self.request.POST.get('topic')
+            topic, created = PostTopic.objects.get_or_create(name=topic_name)
+            self.object.topic = topic
+            self.object.save()
+
+            return redirect(reverse('detail_post', kwargs={'pk':self.object.id}))
+
+        return False
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):

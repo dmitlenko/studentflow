@@ -24,7 +24,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = '__all__'
-        exclude = ['author', 'likes', 'views']
+        exclude = ['author', 'likes', 'views', 'topic']
 
 
 class UserForm(forms.ModelForm):

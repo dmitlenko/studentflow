@@ -7,8 +7,20 @@
             <h5 class="card-title">Створення/редагування оголошення</h5>
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %} {{ form|crispy }}
+                <div id="div_id_title" class="mb-3">
+                    <label for="id_title" class="form-label requiredField">
+                        Тема<span class="asteriskField">*</span>
+                    </label>
+                    <input type="text" name="topic" maxlength="150" class="textinput form-control" required id="id_topic" list="topics" value="{% firstof object.topic %}">
+                    <datalist id="topics">
+                        {% for topic in topics %}
+                        <option value="{{topic.name}}">{{topic.name}}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
                 <div class="input-group mb-3 w-100">
-                    <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-send-fill"></i> Відправити</button>
+                    <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-send-fill"></i>
+                        Відправити</button>
                     <button type="button" class="btn btn-secondary w-50" onclick="history.back();">Повернутись</button>
                 </div>
             </form>

@@ -38,6 +38,14 @@ class UserFollow(models.Model):
     def __str__(self):
         return f'{self.follower} -> {self.user}'
 
+
+class PostTopic(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+    
+
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
@@ -49,6 +57,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, related_name='likes')
 
     pinned = models.BooleanField(default=False)
+    topic = models.ForeignKey(PostTopic, on_delete=models.SET_NULL, null=True)
 
     def validate_image(fieldfile_obj):
         filesize = fieldfile_obj.file.size
