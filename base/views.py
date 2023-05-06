@@ -152,23 +152,17 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         return obj
 
 
-class PostCommentDeleteView(LoginRequiredMixin, DeleteView):
-    model = PostComment
-    template_name = 'delete.html'
-    success_url = reverse_lazy('home')
+class PostCommentDeleteView(LoginRequiredMixin, RedirectView):
     login_url = 'login'
 
-    def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        self.success_url = reverse('detail_post', kwargs={'pk': obj.post.id})
-        if request.user != obj.author:
+    def get_redirect_url(self, pk):
+        obj = get_object_or_404(PostComment, pk=pk)
+
+        if self.request.user != obj.author and obj.post.author != self.request.user:
             return self.handle_no_permission()
-
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_object(self, queryset=None):
-        obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
-        return obj
+        
+        obj.delete()
+        return self.request.META.get('HTTP_REFERER')
 
 
 class PostDetailView(LoginRequiredMixin, DetailView):
@@ -210,6 +204,17 @@ class ProfileView(DetailView):
             author=self.get_object()).count()
         context['posts'] = Post.objects.filter(author=self.get_object())
         return context
+
+
+class PostStatsView(DetailView):
+    model = Post
+    template_name = 'base/post_stats.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.get_object().author != request.user:
+            return self.handle_no_permission()
+        
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):

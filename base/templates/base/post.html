@@ -23,6 +23,7 @@
             <a href="{% url 'profile' pk=object.author.id %}">@{{object.author.username}}</a> опублікувано
             {{object.date_edited|date}}
             {% if object.author == request.user %}
+            <a href="{% url 'stats_post' pk=object.id %}"><i class="bi bi-bar-chart-fill"></i> Статистика</a>
             <a href="{% url 'update_post' pk=object.id %}"><i class="bi bi-pencil-fill"></i> Редагувати</a>
             <a href="{% url 'delete_post' pk=object.id %}"><i class="bi bi-trash-fill"></i> Видалити</a>
             {% endif %}
