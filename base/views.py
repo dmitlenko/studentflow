@@ -9,7 +9,7 @@ from django.contrib import messages
 from .forms import RegistrationForm, PostForm, UserForm
 from .models import Post, PostComment, User, UserFollow
 from django.urls import reverse_lazy, reverse
-from datetime import datetime
+from django.db.models import Q
 
 
 class IndexView(ListView):
@@ -17,9 +17,12 @@ class IndexView(ListView):
     paginate_by = 6
     model = Post
 
-    # def get(self, request):
-    #     posts = Post.objects.all().order_by('-date_created')[:10]
-    #     return render(request, self.template_name, {'posts': posts})
+    def get_queryset(self):
+        q = self.request.GET.get('q') if self.request.GET.get('q') != None else ''
+
+        return Post.objects.filter(
+            Q(title__icontains=q) |
+            Q(body__icontains=q))
 
 
 class LoginView(View):
@@ -230,11 +233,12 @@ class FeedView(LoginRequiredMixin, ListView):
     paginate_by = 6
     model = Post
     login_url = 'login'
-
+    
     def get_queryset(self):
+        q = self.request.GET.get('q') if self.request.GET.get('q') != None else ''
         current_user = self.request.user
         followed_users = UserFollow.objects.filter(follower=current_user).values_list('user', flat=True)
-        followed_posts = Post.objects.filter(author__in=followed_users).order_by('-date_created')
+        followed_posts = Post.objects.filter(author__in=followed_users).filter(Q(title__icontains=q) | Q(body__icontains=q)).order_by('-date_created')
 
         return followed_posts
 

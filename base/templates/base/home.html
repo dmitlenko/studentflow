@@ -2,10 +2,13 @@
 {% load static %}
 {% load base_tags %}
 <div class="my-3">
+    <form class="input-group mb-4" role="search">
+        <input class="form-control" type="text" placeholder="Пошук" aria-label="Пошук" name="q" value="{{request.GET.q}}">
+        <button class="btn btn-outline-success" type="submit">Пошук</button>
+    </form>
     {% if not object_list %}
-    <h5 class="text-center">Looks like there is nothing to see 😥</h5>
+    <h5 class="text-center">Здається, тут нема чого дивитися 😥</h5>
     {% endif %}
-    
     <div class="row mb-4">
     {% for post in object_list %}
         {% include 'base/items/post_card.html' with prefix='-md-4' post=post %}
