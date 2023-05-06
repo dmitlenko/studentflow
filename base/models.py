@@ -35,6 +35,9 @@ class UserFollow(models.Model):
             models.UniqueConstraint(fields=['user', 'follower'], name="%(app_label)s_%(class)s_unique")
         ]
 
+    def __str__(self):
+        return f'{self.follower} -> {self.user}'
+
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
