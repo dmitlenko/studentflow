@@ -12,14 +12,80 @@
 </head>
 
 <body class="body-bg h-100 d-flex flex-column">
+    {% if request.user.is_authenticated or is_auth %}
     {% include 'navbar.html' %}
-
     <div class="container-fluid flex-container">
         <div class="container">
             {% block content %} {% endblock %}
         </div>
     </div>
-
+    {% else %}
+    <div class="container-fluid h-100 p-0">
+        <div class="d-flex flex-column h-100 justify-content-center align-items-center text-light bg-dark" id="title">
+            <h1 class="app-title">StudentFlow</h1>
+            <p class="col-lg-6 text-justify px-4">
+                Ласкаво просимо до нашої <a href="#about">спільноти</a>! Ми раді бачити вас тут і запрошуємо долучитися
+                до нашого
+                інтерактивного середовища, де ви зможете знайти багато корисної інформації, обговорити цікаві теми та
+                знайти нових друзів. Приєднуйтесь до нас, і ми з радістю поділимося з вами своїм досвідом та знаннями.
+                Відчуйте себе як вдома в нашій спільноті!
+            </p>
+            <div class="d-flex gap-4 align-items-center">
+                <a href="#join" class="btn btn-light btn-title">Приєднатися</a>
+                <span class="">або</span>
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-title">Увіти</a>
+            </div>
+        </div>
+        <div class="d-flex flex-column h-100 justify-content-center align-items-center" id="join">
+            <h1 class="mb-4">
+                Готові плани
+            </h1>
+            <div class="row gap-4 justify-content-center w-100 px-4">
+                <div class="card col-lg-2 p-0">
+                    <div class="card-header">
+                        <h5 class="card-title">Студент</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Публікуйте нові та переглядайте пости інших користувачів. Спулкуйтесь в
+                            групових та приватних чатах.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'signup' %}" class="card-link">Приєднатись</a>
+                    </div>
+                </div>
+                <div class="card col-lg-2 p-0">
+                    <div class="card-header">
+                        <h5 class="card-title">Викладач</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Використувайте такі ж можливості як і в студентів, але з додатковими
+                            моживостями, такими як: перевірка неопублікованих оголошеь, створення чатів тощо.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'signup' %}" class="card-link">Приєднатись</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column h-100 justify-content-center align-items-center text-light bg-dark" id="about">
+            <h1 class="app-title">Про нас</h1>
+            <p class="col-lg-6 text-justify px-4">
+                Ми - команда розробників, що створює кросплатформенну онлайн дошку "StudentFlow". Наша мета - створити
+                інтерактивне середовище для студентів, де вони зможуть легко та швидко знайти корисну інформацію,
+                обговорити цікаві теми та знайти нових друзів. Ми прагнемо забезпечити зручну комунікацію між
+                користувачами за допомогою коментарів до оголошень, приватного та групового чатів. Безпека та захист
+                інформації користувачів - наш пріоритет, тому передбачена авторизація користувачів та основні засоби
+                безпеки. Ми раді привітати вас у нашій спільноті та з радістю поділимося з вами своїм досвідом та
+                знаннями. Приєднуйтесь до нас та відчуйте себе як вдома в "StudentFlow"!
+            </p>
+            <div class="d-flex gap-4">
+                <a href="#about" class="btn btn-light btn-title">Instagram</a>
+                <a href="#about" class="btn btn-outline-light btn-title">Telegram</a>
+                <a href="#about" class="btn btn-light btn-title">Facebook</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% include 'scripts.html' %}
 </body>
 

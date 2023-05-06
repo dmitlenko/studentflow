@@ -32,7 +32,7 @@ class LoginView(View):
         if form is None:
             form = AuthenticationForm()
 
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'is_auth':True})
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
@@ -64,7 +64,7 @@ class SignupView(View):
         if form is None:
             form = RegistrationForm()
 
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'is_auth':True})
 
     def post(self, request):
         form = RegistrationForm(data=request.POST)
