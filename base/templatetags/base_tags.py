@@ -14,8 +14,16 @@ def is_liked(post, user):
 
 @register.filter('followers')
 def followers(user):
-    return UserFollow.objects.filter(user=user).count()
+    return UserFollow.objects.filter(user=user)
 
 @register.filter('following')
-def followers(user):
-    return UserFollow.objects.filter(follower=user).count()
+def following(user):
+    return UserFollow.objects.filter(follower=user)
+
+@register.filter('followers_count')
+def followers_count(user):
+    return followers(user).count()
+
+@register.filter('following_count')
+def following_count(user):
+    return following(user).count()

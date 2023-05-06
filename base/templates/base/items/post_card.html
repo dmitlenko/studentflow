@@ -27,7 +27,7 @@
                 {% endif %}
             </h5>
             <span>
-                <a href="?q={% firstof request.GET.q %} author:&quot;{{post.author.username}}&quot;"
+                <a href="{% url 'profile' pk=post.author.id %}"
                     class="card-title">@{{post.author.username}}</a>
                 {{post.date_created}}
             </span>

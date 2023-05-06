@@ -17,6 +17,11 @@ class IndexView(ListView):
     paginate_by = 6
     model = Post
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['topics'] = PostTopic.objects.all()
+        return context
+
     def get_queryset(self):
         return search_posts(Post.objects.all(), self.request.GET.get('q'))
 
@@ -263,6 +268,11 @@ class FeedView(LoginRequiredMixin, ListView):
     model = Post
     login_url = 'login'
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['topics'] = PostTopic.objects.all()
+        return context
+
     def get_queryset(self):
         current_user = self.request.user
         followed_users = UserFollow.objects.filter(follower=current_user).values_list('user', flat=True)

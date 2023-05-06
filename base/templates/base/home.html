@@ -3,7 +3,15 @@
 {% load base_tags %}
 <div class="my-3">
     <form class="input-group mb-4 fixed" role="search">
-        <input class="form-control" type="text" placeholder="Пошук" aria-label="Пошук" name="q" value="{{request.GET.q}}">
+        <input class="form-control" type="text" placeholder="Пошук" aria-label="Пошук" name="q" value="{{request.GET.q}}" list="topics" multiple>
+        <datalist id="topics">
+            {% for topic in topics %}
+            <option value="topic:&quot;{{topic}}&quot;">Тема "{{topic}}"</option>
+            {% endfor %}
+            {% for user in request.user|following %}
+            <option value="author:&quot;{{user.user.username}}&quot;">Автор "@{{user.user.username}}"</option>
+            {% endfor %}
+        </datalist>
         <button class="btn btn-outline-success" type="submit">Пошук</button>
     </form>
     {% if not object_list %}
