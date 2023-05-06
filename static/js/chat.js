@@ -9,7 +9,7 @@ function renderMessage(userId, username, message, date_created) {
     let output =
     `<div href="#" class="list-group-item list-group-item-action" aria-current="true">
         <div class="d-flex w-100 justify-content-between">` + (
-            userId == context.userId ? `<h6 class="mb-1">You</a></h6>` : 
+            userId == context.userId ? `<h6 class="mb-1">Ви</a></h6>` : 
             `<h6 class="mb-1"><a href="/profile/detail/${userId}">@${username}</a></h6>`
         ) + `<small>${date_created}</small>
         </div>

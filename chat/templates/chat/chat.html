@@ -47,7 +47,7 @@
         <div href="#" class="list-group-item list-group-item-action" aria-current="true">
             <div class="d-flex w-100 justify-content-between">
                 {% if message.author == request.user %}
-                <h6 class="mb-1">You</h6>
+                <h6 class="mb-1">Ви</h6>
                 {% else %}
                 <h6 class="mb-1"><a href="{% url 'profile' pk=message.author.id %}">@{{message.author.username}}</a>
                 </h6>
@@ -62,7 +62,7 @@
         <input type="text" name="message" class="form-control rounded-0 border-0" placeholder="Message..."
             id="chat-message-input">
         <button class="btn btn-outline-primary border-0 rounded-0" style="box-shadow: none!important;"
-            id="chat-message-submit"><i class="bi bi-send-fill"></i> Send</button>
+            id="chat-message-submit"><i class="bi bi-send-fill"></i> Відправити</button>
     </div>
 </div>
 
@@ -82,7 +82,7 @@
             </div>
             
             <div class="modal-body p-0">
-                <h5 class="px-2 pt-2">Participants:</h5>
+                <h5 class="px-2 pt-2">Учасники:</h5>
                 <div class="p-2 border-top d-flex gap-3 flex-column">
                     {% for participant in object.participants.all %}
                     <a href="{% url 'profile' pk=participant.id %}">{{ participant.username }}</a>
@@ -93,7 +93,7 @@
             <div class="modal-footer p-0">
                 <div class="input-group w-100 d-flex">
                     <button type="button" class="btn btn-outline-primary flex-grow-1" data-bs-dismiss="modal"
-                        style="box-shadow: none!important;">Close</button>
+                        style="box-shadow: none!important;">Закрити</button>
                     {% if request.user == object.creator %}
                     <a class="btn btn-outline-danger" href="{% url 'chat_delete' pk=object.id %}"
                         style="box-shadow: none!important;">

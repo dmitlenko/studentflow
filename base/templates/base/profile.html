@@ -27,32 +27,31 @@
                     
                     <div class="d-flex justify-content-start rounded-3 p-2 mb-2" style="background-color: #efefef;">
                         <div class="flex-fill">
-                            <p class="small text-muted mb-1">Posts</p>
+                            <p class="small text-muted mb-1">Оголошення</p>
                             <p class="mb-0">{{posts.count}}</p>
                         </div>
                         <div class="flex-fill">
-                            <p class="small text-muted mb-1">Followers</p>
+                            <p class="small text-muted mb-1">Слідкують</p>
                             <p class="mb-0">{{object|followers}}</p>
                         </div>
                         <div class="flex-fill">
-                            <p class="small text-muted mb-1">Following</p>
+                            <p class="small text-muted mb-1">Слідкує</p>
                             <p class="mb-0">{{object|following}}</p>
                         </div>
                     </div>
                     <p class="mb-2 pb-1 flex-grow-1" style="color: #2b2a2a;">{{object.bio}}</p>
                     <div class="d-flex pt-1 input-group">
                         {% if request.user == object %}
-                        <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Edit
-                            profile</a>
+                        <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Редагувати профіль</a>
                         {% else %}
                         <a href="{% url 'chat_with' user_id=object.id %}" class="btn btn-primary w-50">
-                            <i class="bi bi-chat"></i> Chat</a>
+                            <i class="bi bi-chat"></i> Чат</a>
                         {% if object|is_followed:request.user %}
                         <a href="{% url 'unfollow_user' pk=object.pk %}" class="btn btn-secondary w-50">
-                            <i class="bi bi-person-fill-dash"></i> Unfollow</a>
+                            <i class="bi bi-person-fill-dash"></i> Відписатися</a>
                         {% else %}
                         <a href="{% url 'follow_user' pk=object.pk %}" class="btn btn-outline-secondary w-50">
-                            <i class="bi bi-person-fill-add"></i> Follow</a>
+                            <i class="bi bi-person-fill-add"></i> Підписатися</a>
                         {% endif %}
                         {% endif %}
                     </div>
@@ -62,7 +61,7 @@
     </div>
 </div>
 {% if posts %}
-<h5 class="text-center mt-3">Posts by {% firstof object.name object.username %}:</h5>
+<h5 class="text-center mt-3">Оголошення від {% firstof object.name object.username %}:</h5>
 <div class="d-flex flex-column gap-4 mb-3">
     {% for post in posts %}
     <div class="row justify-content-md-center ">
@@ -71,7 +70,7 @@
     {% endfor %}
 </div>
 {% else %}
-<h5 class="text-center mt-3">Looks like <i>{% firstof object.name object.username %}</i> don't have any posts 😔</h5>
+<h5 class="text-center mt-3">Нажаль <i>{% firstof object.name object.username %}</i> ще не опублікував жодного оголошення 😔</h5>
 {% endif %}
 
 {% endblock %}
