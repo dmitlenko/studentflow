@@ -133,8 +133,7 @@ class PostCommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
-        self.success_url = reverse('detail_post', kwargs={
-                                   'pk': self.kwargs['pk']})
+        self.success_url = reverse('detail_post', kwargs={'pk': obj.post.id})
         if request.user != obj.author:
             return self.handle_no_permission()
 
@@ -171,7 +170,7 @@ class PostDetailView(LoginRequiredMixin, DetailView):
             body=request.POST.get('body'),
         )
 
-        return redirect(reverse('detail_post', kwargs={'pk': self.kwargs['pk']}))
+        return redirect(reverse('detail_post', kwargs={'pk': self.kwargs['pk']}) + f'#comment_{comment.id}')
 
 
 class ProfileView(DetailView):

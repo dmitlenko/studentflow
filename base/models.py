@@ -85,3 +85,6 @@ class PostComment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
     body = models.CharField(max_length=500)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.body

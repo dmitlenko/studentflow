@@ -34,13 +34,21 @@
         <h5 class="card-title">Comments:</h5>
         <div class="list-group" id="comments">
             {% for comment in comments %}
-            <a class="list-group-item" href="{% url 'profile' pk=comment.author.id %}">
+            <div class="list-group-item" id="comment_{{comment.id}}">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{comment.body}}</h5>
+                    <h5 class="mb-1">{{comment.body}}
+                        {% if comment.author == request.user %}
+                        <a href="{% url 'delete_comment' pk=comment.id %}" class="fs-6 text fst-light ms-1"><i
+                                class="bi bi-trash-fill"></i>Видалити</a>
+                        {% endif %}
+                    </h5>
+
                     <small>{{comment.date_created|timesince}} ago</small>
                 </div>
-                <small>@{{comment.author.username}}</small>
-            </a>
+                <small>
+                    <a href="{% url 'profile' pk=comment.author.id %}">@{{comment.author.username}}</a>
+                </small>
+            </div>
             {% endfor %}
         </div>
         <form action="" method="post">
@@ -48,8 +56,8 @@
             <div class="input-group mt-3">
                 <input type="text" class="form-control" placeholder="Comment text..." aria-label="Comment text"
                     aria-describedby="button-addon2" required name="body">
-                <button class="btn btn-outline-primary border border-dark-subtle" type="submit" id="button-addon2" style="box-shadow: none!important;"><i
-                        class="bi bi-chat-left-text-fill"></i> Comment</button>
+                <button class="btn btn-outline-primary border border-dark-subtle" type="submit" id="button-addon2"
+                    style="box-shadow: none!important;"><i class="bi bi-chat-left-text-fill"></i> Comment</button>
             </div>
         </form>
     </div>
