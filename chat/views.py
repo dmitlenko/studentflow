@@ -2,11 +2,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
+from django.views.generic.base import RedirectView
 from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ChatGroup, ChatGroupMessage
 from .forms import ChatGroupForm
 from base.models import User
+from django.db.models import Count
 
 # Create your views here.
 class HomeView(LoginRequiredMixin, View):
@@ -101,24 +103,29 @@ class DeleteChatGroupView(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, **kwargs)
 
 
-class CreatePrivateChatView(LoginRequiredMixin, View):
-    def get(self, request, user_id):
+class CreatePrivateChatView(LoginRequiredMixin, RedirectView):
+    def get_redirect_url(self, user_id):
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            return redirect('home')
+            return reverse('home')
         
-        if user == request.user:
-            return redirect('home')
+        if user == self.request.user:
+            return reverse('home')
         
-        chat_group = ChatGroup.objects.filter(creator=None, participants__in=[user, request.user], private=True)
+        chat_group = ChatGroup.objects.filter(
+            creator=None,
+            private=True,
+            participants__in=[user, self.request.user]
+        ).annotate(num_participants=Count('participants')).filter(num_participants=2)
+
         if chat_group.exists():
             chat_group = chat_group.first()
         else:
             chat_group = ChatGroup.objects.create(
-                name = f'Chat with @{request.user.username} and @{user.username}',
+                name = f'Chat with @{self.request.user.username} and @{user.username}',
                 private = True
             )
-            chat_group.participants.add(request.user, user)
+            chat_group.participants.add(self.request.user, user)
 
-        return redirect(reverse('chat', kwargs={'pk': chat_group.id}))
+        return reverse('chat', kwargs={'pk': chat_group.id})
