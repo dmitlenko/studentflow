@@ -2,7 +2,7 @@
 {% load static %}
 {% load base_tags %}
 <div class="my-3">
-    <form class="input-group mb-4" role="search">
+    <form class="input-group mb-4 fixed" role="search">
         <input class="form-control" type="text" placeholder="Пошук" aria-label="Пошук" name="q" value="{{request.GET.q}}">
         <button class="btn btn-outline-success" type="submit">Пошук</button>
     </form>
@@ -11,7 +11,7 @@
     {% endif %}
     <div class="row mb-4">
     {% for post in object_list %}
-        {% include 'base/items/post_card.html' with prefix='-md-4' post=post %}
+        {% include 'base/items/post_card.html' with prefix='-lg-4' post=post %}
     {% endfor %}
     </div>
 </div>

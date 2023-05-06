@@ -23,8 +23,11 @@
                 </span>
                 {% endif %}
             </h5>
-            <span>by <a href="?q={% firstof request.GET.q %} author:&quot;{{post.author.username}}&quot;"
-                    class="card-title">@{{post.author.username}}</a></span>
+            <span>
+                <a href="?q={% firstof request.GET.q %} author:&quot;{{post.author.username}}&quot;"
+                    class="card-title">@{{post.author.username}}</a>
+                {{post.date_created}}
+            </span>
             <p class="card-text">
                 {{post.body|truncatechars:40 }}
                 <div class="fst-italic">
