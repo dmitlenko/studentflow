@@ -98,9 +98,9 @@ WSGI_APPLICATION = 'studentflow.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'studentflow',
-        'USER': 'studentflow',
-        'PASSWORD': 'vG8#sQ2^jL',
+        'NAME': 'sf_db',
+        'USER': 'sf_user',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '5432',
     }

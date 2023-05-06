@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from PIL import Image
 from django.core.exceptions import ValidationError
-
+from os import path
+from .utils import validate_file_size
 
 # Create your models here.
 class User(AbstractUser):
@@ -10,15 +11,10 @@ class User(AbstractUser):
         STUDENT = 1, 'Студент'
         TEACHER = 2, 'Викладач'
 
-    def validate_image(fieldfile_obj):
-        filesize = fieldfile_obj.file.size
-        megabyte_limit = 5.0
-        if filesize > megabyte_limit*1024*1024:
-            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
         
     name = models.CharField(max_length=300, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
-    image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True, validators=[validate_image], blank=True)
+    image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True, validators=[validate_file_size], blank=True)
     bio = models.TextField(null=True, blank=True)
     role = models.PositiveSmallIntegerField(choices=Role.choices, default=Role.STUDENT)
 
@@ -37,6 +33,19 @@ class UserFollow(models.Model):
 
     def __str__(self):
         return f'{self.follower} -> {self.user}'
+
+
+def user_directory_path(instance, filename):
+    return 'data/user_{0}/{1}'.format(instance.uploader.id, filename)
+
+
+class UserFile(models.Model):
+    file = models.FileField(upload_to=user_directory_path, validators=[validate_file_size])
+    uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return path.basename(self.file.name)
 
 
 class PostTopic(models.Model):
@@ -59,13 +68,8 @@ class Post(models.Model):
     pinned = models.BooleanField(default=False)
     topic = models.ForeignKey(PostTopic, on_delete=models.SET_NULL, null=True)
 
-    def validate_image(fieldfile_obj):
-        filesize = fieldfile_obj.file.size
-        megabyte_limit = 5.0
-        if filesize > megabyte_limit*1024*1024:
-            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
-
-    image = models.ImageField(upload_to='images/post', null=True, blank=True, validators=[validate_image])
+    image = models.ImageField(upload_to='images/post', null=True, blank=True, validators=[validate_file_size])
+    files = models.ManyToManyField(UserFile, related_name='files', blank=True)
 
     def __str__(self):
         return self.title

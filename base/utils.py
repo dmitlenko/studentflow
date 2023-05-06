@@ -1,5 +1,6 @@
 import re
-from .models import Post
+
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from datetime import datetime
 
@@ -50,3 +51,10 @@ def search_posts(posts, query_string):
         posts = posts.filter(Q(title__icontains=search) | Q(body__icontains=search))
 
     return posts
+
+
+def validate_file_size(fieldfile_obj):
+        filesize = fieldfile_obj.file.size
+        megabyte_limit = 5.0
+        if filesize > megabyte_limit*1024*1024:
+            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))

@@ -40,6 +40,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                         <li><a class="dropdown-item" href="{% url 'profile' pk=request.user.id %}">Профіль</a></li>
                         <li><a class="dropdown-item" href="{% url 'update_profile' pk=request.user.id %}">Редагувати профіль</a></li>
+                        <li><a class="dropdown-item" href="{% url 'files' %}">Мої файли</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

@@ -1,4 +1,3 @@
-from re import search as re_search
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
@@ -8,9 +7,9 @@ from django.views.generic.base import RedirectView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import RegistrationForm, PostForm, UserForm
-from .models import Post, PostComment, User, UserFollow, PostTopic
+from .models import Post, PostComment, User, UserFollow, PostTopic, UserFile
 from django.urls import reverse_lazy, reverse
-from .utlis import search_posts
+from .utils import search_posts
 
 class IndexView(ListView):
     template_name = 'base/home.html'
@@ -92,6 +91,11 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('home')
     login_url = 'login'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def form_valid(self, form):
         form.instance.author = self.request.user
 
@@ -119,6 +123,11 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('home')
     login_url = 'login'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
         return obj
@@ -140,7 +149,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
             topic, created = PostTopic.objects.get_or_create(name=topic_name)
             self.object.topic = topic
             self.object.save()
-
             return redirect(reverse('detail_post', kwargs={'pk':self.object.id}))
 
         return False
@@ -304,3 +312,40 @@ class LogoutView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         logout(self.request)
         return super().get_redirect_url(*args, **kwargs)
+
+
+class UserFilesView(LoginRequiredMixin, ListView):
+    model = UserFile
+    template_name = 'base/file_list.html'
+
+    def get_queryset(self):
+        return UserFile.objects.filter(uploader=self.request.user)
+
+
+class UploadUserFileView(LoginRequiredMixin, CreateView):
+    model = UserFile
+    template_name = 'base/form/file.html'
+    login_url = 'login'
+    success_url = reverse_lazy('files')
+    fields = ['file']
+
+    def form_valid(self, form):
+        form.instance.uploader = self.request.user
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.instance)
+
+        return super().form_invalid(form)
+
+
+class DeleteUserFileView(LoginRequiredMixin, DeleteView):
+    model = UserFile
+    template_name = 'delete.html'
+    success_url = reverse_lazy('files')
+    login_url = 'login'
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
+        return obj

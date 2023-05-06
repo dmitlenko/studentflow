@@ -28,8 +28,17 @@
             <a href="{% url 'delete_post' pk=object.id %}"><i class="bi bi-trash-fill"></i> Видалити</a>
             {% endif %}
             <div class="card-text" style="white-space: pre-line;">
-                {{object.body}}
+                {{object.body|urlize}}
             </div>
+            {% if object.files %}
+            <ul class="list-group list-group-flush">
+                {% for file in object.files.all %}
+                <li class="list-group-item">
+                    <i class="bi bi-paperclip"></i><a href="{% get_media_prefix %}{{file.file.name}}">{{file}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
         <h5 class="card-title">Коментарі:</h5>
         <div class="list-group" id="comments">

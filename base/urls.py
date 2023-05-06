@@ -25,6 +25,10 @@ urlpatterns = [
 
     path('user/follow/<int:pk>', views.UserFollowView.as_view(), name='follow_user'),
     path('user/unfollow/<int:pk>', views.UserUnfollowView.as_view(), name='unfollow_user'),
+
+    path('user/files/', views.UserFilesView.as_view(), name='files'),
+    path('user/files/upload/', views.UploadUserFileView.as_view(), name='upload_file'),
+    path('user/files/delete/<int:pk>', views.DeleteUserFileView.as_view(), name='delete_file'),
 ]
 
 if settings.DEBUG:
