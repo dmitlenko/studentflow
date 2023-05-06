@@ -45,6 +45,8 @@ class Post(models.Model):
     views = models.ManyToManyField(User, related_name='views')
     likes = models.ManyToManyField(User, related_name='likes')
 
+    pinned = models.BooleanField(default=False)
+
     def validate_image(fieldfile_obj):
         filesize = fieldfile_obj.file.size
         megabyte_limit = 5.0
@@ -77,7 +79,7 @@ class Post(models.Model):
             img.save(self.image.path)
 
     class Meta:
-        ordering = ['-date_created']
+        ordering = ['-pinned','-date_created']
 
 
 class PostComment(models.Model):

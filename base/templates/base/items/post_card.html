@@ -7,7 +7,11 @@
             style="height: 260px; object-fit: cover;" />
         {% endif %}
         <div class="card-body">
-            <h5 class="card-title">{{post.title}}
+            <h5 class="card-title">
+                {% if post.pinned %}
+                <i class="bi bi-pin-angle-fill"></i>
+                {% endif %}
+                {{post.title}}
                 {% if post.author == request.user %}
                 <span class="fs-6 text">
                     <a href="{% url 'delete_post' pk=post.id %}" class="text-decoration-none">
