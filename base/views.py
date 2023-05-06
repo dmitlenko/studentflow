@@ -1,4 +1,4 @@
-from django.http import HttpRequest, HttpResponse
+from re import search as re_search
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
@@ -10,20 +10,15 @@ from django.contrib import messages
 from .forms import RegistrationForm, PostForm, UserForm
 from .models import Post, PostComment, User, UserFollow, PostTopic
 from django.urls import reverse_lazy, reverse
-from django.db.models import Q
-
+from .utlis import search_posts
 
 class IndexView(ListView):
     template_name = 'base/home.html'
     paginate_by = 6
     model = Post
-
+    
     def get_queryset(self):
-        q = self.request.GET.get('q') if self.request.GET.get('q') != None else ''
-
-        return Post.objects.filter(
-            Q(title__icontains=q) |
-            Q(body__icontains=q))
+        return search_posts(Post.objects.all(), self.request.GET.get('q'))
 
 
 class LoginView(View):
@@ -264,12 +259,10 @@ class FeedView(LoginRequiredMixin, ListView):
     login_url = 'login'
     
     def get_queryset(self):
-        q = self.request.GET.get('q') if self.request.GET.get('q') != None else ''
         current_user = self.request.user
         followed_users = UserFollow.objects.filter(follower=current_user).values_list('user', flat=True)
-        followed_posts = Post.objects.filter(author__in=followed_users).filter(Q(title__icontains=q) | Q(body__icontains=q)).order_by('-date_created')
-
-        return followed_posts
+        posts = Post.objects.filter(author__in=followed_users)
+        return search_posts(posts, self.request.GET.get('q'))
 
 
 class LikePostView(LoginRequiredMixin, RedirectView):

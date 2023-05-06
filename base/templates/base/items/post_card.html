@@ -9,7 +9,7 @@
         <div class="card-body">
             <h5 class="card-title">
                 {% if post.pinned %}
-                <i class="bi bi-pin-angle-fill"></i>
+                <a href="?q={% firstof request.GET.q %} pinned:&quot;{{post.pinned}}&quot;" class="text-body"><i class="bi bi-pin-angle-fill"></i></a>
                 {% endif %}
                 {{post.title}}
                 {% if post.author == request.user %}
@@ -23,12 +23,12 @@
                 </span>
                 {% endif %}
             </h5>
-            <span>by <a href="{% url 'profile' pk=post.author.id %}"
+            <span>by <a href="?q={% firstof request.GET.q %} author:&quot;{{post.author.username}}&quot;"
                     class="card-title">@{{post.author.username}}</a></span>
             <p class="card-text">
                 {{post.body|truncatechars:40 }}
                 <div class="fst-italic">
-                    <a href="?topic={{post.topic}}" class="text-body">{{post.topic}}</a>
+                    <a href="?q={% firstof request.GET.q %} topic:&quot;{{post.topic}}&quot;" class="text-body">{{post.topic}}</a>
                 </div>
             </p>
             <div class="input-group d-flex">
