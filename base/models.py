@@ -6,6 +6,10 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class User(AbstractUser):
+    class Role(models.IntegerChoices):
+        STUDENT = 1, 'Студент'
+        TEACHER = 2, 'Викладач'
+
     def validate_image(fieldfile_obj):
         filesize = fieldfile_obj.file.size
         megabyte_limit = 5.0
@@ -14,8 +18,9 @@ class User(AbstractUser):
         
     name = models.CharField(max_length=300, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
-    image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True, validators=[validate_image])
+    image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True, validators=[validate_image], blank=True)
     bio = models.TextField(null=True, blank=True)
+    role = models.PositiveSmallIntegerField(choices=Role.choices, default=Role.STUDENT)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

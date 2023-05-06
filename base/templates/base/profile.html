@@ -12,9 +12,19 @@
                 </div>
                 {% endif %}
                 <div class="d-flex flex-column flex-grow-1 ms-3">
-                    <h5 class="mb-1">
-                        {% firstof object.name object.username %}
-                    </h5>
+                    <div class="d-flex gap-1 align-items-center">
+                        <h5 class="mb-1">
+                            {% firstof object.name object.username %}
+                        </h5>
+                        <span class="fs-6 text fs-light fst-italic text-body-secondary">
+                            {% if object.role == 1 %}
+                            Студент
+                            {% elif object.role == 2 %}
+                            Викладач
+                            {% endif %}
+                        </span>
+                    </div>
+                    
                     <div class="d-flex justify-content-start rounded-3 p-2 mb-2" style="background-color: #efefef;">
                         <div class="flex-fill">
                             <p class="small text-muted mb-1">Posts</p>

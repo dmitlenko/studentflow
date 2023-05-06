@@ -9,7 +9,7 @@ urlpatterns = [
     path('feed/', views.FeedView.as_view(), name='feed'),
     path('auth/login', views.LoginView.as_view(), name='login'),
     path('auth/logout', views.LogoutView.as_view(), name='logout'),
-    path('auth/signup', views.SignupView.as_view(), name='signup'),
+    path('auth/signup/<int:role>', views.SignupView.as_view(), name='signup'),
 
     path('post/create', views.PostCreateView.as_view(), name='create_post'),
     path('post/update/<int:pk>', views.PostUpdateView.as_view(), name='update_post'),

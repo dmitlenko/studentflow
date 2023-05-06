@@ -57,20 +57,20 @@ class LoginView(View):
 class SignupView(View):
     template_name = 'base/auth/signup.html'
 
-    def get(self, request, form: RegistrationForm = None):
+    def get(self, request, role, form: RegistrationForm = None):
         if request.user.is_authenticated:
             return redirect('home')
 
         if form is None:
             form = RegistrationForm()
 
-        return render(request, self.template_name, {'form': form, 'is_auth':True})
+        return render(request, self.template_name, {'form': form, 'is_auth':True, 'role':role})
 
-    def post(self, request):
+    def post(self, request, role):
         form = RegistrationForm(data=request.POST)
 
         if form.is_valid():
-            user = form.save()
+            user = form.save(role=role)
             login(request, user)
             messages.success(request, "Registration successful")
             return redirect('home')
