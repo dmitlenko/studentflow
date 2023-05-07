@@ -74,26 +74,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        super().save()
-
-        if not self.image.name:
-            return
-        
-        img = Image.open(self.image.path)
-        new_width, new_height = 1200, 560
-
-        if img.height > new_height or img.width > new_width:
-            width, height = img.size
-            
-            left = (width - new_width)/2
-            top = (height - new_height)/2
-            right = (width + new_width)/2
-            bottom = (height + new_height)/2
-
-            img = img.crop((left, top, right, bottom))
-            img.save(self.image.path)
-
     class Meta:
         ordering = ['-pinned','-date_created']
 
