@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from PIL import Image
-from django.core.exceptions import ValidationError
+
 from os import path
-from .utils import validate_file_size
+from .validators import validate_file_size
 
 # Create your models here.
 class User(AbstractUser):
