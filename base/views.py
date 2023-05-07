@@ -346,4 +346,6 @@ class DeleteUserFileView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
+        if obj.uploader != self.request.user:
+            return self.handle_no_permission()
         return obj
