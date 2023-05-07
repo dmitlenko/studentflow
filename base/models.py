@@ -7,7 +7,7 @@ from .validators import validate_file_size
 
 # Create your models here.
 def image_user_directory_path(instance, filename):
-    return 'data/user_{0}/image/{1}'.format(instance.uploader.id, filename)
+    return 'data/user_{0}/image/{1}'.format(instance.id, filename)
 
 class User(AbstractUser):
     class Role(models.IntegerChoices):
@@ -15,10 +15,10 @@ class User(AbstractUser):
         TEACHER = 2, 'Викладач'
 
         
-    name = models.CharField(max_length=300, null=True, blank=True)
+    name = models.CharField('Ім\'я',max_length=300, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
-    image = models.ImageField(default='default_user.png', upload_to=image_user_directory_path, null=True, validators=[validate_file_size], blank=True)
-    bio = models.TextField(null=True, blank=True)
+    image = models.ImageField('Фото', default='default_user.png', upload_to=image_user_directory_path, null=True, validators=[validate_file_size])
+    bio = models.TextField('Біографія', null=True, blank=True)
     role = models.PositiveSmallIntegerField(choices=Role.choices, default=Role.STUDENT)
 
     USERNAME_FIELD = 'email'
@@ -43,7 +43,7 @@ def user_directory_path(instance, filename):
 
 
 class UserFile(models.Model):
-    file = models.FileField(upload_to=user_directory_path, validators=[validate_file_size])
+    file = models.FileField('Файл',upload_to=user_directory_path, validators=[validate_file_size])
     uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -64,8 +64,8 @@ def post_user_directory_path(instance, filename):
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=150)
-    body = models.TextField()
+    title = models.CharField('Заголовок', max_length=150)
+    body = models.TextField('Тіло')
     date_created = models.DateTimeField(auto_now_add=True)
     date_edited = models.DateTimeField(auto_now=True)
 
@@ -75,7 +75,7 @@ class Post(models.Model):
     pinned = models.BooleanField(default=False)
     topic = models.ForeignKey(PostTopic, on_delete=models.SET_NULL, null=True)
 
-    image = models.ImageField(upload_to=post_user_directory_path, null=True, blank=True, validators=[validate_file_size])
+    image = models.ImageField('Фото', upload_to=post_user_directory_path, null=True, blank=True, validators=[validate_file_size])
     files = models.ManyToManyField(UserFile, related_name='files', blank=True)
 
     def __str__(self):
