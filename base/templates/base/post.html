@@ -2,6 +2,7 @@
 {% load static %}
 
 {% load crispy_forms_tags %}
+{% load markdown_extras %}
 <style>
     .body-bg {
         background: url("{% get_media_prefix %}{{ object.image }}");
@@ -28,7 +29,7 @@
             <a href="{% url 'delete_post' pk=object.id %}"><i class="bi bi-trash-fill"></i> Видалити</a>
             {% endif %}
             <div class="card-text" style="white-space: pre-line;">
-                {{object.body|urlize}}
+                {{object.body|markdown|safe}}
             </div>
             {% if object.files %}
             <ul class="list-group list-group-flush">
