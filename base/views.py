@@ -3,17 +3,18 @@ from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, ListView
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import RegistrationForm, PostForm, UserForm
 from .models import Post, PostComment, User, UserFollow, PostTopic, UserFile
 from django.urls import reverse_lazy, reverse
 from .utils import search_posts
-from django.db.models import Q
+from django.db.models import Q, Count, Sum
 from rolepermissions.mixins import HasRoleMixin
 from rolepermissions.roles import assign_role
 from studentflow.roles import Teacher, Student
+from chat.models import ChatGroup, ChatGroupMessage
 
 class IndexView(ListView):
     template_name = 'base/home.html'
@@ -357,3 +358,36 @@ class PublishPostView(HasRoleMixin, RedirectView):
         obj.published = True
         obj.save()
         return reverse('detail_post', kwargs={'pk':obj.id})
+
+
+class GlobalStatsView(HasRoleMixin, TemplateView):
+    allowed_roles = Teacher
+    template_name = 'base/admin/statistics.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        post_objects = Post.objects.all()
+        user_objects = User.objects.all()
+        chat_objects = ChatGroup.objects.filter(private=False)
+        chat_messages_objects = ChatGroupMessage.objects.all()
+        file_objects = UserFile.objects.all()
+
+        context['post_count'] = post_objects.count()
+        context['most_liked_post'] = post_objects.order_by('-likes').first()
+        context['most_viewed_post'] = post_objects.order_by('-views').first()
+        context['most_viewed_post'] = post_objects.order_by('-views').first()
+        context['latest_post'] = post_objects.order_by('-date_created').first()
+
+        context['user_count'] = user_objects.count()
+        context['active_user'] = user_objects.annotate(num_posts=Count('post')).order_by('-num_posts').first()
+        context['latest_user'] = user_objects.order_by('-date_joined').first()
+
+        context['chat_count'] = chat_objects.count()
+        context['chat_popular'] = chat_objects.order_by('-participants').first()
+        context['chat_active'] = chat_objects.annotate(num_messages=Count('chatgroupmessage')).order_by('-num_messages').first()
+        context['chat_messages_count'] = chat_messages_objects.count()
+
+        context['file_count'] = file_objects.count()
+
+        return context
