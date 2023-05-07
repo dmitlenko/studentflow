@@ -1,4 +1,5 @@
 {% load base_tags %}
+{% load permission_tags %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'home' %}">StudentFlow</a>
@@ -55,11 +56,13 @@
                         <li><a class="dropdown-item" href="{% url 'profile' pk=request.user.id %}">Профіль</a></li>
                         <li><a class="dropdown-item" href="{% url 'update_profile' pk=request.user.id %}">Редагувати профіль</a></li>
                         <li><a class="dropdown-item" href="{% url 'files' %}">Мої файли</a></li>
+                        {% if request.user|has_role:'teacher' %}
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item" href="{% url 'admin:index' %}">Адміністрування</a></li>
                         <li><a class="dropdown-item" href="{% url 'unpublished_posts' %}">Перевірка оголошень</a></li>
+                        {% endif %}
                         <li>
                             <hr class="dropdown-divider">
                         </li>

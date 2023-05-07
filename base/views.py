@@ -11,6 +11,8 @@ from .models import Post, PostComment, User, UserFollow, PostTopic, UserFile
 from django.urls import reverse_lazy, reverse
 from .utils import search_posts
 from django.db.models import Q
+from rolepermissions.mixins import HasRoleMixin
+from studentflow.roles import Teacher, Student
 
 class IndexView(ListView):
     template_name = 'base/home.html'
@@ -90,7 +92,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     template_name = 'base/form/post.html'
     success_url = reverse_lazy('home')
-    login_url = 'login'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -122,7 +123,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     template_name = 'base/form/post.html'
     success_url = reverse_lazy('home')
-    login_url = 'login'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -159,7 +159,6 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'delete.html'
     success_url = reverse_lazy('home')
-    login_url = 'login'
 
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
@@ -167,8 +166,6 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class PostCommentDeleteView(LoginRequiredMixin, RedirectView):
-    login_url = 'login'
-
     def get_redirect_url(self, pk):
         obj = get_object_or_404(PostComment, pk=pk)
 
@@ -182,7 +179,6 @@ class PostCommentDeleteView(LoginRequiredMixin, RedirectView):
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'base/post.html'
-    login_url = 'login'
 
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
@@ -236,7 +232,6 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     form_class = UserForm
     template_name = 'base/form/user.html'
     success_url = reverse_lazy('home')
-    login_url = 'login'
 
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
@@ -254,8 +249,6 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class UserFollowView(LoginRequiredMixin, RedirectView):
-    login_url = 'login'
-
     def get_redirect_url(self, *args, **kwargs):
         user_to_follow = get_object_or_404(User, id=self.kwargs.get('pk'))
         UserFollow.objects.get_or_create(user=user_to_follow, follower=self.request.user)
@@ -263,8 +256,6 @@ class UserFollowView(LoginRequiredMixin, RedirectView):
 
 
 class UserUnfollowView(LoginRequiredMixin, RedirectView):
-    login_url = 'login'
-
     def get_redirect_url(self, *args, **kwargs):
         user_to_unfollow = get_object_or_404(User, id=self.kwargs.get('pk'))
         UserFollow.objects.filter(user=user_to_unfollow, follower=self.request.user).delete()
@@ -275,7 +266,6 @@ class FeedView(LoginRequiredMixin, ListView):
     template_name = 'base/home.html'
     paginate_by = 6
     model = Post
-    login_url = 'login'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -290,8 +280,6 @@ class FeedView(LoginRequiredMixin, ListView):
 
 
 class LikePostView(LoginRequiredMixin, RedirectView):
-    login_url = 'login'
-
     def get_redirect_url(self, *args, **kwargs):
         post_to_like = get_object_or_404(Post, pk=self.kwargs.get('pk'))
         post_to_like.likes.add(self.request.user)
@@ -299,8 +287,6 @@ class LikePostView(LoginRequiredMixin, RedirectView):
 
 
 class UnlikePostView(LoginRequiredMixin, RedirectView):
-    login_url = 'login'
-
     def get_redirect_url(self, *args, **kwargs):
         post_to_like = get_object_or_404(Post, pk=self.kwargs.get('pk'))
         post_to_like.likes.remove(self.request.user)
@@ -352,8 +338,8 @@ class DeleteUserFileView(LoginRequiredMixin, DeleteView):
         return obj
 
 
-class UnpublishedPostListView(LoginRequiredMixin, ListView):
-    # TODO: Restrict this view to only use for admin or teacher
+class UnpublishedPostListView(HasRoleMixin, ListView):
+    allowed_roles = Teacher
     model = Post
     template_name = 'base/admin/unpublished_list.html'
     login_url = 'login'
@@ -362,8 +348,8 @@ class UnpublishedPostListView(LoginRequiredMixin, ListView):
         return Post.objects.filter(~Q(author=self.request.user) & Q(published=False))
 
 
-class PublishPostView(LoginRequiredMixin, RedirectView):
-    # TODO: Restrict this view to only use for admin or teacher
+class PublishPostView(HasRoleMixin, RedirectView):
+    allowed_roles = Teacher
     def get_redirect_url(self, *args, **kwargs):
         obj = get_object_or_404(Post, pk=kwargs.get('pk'))
         obj.published = True

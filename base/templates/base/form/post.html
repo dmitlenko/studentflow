@@ -1,6 +1,7 @@
 {% extends 'index.html' %} {% block content %}
 
 {% load crispy_forms_tags %}
+{% load permission_tags %}
 <div class="justify-content-center my-3 h-100">
     <div class="card col-md h-100 shadow">
         <h5 class="card-header">Створення/редагування оголошення</h5>
@@ -14,7 +15,9 @@
                 <div class="col-lg-4 d-flex flex-column">
                     {{form.image|as_crispy_field}}
                     {{form.files|as_crispy_field}}
-                    {{form.pinned|as_crispy_field}}
+                    {% if request.user|has_role:'teacher' %}
+                        {{form.pinned|as_crispy_field}}
+                    {% endif %}
                     <div id="div_id_title" class="mb-3 flex-grow-1">
                         <label for="id_title" class="form-label requiredField">
                             Тема<span class="asteriskField">*</span>

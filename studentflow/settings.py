@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,11 +45,16 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_cleanup',
+    'rolepermissions',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 AUTH_USER_MODEL = 'base.User'
+
+# Role permissons settings
+ROLEPERMISSIONS_MODULE = 'studentflow.roles'
+LOGIN_URL = reverse_lazy('login')
 
 ASGI_APPLICATION = 'studentflow.asgi.application'
 CHANNEL_LAYERS = {
