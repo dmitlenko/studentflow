@@ -1,29 +1,24 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views import View
 from django.views.generic.base import RedirectView
-from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
+from django.views.generic import DetailView, UpdateView, CreateView, DeleteView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import ChatGroup, ChatGroupMessage
+from .models import ChatGroup
 from .forms import ChatGroupForm
 from base.models import User
-from django.db.models import Count
+from django.db.models import Count, Q
 
 # Create your views here.
-class HomeView(LoginRequiredMixin, View):
+class HomeView(LoginRequiredMixin, ListView):
     login_url = 'login'
     template_name = 'chat/home.html'
+    model = ChatGroup
 
-    def get(self, request):
-        chats = [{
-            'chat':chat,
-            'last_message':chat.chatgroupmessage_set.last()
-        } for chat in ChatGroup.objects.filter(participants=request.user)]
-
-        return render(request, self.template_name, {
-            'chats':chats
-        })
+    def get_queryset(self):
+        return ChatGroup.objects.filter(
+            Q(participants=self.request.user) |
+            Q(creator=self.request.user)
+        ).distinct().order_by('name')
 
 
 class ChatGroupView(LoginRequiredMixin, DetailView):
@@ -34,11 +29,6 @@ class ChatGroupView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
         return obj
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['messages'] = self.get_object().chatgroupmessage_set.all()
-        return context
     
     def dispatch(self, request, **kwargs):
         obj = self.get_object()
@@ -78,6 +68,11 @@ class CreateChatGroupView(LoginRequiredMixin, CreateView):
     login_url = 'login'
     form_class = ChatGroupForm
     success_url = reverse_lazy('chat_home')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
     def form_valid(self, form):
         form.instance.creator = self.request.user
