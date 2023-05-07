@@ -27,3 +27,7 @@ def followers_count(user):
 @register.filter('following_count')
 def following_count(user):
     return following(user).count()
+
+@register.filter('percent')
+def percent(value, max):
+    return int((value / max) * 100)

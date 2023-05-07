@@ -1,10 +1,16 @@
 {% extends 'index.html' %}
 {% load static %}
-
+{% load base_tags %}
 {% block content %}
 <div class="card my-3">
     <div class="card-header">
-        Файли користувача {% firstof request.user.name request.user.username %}
+        <h5 class="card-title">
+            Файли користувача {% firstof request.user.name request.user.username %}
+        </h5>
+        <div class="progress" role="progressbar" aria-valuenow="{{object_list.count}}" aria-valuemin="0" aria-valuemax="20">
+            <div class="progress-bar" style="width: {{ object_list.count|percent:20 }}%;">
+            </div>
+        </div>
     </div>
     <div class="card-body">
         {% if object_list %}
@@ -24,9 +30,10 @@
                     <td scope="row">{{forloop.counter}}</td>
                     <td>{{file}}</td>
                     <td>{{file.file.size|filesizeformat}}</td>
-                    <td>{{file.date_created}}</td>
+                    <td>{{file.date_created|date}}</td>
                     <td>
-                        <a href="{% get_media_prefix %}{{file.file.name}}" download><i class="bi bi-file-earmark-arrow-down-fill"></i></a>
+                        <a href="{% get_media_prefix %}{{file.file.name}}" download><i
+                                class="bi bi-file-earmark-arrow-down-fill"></i></a>
                         <a href="{% url 'delete_file' pk=file.id %}"><i class="bi bi-trash-fill"></i></a>
                     </td>
                 </tr>

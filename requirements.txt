@@ -11,6 +11,7 @@ crispy-bootstrap5==0.7
 cryptography==40.0.2
 daphne==4.0.0
 Django==4.2
+django-cleanup==7.0.0
 django-crispy-forms==2.0
 hyperlink==21.0.0
 idna==3.4

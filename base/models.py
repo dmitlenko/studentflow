@@ -6,6 +6,9 @@ from os import path
 from .validators import validate_file_size
 
 # Create your models here.
+def image_user_directory_path(instance, filename):
+    return 'data/user_{0}/image/{1}'.format(instance.uploader.id, filename)
+
 class User(AbstractUser):
     class Role(models.IntegerChoices):
         STUDENT = 1, 'Студент'
@@ -14,7 +17,7 @@ class User(AbstractUser):
         
     name = models.CharField(max_length=300, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
-    image = models.ImageField(default='default_user.png', upload_to='images/profile', null=True, validators=[validate_file_size], blank=True)
+    image = models.ImageField(default='default_user.png', upload_to=image_user_directory_path, null=True, validators=[validate_file_size], blank=True)
     bio = models.TextField(null=True, blank=True)
     role = models.PositiveSmallIntegerField(choices=Role.choices, default=Role.STUDENT)
 
@@ -55,6 +58,10 @@ class PostTopic(models.Model):
         return self.name
     
 
+def post_user_directory_path(instance, filename):
+    return 'data/user_{0}/post/{1}'.format(instance.author.id, filename)
+
+
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
@@ -68,7 +75,7 @@ class Post(models.Model):
     pinned = models.BooleanField(default=False)
     topic = models.ForeignKey(PostTopic, on_delete=models.SET_NULL, null=True)
 
-    image = models.ImageField(upload_to='images/post', null=True, blank=True, validators=[validate_file_size])
+    image = models.ImageField(upload_to=post_user_directory_path, null=True, blank=True, validators=[validate_file_size])
     files = models.ManyToManyField(UserFile, related_name='files', blank=True)
 
     def __str__(self):

@@ -331,13 +331,11 @@ class UploadUserFileView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.uploader = self.request.user
+        if self.request.user.userfile_set.count() >= 20:
+            form.add_error('file', 'Ви вже завантажили 20 файлів!')
+            return super().form_invalid(form)
 
         return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print(form.instance)
-
-        return super().form_invalid(form)
 
 
 class DeleteUserFileView(LoginRequiredMixin, DeleteView):
