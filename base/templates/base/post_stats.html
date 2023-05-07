@@ -73,14 +73,14 @@
                 {{object.body}}
             </div> -->
         </div>
-        {% if object.postcomment_set.all %}
+        {% if object.postcomment_set.exists %}
         <h5 class="card-title">Коментарі:</h5>
         <div class="list-group" id="comments">
             {% for comment in object.postcomment_set.all %}
             <div class="list-group-item" id="comment_{{comment.id}}">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{comment.body}}
-                        {% if comment.author == request.user or comment.post.author == request.user %}
+                        {% if comment.author == request.user or object.author == request.user %}
                         <a href="{% url 'delete_comment' pk=comment.id %}" class="fs-6 text fst-light ms-1"><i
                                 class="bi bi-trash-fill"></i>Видалити</a>
                         {% endif %}
