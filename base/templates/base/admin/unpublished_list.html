@@ -1,0 +1,73 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load base_tags %}
+{% block content %}
+<div class="card my-3 shadow">
+    <div class="card-header">
+        <h5 class="card-title">
+            Список неопублікованих оголошень
+        </h5>
+    </div>
+    <div class="card-body">
+        {% if object_list %}
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col">Автор</th>
+                    <th scope="col">Дата публікацї</th>
+                    <th scope="col">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in object_list %}
+                <tr>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>{{post}}</td>
+                    <td>
+                        <a href="{% url 'profile' pk=post.author.id %}">
+                            {% firstof post.author.name post.author.username %}
+                        </a>
+                    </td>
+                    <td>{{post.date_created|date}}</td>
+                    <td>
+                        <a href="{% url 'detail_post' pk=post.id %}"><i class="bi bi-eye"></i></a>
+                        <a href="#" class="publish-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-target-url="{% url 'publish_post' pk=post.id %}">
+                            <i class="bi bi-send"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</div>
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Публікація оголошення</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Ви дійсно хочете опублікувати це оголошення?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ні</button>
+                <a href="#" class="btn btn-primary" id="target">Так</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const targetButton = document.querySelector('a#target');
+    document.querySelectorAll('.publish-button').forEach(val => {
+        val.addEventListener('click', e => {
+            targetButton.setAttribute('href', val.dataset.targetUrl)
+        });
+    });
+</script>
+{% endblock %}

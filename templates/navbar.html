@@ -43,6 +43,11 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
+                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">Адміністрування</a></li>
+                        <li><a class="dropdown-item" href="{% url 'unpublished_posts' %}">Перевірка оголошень</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Вийти</a></li>
                     </ul>
                     {% else %}

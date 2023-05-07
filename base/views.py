@@ -10,6 +10,7 @@ from .forms import RegistrationForm, PostForm, UserForm
 from .models import Post, PostComment, User, UserFollow, PostTopic, UserFile
 from django.urls import reverse_lazy, reverse
 from .utils import search_posts
+from django.db.models import Q
 
 class IndexView(ListView):
     template_name = 'base/home.html'
@@ -22,7 +23,7 @@ class IndexView(ListView):
         return context
 
     def get_queryset(self):
-        return search_posts(Post.objects.all(), self.request.GET.get('q'))
+        return search_posts(Post.objects.filter(published=True), self.request.GET.get('q'))
 
 
 class LoginView(View):
@@ -284,7 +285,7 @@ class FeedView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         current_user = self.request.user
         followed_users = UserFollow.objects.filter(follower=current_user).values_list('user', flat=True)
-        posts = Post.objects.filter(author__in=followed_users)
+        posts = Post.objects.filter(published=True, author__in=followed_users)
         return search_posts(posts, self.request.GET.get('q'))
 
 
@@ -349,3 +350,22 @@ class DeleteUserFileView(LoginRequiredMixin, DeleteView):
         if obj.uploader != self.request.user:
             return self.handle_no_permission()
         return obj
+
+
+class UnpublishedPostListView(LoginRequiredMixin, ListView):
+    # TODO: Restrict this view to only use for admin or teacher
+    model = Post
+    template_name = 'base/admin/unpublished_list.html'
+    login_url = 'login'
+
+    def get_queryset(self):
+        return Post.objects.filter(~Q(author=self.request.user) & Q(published=False))
+
+
+class PublishPostView(LoginRequiredMixin, RedirectView):
+    # TODO: Restrict this view to only use for admin or teacher
+    def get_redirect_url(self, *args, **kwargs):
+        obj = get_object_or_404(Post, pk=kwargs.get('pk'))
+        obj.published = True
+        obj.save()
+        return reverse('detail_post', kwargs={'pk':obj.id})

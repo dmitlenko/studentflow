@@ -29,6 +29,9 @@ urlpatterns = [
     path('user/files/', views.UserFilesView.as_view(), name='files'),
     path('user/files/upload/', views.UploadUserFileView.as_view(), name='upload_file'),
     path('user/files/delete/<int:pk>', views.DeleteUserFileView.as_view(), name='delete_file'),
+
+    path('post/admin/unpublished/', views.UnpublishedPostListView.as_view(), name='unpublished_posts'),
+    path('post/admin/publish/<int:pk>', views.PublishPostView.as_view(), name='publish_post')
 ]
 
 if settings.DEBUG:

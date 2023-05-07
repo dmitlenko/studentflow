@@ -72,11 +72,12 @@ class Post(models.Model):
     views = models.ManyToManyField(User, related_name='views')
     likes = models.ManyToManyField(User, related_name='likes')
 
-    pinned = models.BooleanField(default=False)
+    pinned = models.BooleanField('Закріпити',default=False)
     topic = models.ForeignKey(PostTopic, on_delete=models.SET_NULL, null=True)
 
     image = models.ImageField('Фото', upload_to=post_user_directory_path, null=True, blank=True, validators=[validate_file_size])
     files = models.ManyToManyField(UserFile, related_name='files', blank=True)
+    published = models.BooleanField('Опубліковане', default=False)
 
     def __str__(self):
         return self.title
