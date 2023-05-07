@@ -4,12 +4,16 @@
 <div class="row justify-content-center my-3">
     <div class="card col-md-5">
         <div class="card-body">
-            <h5 class="card-title">Create/update chat group</h5>
+            <h5 class="card-title">Створення/редагування чату </h5>
             <form action="" method="post" enctype="multipart/form-data">
-                {% csrf_token %} {{ form|crispy }}
+                {% csrf_token %} 
+                {{ form.name|as_crispy_field }}
+                {{ form.description|as_crispy_field }}
+                {{ form.participants|as_crispy_field }}
+                {{ form.image|as_crispy_field }}
                 <div class="input-group mb-3 w-100">
-                    <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-send-fill"></i> Submit</button>
-                    <button type="button" class="btn btn-secondary w-50" onclick="history.back();">Back</button>
+                    <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-send-fill"></i> Відправити</button>
+                    <button type="button" class="btn btn-secondary w-50" onclick="history.back();">Повернутись</button>
                 </div>
             </form>
         </div>

@@ -11,10 +11,10 @@ class ChatGroup(models.Model):
             raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
         
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    participants = models.ManyToManyField(User, related_name='participants', blank=True)
-    image = models.ImageField(default='default_chatgroup.png', upload_to='images/groups', blank=True, validators=[validate_image])
-    description = models.CharField(max_length=2000, blank=True)
-    name = models.CharField(max_length=200)
+    participants = models.ManyToManyField(User, verbose_name='Учасники', related_name='participants', blank=True)
+    image = models.ImageField('Фото', default='default_chatgroup.png', upload_to='images/groups', blank=True, validators=[validate_image])
+    description = models.CharField('Опис', max_length=2000, blank=True)
+    name = models.CharField('Назва', max_length=200)
     private = models.BooleanField(default=False)
 
     def __str__(self):
