@@ -1,5 +1,6 @@
 {% extends 'index.html' %} {% block content %}
 {% load static %}
+{% load permission_tags %}
 {% load base_tags %}
 <div class="d-flex justify-content-center m-3 row">
     <div class="card col-md-6 p-1 shadow">
@@ -18,10 +19,10 @@
                         </h5>
                         <span class="fs-6 text fs-light fst-italic text-body-secondary">
                             {% if object.is_staff %}
-                            <i class="bi bi-person-badge-fill">Персонал</i>
-                            {% elif object.role == 1 %}
+                            <a href="#" data-bs-toggle="tooltip" data-bs-title="Користувач належить до персоналу додатку"><i class="bi bi-person-badge-fill"></i></a>
+                            {% elif object|has_role:'student' %}
                             Студент
-                            {% elif object.role == 2 %}
+                            {% elif object|has_role:'teacher'  %}
                             Викладач
                             {% endif %}
                         </span>
@@ -63,16 +64,20 @@
     </div>
 </div>
 {% if posts %}
-<h5 class="text-center mt-3">Оголошення від {% firstof object.name object.username %}:</h5>
-<div class="d-flex flex-column gap-4 mb-3">
+<h5 class="text-center mt-3 mb-3">Оголошення від користувача {% firstof object.name object.username %}:</h5>
+<div class="d-flex flex-column gap-1 mb-3 align-items-center">
     {% for post in posts %}
-    <div class="row justify-content-md-center ">
         {% include 'base/items/post_card.html' with prefix='-md-6' post=post %}
-    </div>
     {% endfor %}
 </div>
 {% else %}
-<h5 class="text-center mt-3">Нажаль <i>{% firstof object.name object.username %}</i> ще не опублікував жодного оголошення 😔</h5>
+<h5 class="text-center mt-3">Нажаль користувач <i>{% firstof object.name object.username %}</i> ще не опублікував жодного оголошення 😔</h5>
 {% endif %}
+{% endblock %}
 
+{% block script %}
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
 {% endblock %}

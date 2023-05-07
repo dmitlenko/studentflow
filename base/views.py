@@ -12,6 +12,7 @@ from django.urls import reverse_lazy, reverse
 from .utils import search_posts
 from django.db.models import Q
 from rolepermissions.mixins import HasRoleMixin
+from rolepermissions.roles import assign_role
 from studentflow.roles import Teacher, Student
 
 class IndexView(ListView):
@@ -50,12 +51,7 @@ class LoginView(View):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, "Authorization successful")
-
                 return redirect('home')
-
-        messages.error(
-            request, "Unsuccessful authentication. Invalid information.")
 
         return self.get(request, form)
 
@@ -76,13 +72,12 @@ class SignupView(View):
         form = RegistrationForm(data=request.POST)
 
         if form.is_valid():
-            user = form.save(role=role)
-            login(request, user)
-            messages.success(request, "Registration successful")
-            return redirect('home')
+            user = form.save()
 
-        messages.error(
-            request, "Unsuccessful registration. Invalid information.")
+            assign_role(user, Teacher if role == Teacher.id else Student)
+            login(request, user)
+
+            return redirect('home')
 
         return self.get(request, form)
 
@@ -212,7 +207,7 @@ class ProfileView(DetailView):
         context = super().get_context_data(**kwargs)
         context['comments_count'] = PostComment.objects.filter(
             author=self.get_object()).count()
-        context['posts'] = Post.objects.filter(published=False, author=self.get_object())
+        context['posts'] = Post.objects.filter(published=True, author=self.get_object())
         return context
 
 
@@ -345,7 +340,14 @@ class UnpublishedPostListView(HasRoleMixin, ListView):
     login_url = 'login'
 
     def get_queryset(self):
-        return Post.objects.filter(~Q(author=self.request.user) & Q(published=False))
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return Post.objects.filter(Q(published=False))
+        
+        return Post.objects.filter(
+            ~Q(author=self.request.user) 
+            & Q(published=False)
+            & Q(author__is_staff=False)
+        )
 
 
 class PublishPostView(HasRoleMixin, RedirectView):

@@ -14,6 +14,7 @@ class Permissions:
     AdminPostPublish = 'admin_post_publish'
 
 class Student(AbstractUserRole):
+    id = 1
     available_permissons = {
         Permissions.PostCreate: True,
         Permissions.PostUpdate: True,
@@ -27,6 +28,7 @@ class Student(AbstractUserRole):
     }
 
 class Teacher(AbstractUserRole):
+    id = 2
     available_permissons = Student.available_permissons | {
         Permissions.AdminPost: True,
         Permissions.AdminPostPublish: True

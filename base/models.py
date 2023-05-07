@@ -10,19 +10,16 @@ def image_user_directory_path(instance, filename):
     return 'data/user_{0}/image/{1}'.format(instance.id, filename)
 
 class User(AbstractUser):
-    class Role(models.IntegerChoices):
-        STUDENT = 1, 'Студент'
-        TEACHER = 2, 'Викладач'
-
-        
     name = models.CharField('Ім\'я',max_length=300, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
     image = models.ImageField('Фото', default='default_user.png', upload_to=image_user_directory_path, null=True, validators=[validate_file_size])
     bio = models.TextField('Біографія', null=True, blank=True)
-    role = models.PositiveSmallIntegerField(choices=Role.choices, default=Role.STUDENT)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+    def __str__(self):
+        return self.name if self.name else self.username
 
 
 class UserFollow(models.Model):

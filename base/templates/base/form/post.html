@@ -17,6 +17,7 @@
                     {{form.files|as_crispy_field}}
                     {% if request.user|has_role:'teacher' %}
                         {{form.pinned|as_crispy_field}}
+                        {{form.published|as_crispy_field}}
                     {% endif %}
                     <div id="div_id_title" class="mb-3 flex-grow-1">
                         <label for="id_title" class="form-label requiredField">
