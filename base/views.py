@@ -216,7 +216,7 @@ class ProfileView(DetailView):
         context = super().get_context_data(**kwargs)
         context['comments_count'] = PostComment.objects.filter(
             author=self.get_object()).count()
-        context['posts'] = Post.objects.filter(author=self.get_object())
+        context['posts'] = Post.objects.filter(published=False, author=self.get_object())
         return context
 
 
