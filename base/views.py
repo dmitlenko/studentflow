@@ -13,6 +13,7 @@ from .utils import search_posts
 from django.db.models import Q, Count, Sum
 from rolepermissions.mixins import HasRoleMixin
 from rolepermissions.roles import assign_role
+from rolepermissions.checkers import has_role
 from studentflow.roles import Teacher, Student
 from chat.models import ChatGroup, ChatGroupMessage
 
@@ -187,7 +188,13 @@ class PostDetailView(LoginRequiredMixin, DetailView):
         return context
     
     def dispatch(self, request, *args, **kwargs):
-        self.get_object().views.add(request.user)
+        obj = self.get_object()
+        if self.request.user != obj.author and not has_role(self.request.user, Teacher):
+            return self.handle_no_permission()
+
+        if obj.reviewed and obj.published and not obj.archived:
+            obj.views.add(request.user)
+
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, **kwargs):
@@ -374,9 +381,8 @@ class GlobalStatsView(HasRoleMixin, TemplateView):
         file_objects = UserFile.objects.all()
 
         context['post_count'] = post_objects.count()
-        context['most_liked_post'] = post_objects.order_by('-likes').first()
-        context['most_viewed_post'] = post_objects.order_by('-views').first()
-        context['most_viewed_post'] = post_objects.order_by('-views').first()
+        context['most_liked_post'] = post_objects.annotate(likes_count=Count('likes')).order_by('-likes_count').first()
+        context['most_viewed_post'] = post_objects.annotate(views_count=Count('views')).order_by('-views_count').first()
         context['latest_post'] = post_objects.order_by('-date_created').first()
 
         context['user_count'] = user_objects.count()
