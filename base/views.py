@@ -390,7 +390,7 @@ class GlobalStatsView(HasRoleMixin, TemplateView):
         context['latest_user'] = user_objects.order_by('-date_joined').first()
 
         context['chat_count'] = chat_objects.count()
-        context['chat_popular'] = chat_objects.order_by('-participants').first()
+        context['chat_popular'] = chat_objects.annotate(participants_count=Count('participants')).order_by('-participants_count').first()
         context['chat_active'] = chat_objects.annotate(num_messages=Count('chatgroupmessage')).order_by('-num_messages').first()
         context['chat_messages_count'] = chat_messages_objects.count()
 
