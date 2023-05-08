@@ -11,7 +11,16 @@
                 {% csrf_token %}
                 <div class="col-lg-8 d-flex flex-column">
                     {{form.title|as_crispy_field}}
-                    {{form.body|as_crispy_field}}
+                    <div class="mb-3 flex-grow-1 d-flex flex-column">
+                        <label for="{{ form.date_published.id_for_label }}" class="form-label">
+                            {{ form.body.label }}
+                        </label>
+                        {% if form.body.errors %}
+                            {% crispy_field form.body 'class' 'flex-grow-1 textarea form-control is-invalid' %}
+                        {% else %}
+                            {% crispy_field form.body 'class' 'flex-grow-1 teatarea form-control' %}
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="col-lg-4 d-flex flex-column">
                     {{form.image|as_crispy_field}}
