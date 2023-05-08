@@ -17,15 +17,17 @@
                     {{form.files|as_crispy_field}}
                     {% if request.user|has_role:'teacher' %}
                         {{form.pinned|as_crispy_field}}
+                        {{form.date_unpinned|as_crispy_field}}
                         {{form.published|as_crispy_field}}
+                        {{form.date_published|as_crispy_field}}
                     {% endif %}
                     <div id="div_id_title" class="mb-3 flex-grow-1">
                         <label for="id_title" class="form-label requiredField">
                             Тема<span class="asteriskField">*</span>
                         </label>
                         <input type="text" name="topic" maxlength="150" class="textinput form-control" required
-                            id="id_topic" list="topics" value="{% firstof object.topic %}">
-                        <datalist id="topics">
+                            id="id_topic" list="topics_input" value="{% firstof object.topic %}">
+                        <datalist id="topics_input">
                             {% for topic in topics %}
                             <option value="{{topic.name}}">{{topic.name}}</option>
                             {% endfor %}
@@ -42,4 +44,19 @@
         </form>
     </div>
 </div>
+<script>
+    const pinnedCheck = document.querySelector('input[name="pinned"]');
+    const pinnedDate = document.querySelector('input[name="date_unpinned"]');
+    const publishCheck = document.querySelector('input[name="published"]');
+    const publishDate = document.querySelector('input[name="date_published"]');
+
+    let pinnedDateDisable = e => pinnedDate.disabled = e.checked;
+    let publishDateDisable = e => publishDate.disabled = e.checked;
+    
+    pinnedDateDisable(pinnedCheck);
+    publishDateDisable(publishCheck);
+
+    pinnedCheck.addEventListener('change', event => pinnedDateDisable(event.currentTarget));
+    publishCheck.addEventListener('change', event => publishDateDisable(event.currentTarget));
+</script>
 {% endblock %}

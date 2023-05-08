@@ -58,10 +58,9 @@ ROLEPERMISSIONS_MODULE = 'studentflow.roles'
 LOGIN_URL = reverse_lazy('login')
 
 CRONJOBS = [
-    ('0 0 * * *', 'base.cron.man_unpin_posts'),
-    ('0 0 * * *', 'base.cron.man_pin_posts'),
+    ('*/5 * * * *', 'base.cron.man_unpin_posts'),
     ('0 0 * * *', 'base.cron.man_archive_posts'),
-    ('0 0 * * *', 'base.cron.man_publish_posts'),
+    ('*/5 * * * *', 'base.cron.man_publish_posts'),
 ]
 
 ASGI_APPLICATION = 'studentflow.asgi.application'

@@ -14,7 +14,7 @@
                 <a href="{% url 'update_post' pk=object.id %}"><i class="bi bi-pencil-fill"></i> Редагувати</a>
                 <a href="{% url 'delete_post' pk=object.id %}"><i class="bi bi-trash-fill"></i> Видалити</a>
             </div>
-            <table class="table-bordered table table-striped table-hover">
+            <table class="table table-sm">
                 <tbody>
                     <tr>
                         <td>Дата й час публікації</td>
@@ -63,7 +63,7 @@
                     <tr>
                         <td>Тема</td>
                         <td>
-                            {{ object.topic }}
+                            <a href="{% url 'home' %}?q=topic:&quot;{{ object.topic }}&quot;">{{ object.topic }}</a>
                         </td>
                     </tr>
                 </tbody>

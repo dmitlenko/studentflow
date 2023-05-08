@@ -23,16 +23,20 @@ class PostForm(forms.ModelForm):
         label='Файли',
         required=False,
         queryset=UserFile.objects.none())
+
+    date_unpinned = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'datetime-local'}), required=False, label='Дата відкріплення')
+    date_published = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'datetime-local'}), required=False, label='Дата публікації')
         
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
         self.fields['files'].queryset = UserFile.objects.filter(uploader=self.request.user)
 
+
     class Meta:
         model = Post
         fields = '__all__'
-        exclude = ['author', 'likes', 'views', 'topic']
+        exclude = ['author', 'likes', 'views', 'topic','reviewed']
 
 
 class UserForm(forms.ModelForm):

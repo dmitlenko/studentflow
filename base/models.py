@@ -83,7 +83,6 @@ class Post(models.Model):
     date_archive = models.DateTimeField('Дата архівації', blank=True, null=True)
 
     pinned = models.BooleanField('Закріпити',default=False)
-    date_pinned = models.DateTimeField('Дата й час закріплення', blank=True, null=True)
     date_unpinned = models.DateTimeField('Дата й час відкріплення', blank=True, null=True)
 
     def __str__(self):

@@ -32,7 +32,8 @@ urlpatterns = [
 
     path('man/post/unpublished/', views.ReviewPostListView.as_view(), name='unpublished_posts'),
     path('man/post/publish/<int:pk>', views.ReviewPostView.as_view(), name='publish_post'),
-    path('man/stats/', views.GlobalStatsView.as_view(), name='global_stats')
+    path('man/stats/', views.GlobalStatsView.as_view(), name='global_stats'),
+    path('man/post/list', views.UserPostsListView.as_view(), name='user_posts')
 ]
 
 if settings.DEBUG:

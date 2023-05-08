@@ -10,16 +10,8 @@ def man_unpin_posts():
             obj.save()
 
 
-def man_pin_posts():
-    objects = Post.objects.filter(pinned=False, date_pinned__isnull=False)
-    for obj in objects:
-        if obj.date_pinned <= datetime.now():
-            obj.pinned = True
-            obj.save()
-
-
 def man_archive_posts():
-    objects = Post.opbjects.filter(archived=False, date_archived__isnull=False)
+    objects = Post.objects.filter(archived=False, date_archived__isnull=False)
     for obj in objects:
         if obj.date_archived <= datetime.now():
             obj.archived = True
@@ -27,7 +19,7 @@ def man_archive_posts():
 
 
 def man_publish_posts():
-    objects = Post.opbjects.filter(published=False, date_published__isnull=False)
+    objects = Post.objects.filter(published=False, date_published__isnull=False)
     for obj in objects:
         if obj.date_published <= datetime.now():
             obj.published = True

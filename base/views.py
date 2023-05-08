@@ -391,3 +391,11 @@ class GlobalStatsView(HasRoleMixin, TemplateView):
         context['file_count'] = file_objects.count()
 
         return context
+
+
+class UserPostsListView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'base/admin/user_posts.html'
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)
