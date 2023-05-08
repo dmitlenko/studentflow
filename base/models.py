@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from PIL import Image
+from django.utils.timezone import now
 
 from os import path
 from .validators import validate_file_size
@@ -63,18 +63,28 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField('Заголовок', max_length=150)
     body = models.TextField('Тіло')
+    topic = models.ForeignKey(PostTopic, on_delete=models.SET_NULL, null=True)
+
     date_created = models.DateTimeField(auto_now_add=True)
     date_edited = models.DateTimeField(auto_now=True)
 
     views = models.ManyToManyField(User, related_name='views')
     likes = models.ManyToManyField(User, related_name='likes')
 
-    pinned = models.BooleanField('Закріпити',default=False)
-    topic = models.ForeignKey(PostTopic, on_delete=models.SET_NULL, null=True)
-
     image = models.ImageField('Фото', upload_to=post_user_directory_path, null=True, blank=True, validators=[validate_file_size])
     files = models.ManyToManyField(UserFile, related_name='files', blank=True)
+
+    reviewed = models.BooleanField('Перевірено', default=False)
+
     published = models.BooleanField('Опубліковане', default=False)
+    date_published = models.DateTimeField('Дата публікації', default=now)
+    
+    archived = models.BooleanField('Архівовано', default=False)
+    date_archive = models.DateTimeField('Дата архівації', blank=True, null=True)
+
+    pinned = models.BooleanField('Закріпити',default=False)
+    date_pinned = models.DateTimeField('Дата й час закріплення', blank=True, null=True)
+    date_unpinned = models.DateTimeField('Дата й час відкріплення', blank=True, null=True)
 
     def __str__(self):
         return self.title

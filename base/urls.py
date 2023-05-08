@@ -30,8 +30,8 @@ urlpatterns = [
     path('user/files/upload/', views.UploadUserFileView.as_view(), name='upload_file'),
     path('user/files/delete/<int:pk>', views.DeleteUserFileView.as_view(), name='delete_file'),
 
-    path('man/post/unpublished/', views.UnpublishedPostListView.as_view(), name='unpublished_posts'),
-    path('man/post/publish/<int:pk>', views.PublishPostView.as_view(), name='publish_post'),
+    path('man/post/unpublished/', views.ReviewPostListView.as_view(), name='unpublished_posts'),
+    path('man/post/publish/<int:pk>', views.ReviewPostView.as_view(), name='publish_post'),
     path('man/stats/', views.GlobalStatsView.as_view(), name='global_stats')
 ]
 

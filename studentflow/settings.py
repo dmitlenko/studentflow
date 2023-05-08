@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_cleanup',
     'rolepermissions',
+    'django_crontab',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
@@ -55,6 +56,13 @@ AUTH_USER_MODEL = 'base.User'
 # Role permissons settings
 ROLEPERMISSIONS_MODULE = 'studentflow.roles'
 LOGIN_URL = reverse_lazy('login')
+
+CRONJOBS = [
+    ('0 0 * * *', 'base.cron.man_unpin_posts'),
+    ('0 0 * * *', 'base.cron.man_pin_posts'),
+    ('0 0 * * *', 'base.cron.man_archive_posts'),
+    ('0 0 * * *', 'base.cron.man_publish_posts'),
+]
 
 ASGI_APPLICATION = 'studentflow.asgi.application'
 CHANNEL_LAYERS = {

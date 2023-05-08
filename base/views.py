@@ -27,7 +27,7 @@ class IndexView(ListView):
         return context
 
     def get_queryset(self):
-        return search_posts(Post.objects.filter(published=True), self.request.GET.get('q'))
+        return search_posts(Post.objects.filter(published=True, reviewed=True, archived=False), self.request.GET.get('q'))
 
 
 class LoginView(View):
@@ -208,7 +208,7 @@ class ProfileView(DetailView):
         context = super().get_context_data(**kwargs)
         context['comments_count'] = PostComment.objects.filter(
             author=self.get_object()).count()
-        context['posts'] = Post.objects.filter(published=True, author=self.get_object())
+        context['posts'] = Post.objects.filter(published=True, reviewed=True, archived=False, author=self.get_object())
         return context
 
 
@@ -334,7 +334,7 @@ class DeleteUserFileView(LoginRequiredMixin, DeleteView):
         return obj
 
 
-class UnpublishedPostListView(HasRoleMixin, ListView):
+class ReviewPostListView(HasRoleMixin, ListView):
     allowed_roles = Teacher
     model = Post
     template_name = 'base/admin/unpublished_list.html'
@@ -342,20 +342,20 @@ class UnpublishedPostListView(HasRoleMixin, ListView):
 
     def get_queryset(self):
         if self.request.user.is_staff or self.request.user.is_superuser:
-            return Post.objects.filter(Q(published=False))
+            return Post.objects.filter(Q(reviewed=False))
         
         return Post.objects.filter(
             ~Q(author=self.request.user) 
-            & Q(published=False)
+            & Q(reviewed=False)
             & Q(author__is_staff=False)
         )
 
 
-class PublishPostView(HasRoleMixin, RedirectView):
+class ReviewPostView(HasRoleMixin, RedirectView):
     allowed_roles = Teacher
     def get_redirect_url(self, *args, **kwargs):
         obj = get_object_or_404(Post, pk=kwargs.get('pk'))
-        obj.published = True
+        obj.reviewed = True
         obj.save()
         return reverse('detail_post', kwargs={'pk':obj.id})
 
