@@ -1,6 +1,7 @@
 {% extends 'index.html' %} {% block content %}
 
 {% load crispy_forms_tags %}
+{% load crispy_forms_field %}
 {% load permission_tags %}
 <div class="justify-content-center my-3 h-100">
     <div class="card col-md h-100 shadow">
@@ -16,11 +17,41 @@
                     {{form.image|as_crispy_field}}
                     {{form.files|as_crispy_field}}
                     {% if request.user|has_role:'teacher' %}
-                        {{form.pinned|as_crispy_field}}
-                        {{form.date_unpinned|as_crispy_field}}
-                        {{form.published|as_crispy_field}}
-                        {{form.date_published|as_crispy_field}}
+                        <div class="mb-3">
+                            <div class="mt-1">
+                                {% crispy_field form.pinned 'class' 'form-check-input' %}
+                                <label for="{{ form.pinned.id_for_label }}" class="form-check-label">
+                                    {{ form.pinned.label }}
+                                </label>
+                            </div>
+                            <div class="mt-1">
+                                {% if form.date_unpinned.errors %}
+                                    {% crispy_field form.date_unpinned 'class' 'form-control is-invalid' %}
+                                {% else %}
+                                    {% crispy_field form.date_unpinned 'class' 'form-control' %}
+                                {% endif %}
+                            </div>
+                        </div>
                     {% endif %}
+                    <div class="mb-3">
+                        <div>
+                            <label for="{{ form.date_published.id_for_label }}" class="form-label">
+                                {{ form.date_published.label }}
+                            </label>
+                            {% if form.date_published.errors %}
+                                {% crispy_field form.date_published 'class' 'form-control is-invalid' %}
+                            {% else %}
+                                {% crispy_field form.date_published 'class' 'form-control' %}
+                            {% endif %}
+                        </div>
+                        <div class="mt-1">
+                            {% crispy_field form.published 'class' 'form-check-input' %}
+                            <label for="{{ form.published.id_for_label }}" class="form-check-label">
+                                {{ form.published.label }}
+                            </label>
+                        </div>
+                    </div>
+                    
                     <div id="div_id_title" class="mb-3 flex-grow-1">
                         <label for="id_title" class="form-label requiredField">
                             Тема<span class="asteriskField">*</span>
@@ -50,7 +81,7 @@
     const publishCheck = document.querySelector('input[name="published"]');
     const publishDate = document.querySelector('input[name="date_published"]');
 
-    let pinnedDateDisable = e => pinnedDate.disabled = e.checked;
+    let pinnedDateDisable = e => pinnedDate.disabled = !e.checked;
     let publishDateDisable = e => publishDate.disabled = e.checked;
     
     pinnedDateDisable(pinnedCheck);

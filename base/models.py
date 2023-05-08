@@ -76,7 +76,7 @@ class Post(models.Model):
 
     reviewed = models.BooleanField('Перевірено', default=False)
 
-    published = models.BooleanField('Опубліковане', default=False)
+    published = models.BooleanField('Опублікувати', default=False)
     date_published = models.DateTimeField('Дата публікації', default=now)
     
     archived = models.BooleanField('Архівовано', default=False)
