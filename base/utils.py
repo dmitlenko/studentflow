@@ -1,7 +1,9 @@
 import re
+import glob
 
 from django.db.models import Q
 from datetime import datetime
+from django.contrib.staticfiles import finders
 
 def extract_parameters(input_string):
     pattern = r'(\w+):"([^"]*)"'
@@ -52,3 +54,9 @@ def search_posts(posts, query_string):
     return posts
 
 
+def themes_list():
+    themes = []
+    themes_dir = finders.find('css/themes')
+    if themes_dir:
+        themes = [f.split('/')[-1].split('.')[0] for f in glob.glob(f"{themes_dir}/*.min.css")]
+    return sorted(themes)

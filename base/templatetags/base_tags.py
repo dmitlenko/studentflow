@@ -1,6 +1,7 @@
 from django import template
 from base.models import UserFollow, Post
 from django.template.loader import render_to_string
+from base.utils import themes_list
 
 register = template.Library()
 
@@ -31,3 +32,11 @@ def following_count(user):
 @register.filter('percent')
 def percent(value, max):
     return int((value / max) * 100)
+
+@register.filter
+def valid_theme(theme_name):
+    return theme_name in themes_list()
+
+@register.filter
+def get_themes_list(dummy):
+    return themes_list()

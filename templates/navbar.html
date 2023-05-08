@@ -25,21 +25,25 @@
                         Чат
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" aria-current="page" href="{% url 'chat_home' %}">Відкрити список</a></li>
-                        <li><a class="dropdown-item" aria-current="page" href="{% url 'chat_create' %}">Створити новий</a>
+                        <li><a class="dropdown-item" aria-current="page" href="{% url 'chat_home' %}">Відкрити
+                                список</a></li>
+                        <li><a class="dropdown-item" aria-current="page" href="{% url 'chat_create' %}">Створити
+                                новий</a>
                         </li>
                     </ul>
                 </li>
             </ul>
             <form role="search" id="search">
                 <div class="input-group shadow-sm px-2">
-                    <input class="form-control" type="text" placeholder="Пошук" aria-label="Пошук" name="q" value="{{request.GET.q}}" list="topics" multiple>
+                    <input class="form-control" type="text" placeholder="Пошук" aria-label="Пошук" name="q"
+                        value="{{request.GET.q}}" list="topics" multiple>
                     <datalist id="topics">
                         {% for topic in topics %}
                         <option value="topic:&quot;{{topic}}&quot;">Тема "{{topic}}"</option>
                         {% endfor %}
                         {% for user in request.user|following %}
-                        <option value="author:&quot;{{user.user.username}}&quot;">Автор "@{{user.user.username}}"</option>
+                        <option value="author:&quot;{{user.user.username}}&quot;">Автор "@{{user.user.username}}"
+                        </option>
                         {% endfor %}
                     </datalist>
                     <button class="btn btn-success" type="submit">Пошук</button>
@@ -54,18 +58,26 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                         <li><a class="dropdown-item" href="{% url 'profile' pk=request.user.id %}">Профіль</a></li>
-                        <li><a class="dropdown-item" href="{% url 'update_profile' pk=request.user.id %}">Редагувати профіль</a></li>
+                        <li><a class="dropdown-item" href="{% url 'update_profile' pk=request.user.id %}">Редагувати
+                                профіль</a></li>
                         <li><a class="dropdown-item" href="{% url 'files' %}">Мої файли</a></li>
                         <li><a class="dropdown-item" href="{% url 'user_posts' %}">Мої оголошення</a></li>
+                        <li>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#themeModal">Тема</a>
+                        </li>
                         {% if request.user|has_role:'teacher' %}
-                        <li><hr class="dropdown-divider"></li>
-                            {% if request.user.is_staff or request.user.is_superuser %}
-                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Адміністрування</a></li>
-                            {% endif %}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        {% if request.user.is_staff or request.user.is_superuser %}
+                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">Адміністрування</a></li>
+                        {% endif %}
                         <li><a class="dropdown-item" href="{% url 'unpublished_posts' %}">Перевірка оголошень</a></li>
                         <li><a class="dropdown-item" href="{% url 'global_stats' %}">Загальна статистика</a></li>
                         {% endif %}
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Вийти</a></li>
                     </ul>
                     {% else %}
@@ -84,3 +96,28 @@
     </div>
     </div>
 </nav>
+<div class="modal fade" id="themeModal" tabindex="-1" aria-labelledby="themeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="themeModalLabel">Вибір теми</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group" id="themeList">
+                    {% for theme in 'themes'|get_themes_list %}
+                    <li href="#"
+                        class="list-group-item list-group-item-action text-capitalize{% if theme == request.COOKIES.theme %} active{% endif %}" 
+                        data-theme-name="{{ theme }}">
+                            {{ theme }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-primary" id="selectThemeButton">Вибрати</button>
+            </div>
+        </div>
+    </div>
+</div>

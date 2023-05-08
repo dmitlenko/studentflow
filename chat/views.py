@@ -46,6 +46,11 @@ class UpdateChatGroupView(LoginRequiredMixin, UpdateView):
     form_class = ChatGroupForm
     success_url = reverse_lazy('home')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
         return obj
