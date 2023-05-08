@@ -3,6 +3,7 @@
 {% load crispy_forms_tags %}
 {% load crispy_forms_field %}
 {% load permission_tags %}
+{% load static %}
 <div class="justify-content-center my-3 h-100">
     <div class="card col-md h-100 shadow">
         <h5 class="card-header">Створення/редагування оголошення</h5>
@@ -98,24 +99,17 @@
         </form>
     </div>
 </div>
+<script src="{% static 'js/post_form.js' %}"></script>
+{% if request.user|has_role:'teacher' %}
 <script>
     const pinnedCheck = document.querySelector('input[name="pinned"]');
     const pinnedDate = document.querySelector('input[name="date_unpinned"]');
-    const publishCheck = document.querySelector('input[name="published"]');
-    const publishDate = document.querySelector('input[name="date_published"]');
-    const archivedCheck = document.querySelector('input[name="archived"]');
-    const archivedDate = document.querySelector('input[name="date_archive"]');
 
     let pinnedDateDisable = e => pinnedDate.disabled = !e.checked;
-    let publishDateDisable = e => publishDate.disabled = e.checked;
-    let arhivedDateDisable = e => archivedDate.disabled = e.checked;
-    
+
     pinnedDateDisable(pinnedCheck);
-    publishDateDisable(publishCheck);
-    arhivedDateDisable(archivedCheck);
 
     pinnedCheck.addEventListener('change', event => pinnedDateDisable(event.currentTarget));
-    publishCheck.addEventListener('change', event => publishDateDisable(event.currentTarget));
-    archivedCheck.addEventListener('change', event => arhivedDateDisable(event.currentTarget));
 </script>
+{% endif %}
 {% endblock %}
