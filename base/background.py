@@ -11,9 +11,9 @@ def man_unpin_posts():
 
 
 def man_archive_posts():
-    objects = Post.objects.filter(archived=False, date_archived__isnull=False)
+    objects = Post.objects.filter(archived=False, date_archive__isnull=False)
     for obj in objects:
-        if obj.date_archived <= datetime.now():
+        if obj.date_archive <= datetime.now():
             obj.archived = True
             obj.save()
 

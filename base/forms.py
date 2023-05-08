@@ -26,6 +26,7 @@ class PostForm(forms.ModelForm):
 
     date_unpinned = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'datetime-local'}), required=False, label='Дата відкріплення')
     date_published = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'datetime-local'}), required=False, label='Дата публікації')
+    date_archive = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'datetime-local'}), required=False, label='Дата архівації')
         
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
