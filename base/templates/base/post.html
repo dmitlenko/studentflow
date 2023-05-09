@@ -3,6 +3,7 @@
 
 {% load crispy_forms_tags %}
 {% load markdown_extras %}
+{% load base_tags %}
 <style>
     .body-bg {
         background: url("{% get_media_prefix %}{{ object.image }}");
@@ -37,6 +38,23 @@
             <a href="{% url 'delete_post' pk=object.id %}"><i class="bi bi-trash-fill"></i> Видалити</a>
         </div>
         {% endif %}
+        <div class="mt-3">
+            <a>
+                <i class="bi bi-eye"></i>
+                {{ object.views.count }}
+            </a>
+            {% if object|is_liked:request.user %}
+            <a href="{% url 'unlike_post' pk=object.id %}">
+                <i class="bi bi-heart-fill"></i>
+                {% firstof object.likes.count %}
+            </a>
+            {% else %}
+            <a href="{% url 'like_post' pk=object.id %}">
+                <i class="bi bi-heart"></i>
+                {% firstof object.likes.count %}
+            </a>
+            {% endif %}
+        </div>
     </div>
     <div class="card-body">
         <h5 class="card-title">{{object.title}}</h5>
