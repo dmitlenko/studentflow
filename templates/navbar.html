@@ -61,10 +61,15 @@
                         <li><a class="dropdown-item" href="{% url 'update_profile' pk=request.user.id %}">Редагувати
                                 профіль</a></li>
                         <li><a class="dropdown-item" href="{% url 'files' %}">Мої файли</a></li>
-                        <li><a class="dropdown-item" href="{% url 'user_posts' %}">Мої оголошення</a></li>
                         <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#themeModal">Тема</a>
                         </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'user_posts' %}">Мої оголошення</a></li>
+                        <li><a class="dropdown-item" href="{% url 'user_likes' %}">Вподобані оголошення</a></li>
+                        <li><a class="dropdown-item" href="{% url 'user_views' %}">Переглянуті оголошення</a></li>
                         {% if request.user|has_role:'teacher' %}
                         <li>
                             <hr class="dropdown-divider">

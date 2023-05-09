@@ -405,3 +405,31 @@ class UserPostsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user)
+
+
+class UserLikesListView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'base/admin/post_list.html'
+    title = 'Список вподобаних оголошень'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = self.title
+        return context
+
+    def get_queryset(self):
+        return Post.objects.filter(likes=self.request.user)
+
+
+class UserViewsListView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'base/admin/post_list.html'
+    title = 'Список переглянутих оголошень'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = self.title
+        return context
+
+    def get_queryset(self):
+        return Post.objects.filter(views=self.request.user)
