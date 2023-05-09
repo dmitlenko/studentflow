@@ -14,7 +14,7 @@
                 {% endif %}
                 <div class="d-flex flex-column flex-grow-1 ms-3">
                     <div class="d-flex gap-1 align-items-center">
-                        <h5 class="mb-1">
+                        <h5 class="mb-1 text-primary">
                             {% firstof object.name object.username %}
                         </h5>
                         <span class="fs-6 text fs-light fst-italic text-body-secondary">
@@ -28,21 +28,21 @@
                         </span>
                     </div>
                     
-                    <div class="d-flex justify-content-start rounded-3 p-2 mb-2" style="background-color: #efefef;">
+                    <div class="d-flex justify-content-start rounded-3 p-2 mb-2 bg-light">
                         <div class="flex-fill">
-                            <p class="small text-muted mb-1">Оголошення</p>
+                            <p class="small mb-1">Оголошення</p>
                             <p class="mb-0">{{posts.count}}</p>
                         </div>
                         <div class="flex-fill">
-                            <p class="small text-muted mb-1">Слідкують</p>
+                            <p class="small mb-1">Слідкують</p>
                             <p class="mb-0">{{object|followers_count}}</p>
                         </div>
                         <div class="flex-fill">
-                            <p class="small text-muted mb-1">Слідкує</p>
+                            <p class="small mb-1">Слідкує</p>
                             <p class="mb-0">{{object|following_count}}</p>
                         </div>
                     </div>
-                    <p class="mb-2 pb-1 flex-grow-1" style="color: #2b2a2a;">{{object.bio}}</p>
+                    <p class="mb-2 pb-1 flex-grow-1 text">{{object.bio}}</p>
                     <div class="d-flex pt-1 input-group">
                         {% if request.user == object %}
                         <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Редагувати профіль</a>
