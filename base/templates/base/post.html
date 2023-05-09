@@ -12,6 +12,11 @@
         background-position: center;
         backdrop-filter: blur(10px) brightness(60%);
     }
+
+    .card-text > p {
+        margin: 0!important;
+        padding: 0 !important;
+    }
 </style>
 
 <div class="card my-3 shadow-lg">
@@ -20,29 +25,33 @@
         <img src="{% get_media_prefix %}{{ object.image }}" class="card-img-top" style="max-height: 640px; object-fit: cover;">
     </a>
     {% endif %}
-    <div class="card-body">
-        <h5 class="card-title">{{object.title}}</h5>
-        <div class="card-body">
+    <div class="card-header">
+        <div>
             <a href="{% url 'profile' pk=object.author.id %}">@{{object.author.username}}</a> опублікувано
             {{object.date_edited|date}}
-            {% if object.author == request.user %}
+        </div>
+        {% if object.author == request.user %}
+        <div class="mt-3">
             <a href="{% url 'stats_post' pk=object.id %}"><i class="bi bi-bar-chart-fill"></i> Статистика</a>
             <a href="{% url 'update_post' pk=object.id %}"><i class="bi bi-pencil-fill"></i> Редагувати</a>
             <a href="{% url 'delete_post' pk=object.id %}"><i class="bi bi-trash-fill"></i> Видалити</a>
-            {% endif %}
-            <div class="card-text" style="white-space: pre-line;">
-                {{object.body|markdown|safe}}
-            </div>
-            {% if object.files %}
-            <ul class="list-group list-group-flush">
-                {% for file in object.files.all %}
-                <li class="list-group-item">
-                    <i class="bi bi-paperclip"></i><a href="{% get_media_prefix %}{{file.file.name}}">{{file}}</a>
-                </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
         </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{object.title}}</h5>
+        <div class="card-text" style="white-space: pre-line;">
+            {{object.body|markdown|safe}}
+        </div>
+        {% if object.files %}
+        <ul class="list-group list-group-flush mb-3">
+            {% for file in object.files.all %}
+            <li class="list-group-item">
+                <i class="bi bi-paperclip"></i><a href="{% get_media_prefix %}{{file.file.name}}">{{file}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         <h5 class="card-title">Коментарі:</h5>
         <div class="list-group" id="comments">
             {% for comment in comments %}

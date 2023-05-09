@@ -17,7 +17,7 @@
             <table class="table table-sm">
                 <tbody>
                     <tr>
-                        <td>Дата й час публікації</td>
+                        <td>Дата й час створення</td>
                         <td>{{object.date_created}}</td>
                     </tr>
                     <tr>
@@ -55,9 +55,21 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Статус закріпленого</td>
+                        <td>Закріплене</td>
                         <td>
                             {{ object.pinned|yesno:'Так,Ні' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Перевірене</td>
+                        <td>
+                            {{ object.reviewed|yesno:'Так,Ні' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Архівоване</td>
+                        <td>
+                            {{ object.archived|yesno:'Так,Ні' }}
                         </td>
                     </tr>
                     <tr>

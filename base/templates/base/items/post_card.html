@@ -11,7 +11,7 @@
                 {% if post.pinned %}
                 <a href="?q={% firstof request.GET.q %} pinned:&quot;{{post.pinned}}&quot;" class="text-body"><i class="bi bi-pin-angle-fill"></i></a>
                 {% endif %}
-                {{post.title}}
+                {{post.title|truncatechars:22}}
                 {% if post.author == request.user %}
                 <span class="fs-6 text">
                     <a href="{% url 'stats_post' pk=post.id %}" class="text-decoration-none">
