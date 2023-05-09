@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Post, User, UserFile
 
 
-class RegistrationForm(UserCreationForm):
+class SignupForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
@@ -11,7 +11,7 @@ class RegistrationForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
     def save(self, commit=True):
-        user = super(RegistrationForm, self).save(commit=False)
+        user = super(SignupForm, self).save(commit=False)
         user.email = self.cleaned_data.get('email')
         if commit:
             user.save()

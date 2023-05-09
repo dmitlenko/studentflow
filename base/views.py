@@ -4,9 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, ListView
 from django.views.generic.base import RedirectView, TemplateView
+from django.views.generic.edit import FormView
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib import messages
-from .forms import RegistrationForm, PostForm, UserForm
+from .forms import SignupForm, PostForm, UserForm
 from .models import Post, PostComment, User, UserFollow, PostTopic, UserFile
 from django.urls import reverse_lazy, reverse
 from .utils import search_posts
@@ -31,57 +31,61 @@ class IndexView(ListView):
         return search_posts(Post.objects.filter(published=True, reviewed=True, archived=False), self.request.GET.get('q'))
 
 
-class LoginView(View):
+class SigninView(FormView):
     template_name = 'base/auth/login.html'
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('home')
 
-    def get(self, request, form=None):
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['is_auth'] = True
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('home')
 
-        if form is None:
-            form = AuthenticationForm()
+        return super().dispatch(request, *args, **kwargs)
 
-        return render(request, self.template_name, {'form': form, 'is_auth':True})
+    def form_valid(self, form):
+        valid = super().form_valid(form)
 
-    def post(self, request):
-        form = AuthenticationForm(data=request.POST)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
 
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+        user = authenticate(self.request, username=username, password=password)
+        if user is not None:
+            login(self.request, user)
+            return redirect('home')
 
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-
-        return self.get(request, form)
+        return valid
 
 
-class SignupView(View):
+class SignupView(CreateView):
+    model = User
     template_name = 'base/auth/signup.html'
+    form_class = SignupForm
+    success_url = reverse_lazy('home')
 
-    def get(self, request, role, form: RegistrationForm = None):
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['is_auth'] = True
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('home')
 
-        if form is None:
-            form = RegistrationForm()
+        return super().dispatch(request, *args, **kwargs)
 
-        return render(request, self.template_name, {'form': form, 'is_auth':True, 'role':role})
+    def form_valid(self, form):
+        valid = super().form_valid(form)
 
-    def post(self, request, role):
-        form = RegistrationForm(data=request.POST)
+        login(self.request, self.object)
 
-        if form.is_valid():
-            user = form.save()
+        assign_role(self.object, Teacher if self.kwargs['role'] == Teacher.id else Student)
 
-            assign_role(user, Teacher if role == Teacher.id else Student)
-            login(request, user)
-
-            return redirect('home')
-
-        return self.get(request, form)
+        return valid
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -189,7 +193,8 @@ class PostDetailView(LoginRequiredMixin, DetailView):
     
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
-        if self.request.user != obj.author and not has_role(self.request.user, Teacher):
+
+        if not obj.reviewed and (self.request.user != obj.author and not has_role(self.request.user, Teacher)):
             return self.handle_no_permission()
 
         if obj.reviewed and obj.published and not obj.archived:
@@ -364,7 +369,7 @@ class ReviewPostView(HasRoleMixin, RedirectView):
         obj = get_object_or_404(Post, pk=kwargs.get('pk'))
         obj.reviewed = True
         obj.save()
-        return reverse('detail_post', kwargs={'pk':obj.id})
+        return self.request.META.get('HTTP_REFERER')
 
 
 class GlobalStatsView(HasRoleMixin, TemplateView):
