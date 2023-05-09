@@ -10,9 +10,10 @@ def image_user_directory_path(instance, filename):
     return 'data/user_{0}/image/{1}'.format(instance.id, filename)
 
 class User(AbstractUser):
-    name = models.CharField('Ім\'я',max_length=300, null=True, blank=True)
+    name = models.CharField('Ім\'я профілю',max_length=300, null=True, blank=True)
     email = models.EmailField(unique=True, null=True)
     image = models.ImageField('Фото', default='default_user.png', upload_to=image_user_directory_path, null=True, validators=[validate_file_size])
+    image_banner = models.ImageField('Фон профілю', blank=True, upload_to=image_user_directory_path, null=True, validators=[validate_file_size])
     bio = models.TextField('Біографія', null=True, blank=True)
 
     USERNAME_FIELD = 'email'

@@ -43,4 +43,4 @@ class PostForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['name', 'username', 'image', 'bio']
+        fields = ['name', 'username','first_name', 'last_name', 'image', 'image_banner', 'bio']
