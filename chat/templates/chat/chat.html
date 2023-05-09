@@ -13,8 +13,8 @@
 
 {% block content %}
 
-<div class="d-flex flex-column h-100 p-0">
-    <div class="d-flex border border-top-0 rounded-bottom shadow-sm">
+<div class="d-flex flex-column h-100 p-0 shadow-sm">
+    <div class="d-flex border border-top-0 rounded-0">
         <div class="d-flex flex-grow-1 p-2 ">
             {% if object.private %}
                 {% with other_participant=object|other_participant:request.user %}
@@ -35,13 +35,13 @@
             {% endif %}
         </div>
         {% if not object.private %}
-        <button class="btn btn-outline-primary border-0 rounded-start-0 rounded-top-0" style="box-shadow: none!important;" data-bs-toggle="modal"
+        <button class="btn btn-outline-primary border-0 rounded-0" style="box-shadow: none!important;" data-bs-toggle="modal"
             data-bs-target="#infoModal">
             <i class="bi bi-info-circle-fill"></i>
         </button>
         {% endif %}
     </div>
-    <div class="d-flex flex-grow-1 gap-2 px-2 pt-2 flex-column mx-2 border-start border-end" id="chatLog" style="margin-top: auto !important; overflow-y: auto;">
+    <div class="d-flex flex-grow-1 gap-2 px-2 pt-2 flex-column border-start border-end" id="chatLog" style="margin-top: auto !important; overflow-y: auto;">
         {% for message in object.chatgroupmessage_set.all %}
         <div href="#" class="list-group-item list-group-item-action" aria-current="true">
             <div class="d-flex w-100 justify-content-between">
@@ -57,10 +57,10 @@
         </div>
         {% endfor %}
     </div>
-    <div class="input-group flex-shrink-0 border rounded-top border-bottom-0 shadow-sm" style="height:64px">
-        <input type="text" name="message" class="form-control border-0 rounded-bottom-0" placeholder="Message..."
+    <div class="input-group flex-shrink-0 border rounded-0 border-bottom-0" style="height:64px">
+        <input type="text" name="message" class="form-control border-0 rounded-0" placeholder="Message..."
             id="chat-message-input">
-        <button class="btn btn-outline-primary rounded-bottom-0 border-0 roudned-bottom-0"
+        <button class="btn btn-outline-primary border-0 rounded-0"
             id="chat-message-submit"><i class="bi bi-send-fill"></i> Відправити</button>
     </div>
 </div>
@@ -91,14 +91,14 @@
             
             <div class="modal-footer p-0">
                 <div class="input-group w-100 d-flex">
-                    <button type="button" class="btn btn-outline-primary flex-grow-1" data-bs-dismiss="modal"
+                    <button type="button" class="btn btn-primary flex-grow-1" data-bs-dismiss="modal"
                         style="box-shadow: none!important;">Закрити</button>
                     {% if request.user == object.creator %}
-                    <a class="btn btn-outline-danger" href="{% url 'chat_delete' pk=object.id %}"
+                    <a class="btn btn-danger" href="{% url 'chat_delete' pk=object.id %}"
                         style="box-shadow: none!important;">
                         <i class="bi bi-trash-fill"></i>
                     </a>
-                    <a class="btn btn-outline-secondary" href="{% url 'chat_update' pk=object.id %}"
+                    <a class="btn btn-secondary" href="{% url 'chat_update' pk=object.id %}"
                         style="box-shadow: none!important;">
                         <i class="bi bi-pencil-fill"></i>
                     </a>
