@@ -14,8 +14,8 @@
 <body class="body-bg h-100 d-flex flex-column">
     {% if request.user.is_authenticated or is_auth %}
     {% include 'navbar.html' %}
-    <div class="container-fluid flex-container">
-        <div class="container">
+    <div class="container-fluid flex-container {% block flex_container_class %}{% endblock %}">
+        <div class="container {% block container_class %}{% endblock %}">
             {% block content %} {% endblock %}
         </div>
     </div>
