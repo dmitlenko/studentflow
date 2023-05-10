@@ -107,6 +107,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             topic_name = self.request.POST.get('topic')
             topic, created = PostTopic.objects.get_or_create(name=topic_name)
             self.object.topic = topic
+            if has_role(self.request.user, Teacher):
+                self.object.reviewed = True
             self.object.save()
 
             return redirect(reverse('detail_post', kwargs={'pk':self.object.id}))
