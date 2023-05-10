@@ -45,7 +45,7 @@ def search_posts(posts, query_string):
     if pinned:
         posts = posts.filter(pinned=pinned)
     if topic:
-        posts = posts.filter(topic__name__icontains=topic)
+        posts = posts.filter(topic__name=topic)
     if author:
         posts = posts.filter(author__username__icontains=author)
     if search:
