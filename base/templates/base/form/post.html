@@ -16,6 +16,23 @@
                         <label for="{{ form.date_published.id_for_label }}" class="form-label">
                             {{ form.body.label }}
                         </label>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-light" id="buttonTextBold" type="button">
+                                <i class="bi bi-type-bold"></i>
+                            </button>
+                            <button class="btn btn-light" id="buttonTextItalic" type="button">
+                                <i class="bi bi-type-italic"></i>
+                            </button>
+                            <!-- <button class="btn btn-light" id="buttonTextUnderline">
+                                <i class="bi bi-type-underline"></i>
+                            </button> -->
+                            <button class="btn btn-light" id="buttonTextHyperlink" type="button">
+                                <i class="bi bi-link"></i>
+                            </button>
+                            <button class="btn btn-light" id="buttonTextImage" type="button">
+                                <i class="bi bi-card-image"></i> Вставити фото
+                            </button>
+                        </div>
                         {% if form.body.errors %}
                             {% crispy_field form.body 'class' 'flex-grow-1 textarea form-control is-invalid' %}
                         {% else %}
