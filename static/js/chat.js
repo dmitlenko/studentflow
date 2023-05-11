@@ -1,4 +1,4 @@
-const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${context.chatId}/`);
+const chatSocket = new WebSocket(`wss://${window.location.host}/ws/chat/${context.chatId}/`);
 const chatLog = document.querySelector('#chatLog');
 
 function scrollLogDown(){
