@@ -70,7 +70,7 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <h5 class="card-title">Коментарі:</h5>
+        <h5 class="card-title">Коментарі ({{comments.count}}):</h5>
         <div class="list-group" id="comments">
             {% for comment in comments %}
             <div class="list-group-item" id="comment_{{comment.id}}">
