@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-#c&xdb4=o-%c(ofs(8=(a_*ch_9u^18470qa_8n%&d6v#88k12
 DEBUG = True
 
 # FIXME: remove the this on production
-ALLOWED_HOSTS = ['mitlenko.online', 'localhost']
+ALLOWED_HOSTS = ['mitlenko.online', 'localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['https://mitlenko.online']
 
