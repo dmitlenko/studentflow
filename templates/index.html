@@ -21,52 +21,53 @@
     </div>
     {% else %}
     <div class="container-fluid h-100 p-0">
-        <div class="d-flex flex-column h-100 justify-content-center align-items-center text-light bg-dark" id="title">
-            <h1 class="app-title text-light">StudentFlow</h1>
-            <p class="col-lg-6 text-justify px-4">
-                Ласкаво просимо до нашої <a href="#about">спільноти</a>! Ми раді бачити вас тут і запрошуємо долучитися
-                до нашого
-                інтерактивного середовища, де ви зможете знайти багато корисної інформації, обговорити цікаві теми та
-                знайти нових друзів. Приєднуйтесь до нас, і ми з радістю поділимося з вами своїм досвідом та знаннями.
-                Відчуйте себе як вдома в нашій спільноті!
-            </p>
-            <div class="d-flex gap-4 align-items-center">
-                <a href="#join" class="btn btn-light btn-title">Приєднатися</a>
-                <span class="">або</span>
-                <a href="{% url 'login' %}" class="btn btn-outline-light btn-title text-light">Увіти</a>
+        <div class="row bg-light h-100 m-0 p-0">
+            <div class="col-lg-7 d-flex flex-column justify-content-center align-items-center" id="title">
+                <h1 class="mb-4">
+                    StudentFlow
+                </h1>
+                <p class="col-lg-6 text-justify px-4">
+                    Ласкаво просимо до нашої <a href="#about">спільноти</a>! Ми раді бачити вас тут і запрошуємо долучитися
+                    до нашого
+                    інтерактивного середовища, де ви зможете знайти багато корисної інформації, обговорити цікаві теми та
+                    знайти нових друзів. Приєднуйтесь до нас, і ми з радістю поділимося з вами своїм досвідом та знаннями.
+                    Відчуйте себе як вдома в нашій спільноті!
+                </p>
+                <a href="{% url 'login' %}" class="btn btn-outline-dark btn-title">Увіти</a>
             </div>
-        </div>
-        <div class="d-flex flex-column h-100 justify-content-center align-items-center bg-light" id="join">
-            <h1 class="mb-4">
-                Готові плани
-            </h1>
-            <div class="row gap-4 justify-content-center w-100 px-4">
-                <div class="card col-lg-2 p-0">
-                    <div class="card-header">
-                        <h5 class="card-title">Студент</h5>
+            <div class="col-lg-5 d-flex flex-column gap-4 align-items-center justify-content-center">
+                <h1 class="mb-4">
+                    Готові плани
+                </h1>
+                <div class="row gap-4 justify-content-center px-3">
+                    <div class="card col-lg-6 p-0">
+                        <div class="card-header">
+                            <h5 class="card-title">Студент</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Публікуйте нові та переглядайте пости інших користувачів. Спілкуйтесь в
+                                групових та приватних чатах.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'signup' role=1 %}" class="card-link">Приєднатись</a>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text">Публікуйте нові та переглядайте пости інших користувачів. Спулкуйтесь в
-                            групових та приватних чатах.</p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'signup' role=1 %}" class="card-link">Приєднатись</a>
+                    <div class="card col-lg-6 p-0">
+                        <div class="card-header">
+                            <h5 class="card-title">Викладач</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Використувайте такі ж можливості як і в студентів, але з додатковими
+                                моживостями, такими як: перевірка неопублікованих оголошень, закріплення оголошень, перегляд загальної статистики тощо.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'signup' role=2 %}" class="card-link">Приєднатись</a>
+                        </div>
                     </div>
                 </div>
-                <div class="card col-lg-2 p-0">
-                    <div class="card-header">
-                        <h5 class="card-title">Викладач</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Використувайте такі ж можливості як і в студентів, але з додатковими
-                            моживостями, такими як: перевірка неопублікованих оголошеь, створення чатів тощо.</p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'signup' role=2 %}" class="card-link">Приєднатись</a>
-                    </div>
-                </div>
             </div>
         </div>
+        
         <div class="d-flex flex-column h-100 justify-content-center align-items-center text-light bg-dark" id="about">
             <h1 class="app-title text-light">Про нас</h1>
             <p class="col-lg-6 text-justify px-4">
