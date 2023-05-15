@@ -13,8 +13,9 @@
                 <div class="col-lg-8 d-flex flex-column">
                     {{form.title|as_crispy_field}}
                     <div class="mb-3 flex-grow-1 d-flex flex-column">
-                        <label for="{{ form.date_published.id_for_label }}" class="form-label">
-                            {{ form.body.label }}
+                        <label for="{{ form.date_published.id_for_label }}" class="form-label requiredField">
+                            {{form.body.label.strip}}
+                            <span class="asteriskField">*</span>
                         </label>
                         <div class="input-group mb-3">
                             <button class="btn btn-light" id="buttonTextBold" type="button">
