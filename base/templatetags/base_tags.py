@@ -40,3 +40,7 @@ def valid_theme(theme_name):
 @register.filter
 def get_themes_list(dummy):
     return themes_list()
+
+@register.filter
+def user_in(user, manytomany):
+    return user in manytomany.all()
