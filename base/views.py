@@ -16,8 +16,10 @@ from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role
 from studentflow.roles import Teacher, Student
 from chat.models import ChatGroup, ChatGroupMessage
+from .mixins import PageTitleViewMixin
 
-class IndexView(ListView):
+class IndexView(PageTitleViewMixin, ListView):
+    title = 'Головна'
     template_name = 'base/home.html'
     paginate_by = 6
     model = Post
@@ -31,7 +33,8 @@ class IndexView(ListView):
         return search_posts(Post.objects.filter(published=True, reviewed=True, archived=False), self.request.GET.get('q'))
 
 
-class SigninView(FormView):
+class SigninView(PageTitleViewMixin, FormView):
+    title = 'Авторизація'
     template_name = 'base/auth/login.html'
     form_class = AuthenticationForm
     success_url = reverse_lazy('home')
@@ -61,7 +64,8 @@ class SigninView(FormView):
         return valid
 
 
-class SignupView(CreateView):
+class SignupView(PageTitleViewMixin, CreateView):
+    title = 'Реєстрація'
     model = User
     template_name = 'base/auth/signup.html'
     form_class = SignupForm
@@ -88,7 +92,8 @@ class SignupView(CreateView):
         return valid
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(PageTitleViewMixin, LoginRequiredMixin, CreateView):
+    title = 'Створення оголошення'
     model = Post
     form_class = PostForm
     template_name = 'base/form/post.html'
@@ -121,7 +126,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class PostUpdateView(LoginRequiredMixin, UpdateView):
+class PostUpdateView(PageTitleViewMixin, LoginRequiredMixin, UpdateView):
+    title = 'Редагування оголошення'
     model = Post
     form_class = PostForm
     template_name = 'base/form/post.html'
@@ -158,7 +164,8 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         return False
 
 
-class PostDeleteView(LoginRequiredMixin, DeleteView):
+class PostDeleteView(PageTitleViewMixin, LoginRequiredMixin, DeleteView):
+    title = 'Видалення оголошення'
     model = Post
     template_name = 'delete.html'
     success_url = reverse_lazy('home')
@@ -168,18 +175,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         return obj
 
 
-class PostCommentDeleteView(LoginRequiredMixin, RedirectView):
-    def get_redirect_url(self, pk):
-        obj = get_object_or_404(PostComment, pk=pk)
-
-        if self.request.user != obj.author and obj.post.author != self.request.user:
-            return self.handle_no_permission()
-        
-        obj.delete()
-        return self.request.META.get('HTTP_REFERER')
-
-
-class PostDetailView(LoginRequiredMixin, DetailView):
+class PostDetailView(PageTitleViewMixin, LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'base/post.html'
 
@@ -193,6 +189,9 @@ class PostDetailView(LoginRequiredMixin, DetailView):
             post=self.get_object()).order_by('-date_created')
         return context
     
+    def get_title(self):
+        return self.get_object().title
+
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
 
@@ -214,9 +213,16 @@ class PostDetailView(LoginRequiredMixin, DetailView):
         return redirect(reverse('detail_post', kwargs={'pk': self.kwargs['pk']}) + f'#comment_{comment.id}')
 
 
-class ProfileView(DetailView):
+class ProfileView(PageTitleViewMixin, DetailView):
     model = User
     template_name = 'base/profile.html'
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
+        return obj
+
+    def get_title(self):
+        return self.get_object().username
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -226,7 +232,8 @@ class ProfileView(DetailView):
         return context
 
 
-class PostStatsView(DetailView):
+class PostStatsView(PageTitleViewMixin, DetailView):
+    title = 'Статистика оголошення'
     model = Post
     template_name = 'base/post_stats.html'
 
@@ -237,7 +244,8 @@ class PostStatsView(DetailView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class UserUpdateView(LoginRequiredMixin, UpdateView):
+class UserUpdateView(PageTitleViewMixin, LoginRequiredMixin, UpdateView):
+    title = 'Редагування профілю'
     model = User
     form_class = UserForm
     template_name = 'base/form/user.html'
@@ -272,7 +280,8 @@ class UserUnfollowView(LoginRequiredMixin, RedirectView):
         return reverse_lazy('profile', kwargs={'pk': user_to_unfollow.id})
         
 
-class FeedView(LoginRequiredMixin, ListView):
+class FeedView(PageTitleViewMixin, LoginRequiredMixin, ListView):
+    title = 'Підписки'
     template_name = 'base/home.html'
     paginate_by = 6
     model = Post
@@ -289,20 +298,6 @@ class FeedView(LoginRequiredMixin, ListView):
         return search_posts(posts, self.request.GET.get('q'))
 
 
-class LikePostView(LoginRequiredMixin, RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        post_to_like = get_object_or_404(Post, pk=self.kwargs.get('pk'))
-        post_to_like.likes.add(self.request.user)
-        return self.request.META.get('HTTP_REFERER') + f'#post_{post_to_like.id}'
-
-
-class UnlikePostView(LoginRequiredMixin, RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        post_to_like = get_object_or_404(Post, pk=self.kwargs.get('pk'))
-        post_to_like.likes.remove(self.request.user)
-        return self.request.META.get('HTTP_REFERER') + f'#post_{post_to_like.id}'
-
-
 class LogoutView(RedirectView):
     url = reverse_lazy('home')
 
@@ -311,7 +306,8 @@ class LogoutView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class UserFilesView(LoginRequiredMixin, ListView):
+class UserFilesView(PageTitleViewMixin, LoginRequiredMixin, ListView):
+    title = 'Файли користувача'
     model = UserFile
     template_name = 'base/file_list.html'
 
@@ -319,7 +315,8 @@ class UserFilesView(LoginRequiredMixin, ListView):
         return UserFile.objects.filter(uploader=self.request.user)
 
 
-class UploadUserFileView(LoginRequiredMixin, CreateView):
+class UploadUserFileView(PageTitleViewMixin, LoginRequiredMixin, CreateView):
+    title = 'Завантаження файлу'
     model = UserFile
     template_name = 'base/form/file.html'
     login_url = 'login'
@@ -335,7 +332,8 @@ class UploadUserFileView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class DeleteUserFileView(LoginRequiredMixin, DeleteView):
+class DeleteUserFileView(PageTitleViewMixin, LoginRequiredMixin, DeleteView):
+    title = 'Видалення файлу'
     model = UserFile
     template_name = 'delete.html'
     success_url = reverse_lazy('files')
@@ -348,7 +346,8 @@ class DeleteUserFileView(LoginRequiredMixin, DeleteView):
         return obj
 
 
-class ReviewPostListView(HasRoleMixin, ListView):
+class ReviewPostListView(PageTitleViewMixin, HasRoleMixin, ListView):
+    title = 'Перевірка оголошень'
     allowed_roles = Teacher
     model = Post
     template_name = 'base/admin/unpublished_list.html'
@@ -374,7 +373,8 @@ class ReviewPostView(HasRoleMixin, RedirectView):
         return self.request.META.get('HTTP_REFERER')
 
 
-class GlobalStatsView(HasRoleMixin, TemplateView):
+class GlobalStatsView(PageTitleViewMixin, HasRoleMixin, TemplateView):
+    title = 'Загальна статистика'
     allowed_roles = Teacher
     template_name = 'base/admin/statistics.html'
 
@@ -406,7 +406,8 @@ class GlobalStatsView(HasRoleMixin, TemplateView):
         return context
 
 
-class UserPostsListView(LoginRequiredMixin, ListView):
+class UserPostsListView(PageTitleViewMixin, LoginRequiredMixin, ListView):
+    title = 'Список оголошень'
     model = Post
     template_name = 'base/admin/user_posts.html'
 
@@ -414,29 +415,19 @@ class UserPostsListView(LoginRequiredMixin, ListView):
         return Post.objects.filter(author=self.request.user)
 
 
-class UserLikesListView(LoginRequiredMixin, ListView):
+class UserLikesListView(PageTitleViewMixin, LoginRequiredMixin, ListView):
     model = Post
     template_name = 'base/admin/post_list.html'
     title = 'Список вподобаних оголошень'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = self.title
-        return context
 
     def get_queryset(self):
         return Post.objects.filter(likes=self.request.user)
 
 
-class UserViewsListView(LoginRequiredMixin, ListView):
+class UserViewsListView(PageTitleViewMixin, LoginRequiredMixin, ListView):
     model = Post
     template_name = 'base/admin/post_list.html'
     title = 'Список переглянутих оголошень'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = self.title
-        return context
 
     def get_queryset(self):
         return Post.objects.filter(views=self.request.user)

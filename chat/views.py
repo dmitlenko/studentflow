@@ -7,9 +7,11 @@ from .models import ChatGroup
 from .forms import ChatGroupForm
 from base.models import User
 from django.db.models import Count, Q
+from base.mixins import PageTitleViewMixin
 
 # Create your views here.
-class HomeView(LoginRequiredMixin, ListView):
+class HomeView(PageTitleViewMixin, LoginRequiredMixin, ListView):
+    title = 'Чат'
     login_url = 'login'
     template_name = 'chat/home.html'
     model = ChatGroup
@@ -21,7 +23,7 @@ class HomeView(LoginRequiredMixin, ListView):
         ).distinct().order_by('name')
 
 
-class ChatGroupView(LoginRequiredMixin, DetailView):
+class ChatGroupView(PageTitleViewMixin, LoginRequiredMixin, DetailView):
     model = ChatGroup
     template_name = 'chat/chat.html'
     login_url = 'login'
@@ -29,6 +31,9 @@ class ChatGroupView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
         return obj
+
+    def get_title(self):
+        return self.get_object().name
     
     def dispatch(self, request, **kwargs):
         obj = self.get_object()
@@ -39,7 +44,8 @@ class ChatGroupView(LoginRequiredMixin, DetailView):
             return self.handle_no_permission()
         
 
-class UpdateChatGroupView(LoginRequiredMixin, UpdateView):
+class UpdateChatGroupView(PageTitleViewMixin, LoginRequiredMixin, UpdateView):
+    title = 'Редагування чату'
     model = ChatGroup
     template_name = 'chat/form/update.html'
     login_url = 'login'
@@ -67,7 +73,8 @@ class UpdateChatGroupView(LoginRequiredMixin, UpdateView):
         return super().dispatch(request, **kwargs)
     
 
-class CreateChatGroupView(LoginRequiredMixin, CreateView):
+class CreateChatGroupView(PageTitleViewMixin, LoginRequiredMixin, CreateView):
+    title = 'Створення чату'
     model = ChatGroup
     template_name = 'chat/form/update.html'
     login_url = 'login'
@@ -84,7 +91,8 @@ class CreateChatGroupView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class DeleteChatGroupView(LoginRequiredMixin, DeleteView):
+class DeleteChatGroupView(PageTitleViewMixin, LoginRequiredMixin, DeleteView):
+    title = 'Видалення чату'
     model = ChatGroup
     template_name = 'delete.html'
     success_url = reverse_lazy('chat_home')
