@@ -62,7 +62,7 @@
             <div class="d-flex justify-content-start rounded-3 p-2 mb-2 gap-3">
                 <div class="flex-fill border-end">
                     <p class="small mb-1">Оголошення</p>
-                    <p class="mb-0">{{object.post_set.count}}</p>
+                    <p class="mb-0">{{posts.count}}</p>
                 </div>
                 <div class="flex-fill border-end">
                     <p class="small mb-1">Слідкують</p>
@@ -100,9 +100,9 @@
         </div>
     </div>
     <div class="col-lg-8">
-        {% if object.post_set.exists %}
+        {% if posts %}
         <div class="d-flex flex-column gap-1 mb-3 align-items-center">
-            {% for post in object.post_set.all %}
+            {% for post in posts %}
                 {% include 'base/items/post_card.html' with prefix=' w-100' post=post %}
             {% endfor %}
         </div>

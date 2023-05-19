@@ -224,6 +224,11 @@ class ProfileView(PageTitleViewMixin, DetailView):
     def get_title(self):
         return self.get_object().username
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = Post.objects.filter(published=True, reviewed=True, archived=False, author=self.get_object())
+        return context
+
 
 class PostStatsView(PageTitleViewMixin, DetailView):
     title = 'Статистика оголошення'
