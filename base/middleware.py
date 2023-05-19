@@ -6,14 +6,14 @@ class TokenMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if 'token' not in request.COOKIES:
-            response = HttpResponse()
+        response = self.get_response(request)
+
+        if response.cookies.get('token') and response.cookies.get('user_id') == request.user.id:
+            return response
+        
+        if request.user.is_authenticated:
             token, created = Token.objects.get_or_create(user=request.user)
             response.set_cookie('token', token.key)
-        else:
-            # Token cookie already exists, continue with the request
-            response = self.get_response(request)
-
-        response.set_cookie('user_id', request.user.id)
-        
+            response.set_cookie('user_id', request.user.id)
+            
         return response
