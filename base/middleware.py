@@ -13,5 +13,7 @@ class TokenMiddleware:
         else:
             # Token cookie already exists, continue with the request
             response = self.get_response(request)
+
+        response.set_cookie('user_id', request.user.id)
         
         return response

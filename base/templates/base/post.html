@@ -20,7 +20,7 @@
     }
 </style>
 
-<div class="card my-3 shadow-lg" data-sf-post="{{post.id}}">
+<div class="card my-3 shadow-lg" data-sf-post="{{post.id}}" data-sf-author="{{post.author.id}}">
     {% if object.image %}
     <a href="{% get_media_prefix %}{{ object.image }}">
         <img src="{% get_media_prefix %}{{ object.image }}" class="card-img-top" style="max-height: 640px; object-fit: cover;">
@@ -76,25 +76,11 @@
         {% endif %}
         <h5 class="card-title">Коментарі ({{comments.count}}):</h5>
         <div class="list-group" id="comments">
-            {% for comment in comments %}
-            <div class="list-group-item" id="comment_{{comment.id}}">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{comment.body}}
-                        {% if comment.author == request.user or object.author == request.user %}
-                        <a href="{% url 'delete_comment' pk=comment.id %}" class="fs-6 text fst-light ms-1"><i
-                                class="bi bi-trash-fill"></i>Видалити</a>
-                        {% endif %}
-                    </h5>
-
-                    <small>{{comment.date_created|timesince}} тому</small>
-                </div>
-                <small>
-                    <a href="{% url 'profile' pk=comment.author.id %}">@{{comment.author.username}}</a>
-                </small>
+            <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated w-100">Завантаження</div>
             </div>
-            {% endfor %}
         </div>
-        <form action="" method="post">
+        <form id="commentForm">
             {% csrf_token %}
             <div class="input-group mt-3">
                 <input type="text" class="form-control" placeholder="Текст коментаря..." aria-label="Текст коментаря"
@@ -109,4 +95,5 @@
 
 {% block script %}
 <script src="{% static 'js/post_page.js' %}"></script>
+<script src="{% static 'js/post_comments.js' %}"></script>
 {% endblock %}
