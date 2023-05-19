@@ -224,13 +224,6 @@ class ProfileView(PageTitleViewMixin, DetailView):
     def get_title(self):
         return self.get_object().username
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['comments_count'] = PostComment.objects.filter(
-            author=self.get_object()).count()
-        context['posts'] = Post.objects.filter(published=True, reviewed=True, archived=False, author=self.get_object())
-        return context
-
 
 class PostStatsView(PageTitleViewMixin, DetailView):
     title = 'Статистика оголошення'
@@ -264,20 +257,6 @@ class UserUpdateView(PageTitleViewMixin, LoginRequiredMixin, UpdateView):
                                    'pk': self.kwargs['pk']})
 
         return super().dispatch(request, *args, **kwargs)
-
-
-class UserFollowView(LoginRequiredMixin, RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        user_to_follow = get_object_or_404(User, id=self.kwargs.get('pk'))
-        UserFollow.objects.get_or_create(user=user_to_follow, follower=self.request.user)
-        return reverse_lazy('profile', kwargs={'pk': user_to_follow.id})
-
-
-class UserUnfollowView(LoginRequiredMixin, RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        user_to_unfollow = get_object_or_404(User, id=self.kwargs.get('pk'))
-        UserFollow.objects.filter(user=user_to_unfollow, follower=self.request.user).delete()
-        return reverse_lazy('profile', kwargs={'pk': user_to_unfollow.id})
         
 
 class FeedView(PageTitleViewMixin, LoginRequiredMixin, ListView):

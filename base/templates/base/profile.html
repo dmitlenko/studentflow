@@ -23,7 +23,7 @@
     }
 </style>
 {% endif %}
-<div class="card w-100 shadow-none p-0 border-top-0 rounded-0 card-background">
+<div class="card w-100 shadow-none p-0 border-top-0 rounded-0 card-background" data-sf-profile="{{object.id}}">
     <div class="card-body px-3" {% if not object.image_banner %} style="backdrop-filter: blur(10px) brightness(40%);"{% endif %}>
         <div class="d-flex text-black">
             {% if object.image %}
@@ -62,7 +62,7 @@
             <div class="d-flex justify-content-start rounded-3 p-2 mb-2 gap-3">
                 <div class="flex-fill border-end">
                     <p class="small mb-1">Оголошення</p>
-                    <p class="mb-0">{{posts.count}}</p>
+                    <p class="mb-0">{{object.post_set.count}}</p>
                 </div>
                 <div class="flex-fill border-end">
                     <p class="small mb-1">Слідкують</p>
@@ -81,20 +81,28 @@
                 <a href="{% url 'chat_with' user_id=object.id %}" class="btn btn-primary w-50">
                     <i class="bi bi-chat"></i> Чат</a>
                 {% if object|is_followed:request.user %}
-                <a href="{% url 'unfollow_user' pk=object.pk %}" class="btn btn-secondary w-50">
-                    <i class="bi bi-person-fill-dash"></i> Відписатися</a>
+                <a class="btn btn-secondary w-50" data-sf-following="true">
+                    <i class="bi bi-person-fill-dash"></i>
+                    <span class="value">
+                        Відписатися
+                    </span>
+                </a>
                 {% else %}
-                <a href="{% url 'follow_user' pk=object.pk %}" class="btn btn-outline-secondary w-50">
-                    <i class="bi bi-person-fill-add"></i> Підписатися</a>
+                <a class="btn btn-outline-secondary w-50" data-sf-following="false">
+                    <i class="bi bi-person-fill-add"></i>
+                    <span class="value">
+                        Підписатися
+                    </span>
+                </a>
                 {% endif %}
                 {% endif %}
             </div>
         </div>
     </div>
     <div class="col-lg-8">
-        {% if posts %}
+        {% if object.post_set.exists %}
         <div class="d-flex flex-column gap-1 mb-3 align-items-center">
-            {% for post in posts %}
+            {% for post in object.post_set.all %}
                 {% include 'base/items/post_card.html' with prefix=' w-100' post=post %}
             {% endfor %}
         </div>
@@ -111,4 +119,5 @@
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>
+<script src="{% static 'js/profile_page.js' %}"></script>
 {% endblock %}

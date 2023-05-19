@@ -8,7 +8,5 @@ urlpatterns = [
 
     path('comment/<int:pk>/', CreateCommentAPIView.as_view(), name='api_comment_post'),
 
-    path('users/<int:pk>/data', ListCommentsAPIView.as_view(), name='api_unlike_post'),
-
-    path('auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('follow/<int:pk>/', FollowUserAPIView.as_view(), name='api_follow_user'),
 ]
