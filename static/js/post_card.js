@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let is_liked = like_button.dataset.sfLiked == 'true';
             let value = like_button.querySelector('.value');
 
-            await fetch(`api/post/${post_id}/${is_liked ? 'unlike' : 'like'}`, {
-                method: 'POST',
+            await fetch(`/api/like/${post_id}/`, {
+                method: is_liked ? 'DELETE' : 'POST',
                 headers: {
                     'Authorization': 'Token ' + getCookie('token')
                 }

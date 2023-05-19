@@ -13,9 +13,7 @@ class LikePostAPIView(APIView, IsAuthenticated):
         post_to_like.likes.add(request.user)
         return Response(status=status.HTTP_200_OK)
 
-
-class UnlikePostAPIView(APIView, IsAuthenticated):
-    def post(self, request, pk):
+    def delete(self, request, pk):
         post_to_like = get_object_or_404(Post, pk=pk)
         post_to_like.likes.remove(request.user)
         return Response(status=status.HTTP_200_OK)
@@ -42,7 +40,7 @@ class CreateCommentAPIView(CreateAPIView, IsAuthenticated):
 
     def delete(self, request, pk):
         comment = get_object_or_404(PostComment, pk=pk)
-        
+
         if request.user == comment.author or request.user == comment.post.author:
             comment.delete()
             return Response(status=status.HTTP_200_OK)

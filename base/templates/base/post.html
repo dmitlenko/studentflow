@@ -43,18 +43,18 @@
                 <i class="bi bi-eye"></i>
                 {{ object.views.count }}
             </a>
-            {% if post|is_liked:request.user %}
-            <a class="btn btn-outline-danger flex-shrink-0" data-sf-likes="{{ post.likes.count }}" data-sf-liked="true">
+            {% if object|is_liked:request.user %}
+            <a class="btn btn-outline-danger flex-shrink-0" data-sf-likes="{{ object.likes.count }}" data-sf-liked="true">
                 <i class="bi bi-heart-fill"></i>
                 <span class="value">
-                    {% firstof post.likes.count %}
+                    {% firstof object.likes.count %}
                 </span>
             </a>
             {% else %}
-            <a class="btn btn-danger flex-shrink-0" data-sf-likes="{{ post.likes.count }}" data-sf-liked="false">
+            <a class="btn btn-danger flex-shrink-0" data-sf-likes="{{ object.likes.count }}" data-sf-liked="false">
                 <i class="bi bi-heart"></i>
                 <span class="value">
-                    {% firstof post.likes.count %}
+                    {% firstof object.likes.count %}
                 </span>
             </a>
             {% endif %}
