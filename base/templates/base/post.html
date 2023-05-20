@@ -65,15 +65,11 @@
         <div class="card-text" style="white-space: pre-line;">
             {{object.body|markdown|safe}}
         </div>
-        {% if object.files %}
-        <ul class="list-group list-group-flush mb-3">
-            {% for file in object.files.all %}
-            <li class="list-group-item">
-                <i class="bi bi-paperclip"></i><a href="{% get_media_prefix %}{{file.file.name}}">{{file}}</a>
-            </li>
-            {% endfor %}
+        <ul class="list-group list-group-flush mb-3" data-sf-files="{% get_media_prefix %}">
+            <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated w-100">Завантаження</div>
+            </div>
         </ul>
-        {% endif %}
         <h5 class="card-title">Коментарі ({{comments.count}}):</h5>
         <div class="list-group" id="comments">
             <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
@@ -81,7 +77,6 @@
             </div>
         </div>
         <form id="commentForm">
-            {% csrf_token %}
             <div class="input-group mt-3">
                 <input type="text" class="form-control" placeholder="Текст коментаря..." aria-label="Текст коментаря"
                     aria-describedby="button-addon2" required name="body">
@@ -90,10 +85,54 @@
         </form>
     </div>
 </div>
-
+<div class="modal fade" id="fileDataModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTitle">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <td class="fw-bold">
+                            Назва
+                        </td>
+                        <td id="fileName"></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">
+                            Розмір
+                        </td>
+                        <td id="fileSize"></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">
+                            Дата завантаження
+                        </td>
+                        <td id="fileDate"></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">
+                            Автор
+                        </td>
+                        <td>
+                            <a href="" id="author"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <a class="btn btn-primary" href="#" id="downloadButton">Завантажити</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}
 <script src="{% static 'js/post_page.js' %}"></script>
+<script src="{% static 'js/post_files.js' %}"></script>
 <script src="{% static 'js/post_comments.js' %}"></script>
 {% endblock %}
