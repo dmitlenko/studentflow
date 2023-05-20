@@ -1,4 +1,5 @@
 const user_id = getCookie('user_id');
+const user_token = getCookie('token');
 const chat_id = document.querySelector('[data-sf-chat]').dataset.sfChat;
 
 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -44,7 +45,7 @@ document.querySelector('#chat-message-submit').onclick = (e) => {
     const messageInputDom = document.querySelector('#chat-message-input');
     const body = messageInputDom.value;
     chatSocket.send(JSON.stringify({
-        'author': user_id,
+        'author': user_token,
         'chat_group': chat_id,
         'body': body
     }));

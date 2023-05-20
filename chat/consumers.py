@@ -4,6 +4,7 @@ from django.template import Context, Template
 from .models import ChatGroup, ChatGroupMessage
 from base.models import User
 from asgiref.sync import sync_to_async
+from rest_framework.authtoken.models import Token
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -21,11 +22,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        author_id = data['author']
+        author_token = data['author']
         chat_group_id = data['chat_group']
         body = data['body']
 
-        author = await sync_to_async(User.objects.get)(id=author_id)
+        author = (await sync_to_async(Token.objects.get)(key=author_token)).user
         chat_group = await sync_to_async(ChatGroup.objects.get)(id=chat_group_id)
 
         if not (author == chat_group.creator or author in await sync_to_async(chat_group.participants.all)()):
