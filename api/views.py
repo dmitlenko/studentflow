@@ -4,7 +4,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from base.models import Post, User, PostComment, UserFollow
-from .serealizers import PostCommentSerializer, UserDataSerealizer, UserFileSerealizer
+from .serealizers import PostCommentSerializer, UserDataSerealizer, UserFileSerializer
 from rest_framework.permissions import IsAuthenticated
 from rolepermissions.checkers import has_role
 from studentflow.roles import Teacher
@@ -48,6 +48,17 @@ class ListCommentsAPIView(ListAPIView):
         post = get_object_or_404(Post, pk=pk)
         comments = post.postcomment_set.all()
         serealizer = PostCommentSerializer(comments, many=True)
+        return Response(serealizer.data)
+
+
+class ListFilesAPIView(ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        files = post.files.all()
+        serealizer = UserFileSerializer(files, many=True)
         return Response(serealizer.data)
 
 
