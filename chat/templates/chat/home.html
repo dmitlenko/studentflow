@@ -7,7 +7,7 @@
 {% load static %}
 {% load custom_tags %}
 <div class="d-flex flex-column border-start border-end h-100 p-0 shadow-sm">
-    <div class="list-group rounded-0 ">
+    <div class="list-group rounded-0 h-100" style="overflow-y: auto;">
         {% for chat in object_list %}
         <a href="{% url 'chat' pk=chat.id %}"
             class="list-group-item list-group-item-action border-end-0 border-start-0" aria-current="true">
