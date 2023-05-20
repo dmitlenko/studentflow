@@ -5,7 +5,6 @@ const humanFileSize = (size) => {
 }
 
 const showFilesInfo = (data, downloadPrefix) => {
-    console.table(data);
     const modal = document.querySelector('#fileDataModal');
     const modalInstance = new bootstrap.Modal(modal);
 
@@ -19,6 +18,7 @@ const showFilesInfo = (data, downloadPrefix) => {
 
     const downloadButton = modal.querySelector('#downloadButton');
     downloadButton.href = downloadPrefix + data.file_path;
+    downloadButton.addEventListener('click', () => setTimeout(() => modalInstance.hide(), 250));
     downloadButton.download = data.file_name;
 
     modalTitle.textContent = data.file_name;
