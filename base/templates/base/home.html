@@ -18,12 +18,12 @@
             {% if page_obj.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page=1">
-                        &lt;&lt;
+                        <i class="bi bi-caret-left-fill"><i class="bi bi-caret-left-fill"></i></i>
                     </a>
                 </li>
                 <li class="page-item">
                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                        &lt;
+                        <i class="bi bi-caret-left-fill"></i>
                     </a>
                 </li>
             {% endif %}
@@ -49,12 +49,12 @@
             {% if page_obj.has_next %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{request.GET.q}}">
-                        &gt;
+                        <i class="bi bi-caret-right-fill"></i>
                     </a>
                 </li>
                 <li class="page-item">
                     <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{request.GET.qq}}">
-                        &gt;&gt;
+                        <i class="bi bi-caret-right-fill"><i class="bi bi-caret-right-fill"></i></i>
                     </a>
                 </li>
             {% endif %}
