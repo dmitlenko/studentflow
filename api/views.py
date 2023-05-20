@@ -4,12 +4,16 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from base.models import Post, User, PostComment, UserFollow
-from .serealizers import PostCommentSerializer, UserDataSerealizer
+from .serealizers import PostCommentSerializer, UserDataSerealizer, UserFileSerealizer
 from rest_framework.permissions import IsAuthenticated
 from rolepermissions.checkers import has_role
 from studentflow.roles import Teacher
+from rest_framework.authentication import TokenAuthentication
 
-class LikePostAPIView(APIView, IsAuthenticated):
+class LikePostAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, pk):
         post_to_like = get_object_or_404(Post, pk=pk)
         post_to_like.likes.add(request.user)
@@ -21,7 +25,10 @@ class LikePostAPIView(APIView, IsAuthenticated):
         return Response(status=status.HTTP_200_OK)
 
 
-class FollowUserAPIView(APIView, IsAuthenticated):
+class FollowUserAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, pk):
         user_to_follow = get_object_or_404(User, id=pk)
         UserFollow.objects.get_or_create(user=user_to_follow, follower=request.user)
@@ -33,7 +40,10 @@ class FollowUserAPIView(APIView, IsAuthenticated):
         return Response(status=status.HTTP_200_OK)
 
 
-class ListCommentsAPIView(ListAPIView, IsAuthenticated):
+class ListCommentsAPIView(ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         comments = post.postcomment_set.all()
@@ -41,7 +51,9 @@ class ListCommentsAPIView(ListAPIView, IsAuthenticated):
         return Response(serealizer.data)
 
 
-class CreateCommentAPIView(CreateAPIView, IsAuthenticated):
+class CreateCommentAPIView(CreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostCommentSerializer
 
     def post(self, request, pk):
@@ -62,7 +74,10 @@ class CreateCommentAPIView(CreateAPIView, IsAuthenticated):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
 
-class ApprovePostAPIView(APIView, IsAuthenticated):
+class ApprovePostAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request, pk):
         if not has_role(request.user, Teacher):
             return Response(status=status.HTTP_403_FORBIDDEN)
