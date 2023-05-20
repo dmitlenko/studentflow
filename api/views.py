@@ -6,6 +6,8 @@ from rest_framework import status
 from base.models import Post, User, PostComment, UserFollow
 from .serealizers import PostCommentSerializer, UserDataSerealizer
 from rest_framework.permissions import IsAuthenticated
+from rolepermissions.checkers import has_role
+from studentflow.roles import Teacher
 
 class LikePostAPIView(APIView, IsAuthenticated):
     def post(self, request, pk):
@@ -58,3 +60,15 @@ class CreateCommentAPIView(CreateAPIView, IsAuthenticated):
             return Response(status=status.HTTP_200_OK)
         
         return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+class ApprovePostAPIView(APIView, IsAuthenticated):
+    def post(self, request, pk):
+        if not has_role(request.user, Teacher):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        post = get_object_or_404(Post, pk=pk)
+        post.reviewed = True
+        post.save()
+        
+        return Response(status=status.HTTP_200_OK)

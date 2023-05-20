@@ -22,7 +22,7 @@
             </thead>
             <tbody>
                 {% for post in object_list %}
-                <tr>
+                <tr data-sf-post="{{post.id}}">
                     <td scope="row">{{forloop.counter}}</td>
                     <td>{{post}}</td>
                     <td>
@@ -33,7 +33,7 @@
                     <td>{{post.date_created|date}}</td>
                     <td>
                         <a href="{% url 'detail_post' pk=post.id %}"><i class="bi bi-eye"></i></a>
-                        <a href="#" class="publish-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-target-url="{% url 'publish_post' pk=post.id %}">
+                        <a href="#" class="publish-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             <i class="bi bi-send"></i>
                         </a>
                     </td>
@@ -59,17 +59,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ні</button>
-                <a href="#" class="btn btn-primary" id="target">Так</a>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="approveButton">Так</button>
             </div>
         </div>
     </div>
 </div>
-<script>
-    const targetButton = document.querySelector('a#target');
-    document.querySelectorAll('.publish-button').forEach(val => {
-        val.addEventListener('click', e => {
-            targetButton.setAttribute('href', val.dataset.targetUrl)
-        });
-    });
-</script>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/admin_approve.js' %}"></script>
 {% endblock %}
