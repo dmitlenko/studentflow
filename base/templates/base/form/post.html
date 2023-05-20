@@ -18,19 +18,16 @@
                             <span class="asteriskField">*</span>
                         </label>
                         <div class="input-group mb-3">
-                            <button class="btn btn-light" id="buttonTextBold" type="button">
+                            <button class="btn btn-light" type="button" data-sf-styling-pattern="**||**">
                                 <i class="bi bi-type-bold"></i>
                             </button>
-                            <button class="btn btn-light" id="buttonTextItalic" type="button">
+                            <button class="btn btn-light" type="button" data-sf-styling-pattern="*||*">
                                 <i class="bi bi-type-italic"></i>
                             </button>
-                            <!-- <button class="btn btn-light" id="buttonTextUnderline">
-                                <i class="bi bi-type-underline"></i>
-                            </button> -->
-                            <button class="btn btn-light" id="buttonTextHyperlink" type="button">
+                            <button class="btn btn-light" type="button" data-sf-styling-pattern="[текст посилання](||посилання)">
                                 <i class="bi bi-link"></i>
                             </button>
-                            <button class="btn btn-light" id="buttonTextImage" type="button">
+                            <button class="btn btn-light" type="button" data-sf-styling-pattern="![опис фото](||посилання на фото)">
                                 <i class="bi bi-card-image"></i> Вставити фото
                             </button>
                         </div>
@@ -118,6 +115,7 @@
     </div>
 </div>
 <script src="{% static 'js/post_form.js' %}"></script>
+<script src="{% static 'js/post_form_styling.js' %}"></script>
 {% if request.user|has_role:'teacher' %}
 <script>
     const pinnedCheck = document.querySelector('input[name="pinned"]');
