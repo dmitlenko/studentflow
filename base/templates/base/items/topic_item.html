@@ -1,5 +1,12 @@
-<a class="list-group-item border-0 {% if topic.name in request.GET.q %}active{% endif %}" 
-    href="?q=topic:&quot;{{topic}}&quot;">
+{% load topic_tags %}
+
+{% if topic.name in request.GET.topic %}
+<a class="list-group-item border-0 active" 
+    href="{{request.GET.topic|without_topic:topic.name}}">
+{% else %}
+<a class="list-group-item border-0" 
+    href="{{request.GET.topic|with_topic:topic.name}}">
+{% endif %}
     {{topic}}
     <b>{{topic.post_set.count}}</b>
 </a>

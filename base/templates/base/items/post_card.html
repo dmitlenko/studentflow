@@ -34,7 +34,7 @@
             <p class="card-text">
                 {{post.body|truncatechars:40 }}
                 <div class="fst-italic">
-                    <a href="?q={% firstof request.GET.q %} topic:&quot;{{post.topic}}&quot;" class="text-body">{{post.topic}}</a>
+                    <a href="?q=topic:&quot;{{post.topic}}&quot;" class="text-body">{{post.topic}}</a>
                 </div>
             </p>
             <div class="input-group d-flex">

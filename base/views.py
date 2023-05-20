@@ -30,7 +30,7 @@ class IndexView(PageTitleViewMixin, ListView):
         return context
 
     def get_queryset(self):
-        return search_posts(Post.objects.filter(published=True, reviewed=True, archived=False), self.request.GET.get('q'))
+        return search_posts(Post.objects.filter(published=True, reviewed=True, archived=False), self.request.GET)
 
 
 class SigninView(PageTitleViewMixin, FormView):
@@ -161,7 +161,7 @@ class PostUpdateView(PageTitleViewMixin, LoginRequiredMixin, UpdateView):
             self.object.save()
             return redirect(reverse('detail_post', kwargs={'pk':self.object.id}))
 
-        return False
+        return super().form_invalid(form)
 
 
 class PostDeleteView(PageTitleViewMixin, LoginRequiredMixin, DeleteView):
@@ -279,7 +279,7 @@ class FeedView(PageTitleViewMixin, LoginRequiredMixin, ListView):
         current_user = self.request.user
         followed_users = UserFollow.objects.filter(follower=current_user).values_list('user', flat=True)
         posts = Post.objects.filter(published=True, author__in=followed_users)
-        return search_posts(posts, self.request.GET.get('q'))
+        return search_posts(posts, self.request.GET)
 
 
 class LogoutView(RedirectView):

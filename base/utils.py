@@ -27,29 +27,31 @@ def fail_safe_date(date_string, default=None):
 
 
 def search_posts(posts, query_string):
-    if not query_string:
-        return posts
+    if query_string and query_string.get('topic'):
+        topic = query_string.get('topic').rstrip(',')
+        topic_list = topic.split(',')
 
-    params, search = extract_parameters(query_string)
+        if topic or topic_list:
+            posts = posts.filter(topic__name__in=topic_list)
 
-    topic = params.get('topic')
-    author = params.get('author')
-    pinned = params.get('pinned')
-    after = fail_safe_date(params.get('after'))
-    before = fail_safe_date(params.get('before'))
+    if query_string and query_string.get('q'):
+        params, search = extract_parameters(query_string.get('q'))
 
-    if after:
-        posts = posts.filter(date_created__gte=after)
-    if before:
-        posts = posts.filter(date_created__lte=before)
-    if pinned:
-        posts = posts.filter(pinned=pinned)
-    if topic:
-        posts = posts.filter(topic__name=topic)
-    if author:
-        posts = posts.filter(author__username__icontains=author)
-    if search:
-        posts = posts.filter(Q(title__icontains=search) | Q(body__icontains=search))
+        author = params.get('author')
+        pinned = params.get('pinned')
+        after = fail_safe_date(params.get('after'))
+        before = fail_safe_date(params.get('before'))
+
+        if after:
+            posts = posts.filter(date_created__gte=after)
+        if before:
+            posts = posts.filter(date_created__lte=before)
+        if pinned:
+            posts = posts.filter(pinned=pinned)
+        if author:
+            posts = posts.filter(author__username__icontains=author)
+        if search:
+            posts = posts.filter(Q(title__icontains=search) | Q(body__icontains=search))
 
     return posts
 

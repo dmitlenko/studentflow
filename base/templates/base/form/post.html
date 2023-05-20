@@ -96,7 +96,7 @@
                             Тема<span class="asteriskField">*</span>
                         </label>
                         <input type="text" name="topic" maxlength="150" class="textinput form-control" required
-                            id="id_topic" list="topics_input" value="{% firstof object.topic %}">
+                            id="id_topic" list="topics_input" value="{% firstof object.topic %}" pattern="^[\p{L}\p{Pd}0-9\s]+$">
                         <datalist id="topics_input">
                             {% for topic in topics %}
                             <option value="{{topic.name}}">{{topic.name}}</option>
