@@ -5,18 +5,9 @@
 {% block flex_container_class %}h-100{% endblock %}
 {% block container_class %}h-100{% endblock %}
 
-{% block head %}
-<script type="text/javascript">
-    const context = {
-        chatId: {{ object.id }},
-        userId: {{ request.user.id }},
-    }
-</script>
-{% endblock%}
-
 {% block content %}
 
-<div class="d-flex flex-column h-100 p-0 shadow-sm">
+<div class="d-flex flex-column h-100 p-0 shadow-sm" data-sf-chat="{{object.id}}">
     <div class="d-flex border border-top-0 rounded-0">
         <div class="d-flex flex-grow-1 p-2 ">
             {% if object.private %}
