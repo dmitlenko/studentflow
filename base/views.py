@@ -21,12 +21,12 @@ from .mixins import PageTitleViewMixin
 class IndexView(PageTitleViewMixin, ListView):
     title = 'Головна'
     template_name = 'base/home.html'
-    paginate_by = 6
+    paginate_by = 9
     model = Post
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['topics'] = PostTopic.objects.all()
+        context['topics'] = list(PostTopic.order_by_post_count())
         return context
 
     def get_queryset(self):
@@ -272,7 +272,7 @@ class FeedView(PageTitleViewMixin, LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['topics'] = PostTopic.objects.all()
+        context['topics'] = list(PostTopic.order_by_post_count())
         return context
 
     def get_queryset(self):

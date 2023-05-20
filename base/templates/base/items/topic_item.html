@@ -1,0 +1,5 @@
+<a class="list-group-item border-0 {% if topic.name in request.GET.q %}active{% endif %}" 
+    href="?q=topic:&quot;{{topic}}&quot;">
+    {{topic}}
+    <b>{{topic.post_set.count}}</b>
+</a>

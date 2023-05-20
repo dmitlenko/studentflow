@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
 from django.db.models.signals import post_save
+from django.db.models import Count
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
@@ -61,6 +62,10 @@ class PostTopic(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def order_by_post_count(self):
+        return self.objects.annotate(post_count=Count('post')).order_by('-post_count')
     
 
 def post_user_directory_path(instance, filename):
