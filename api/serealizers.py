@@ -15,7 +15,7 @@ class UserFileSerializer(ModelSerializer):
 
     class Meta:
         model = UserFile
-        fields = ['id', 'uploader', 'date_created', 'file_name', 'file_path', 'file_size']
+        fields = ['id', 'file', 'uploader', 'date_created', 'file_name', 'file_path', 'file_size']
 
     def get_file_name(self, obj):
         return obj.file.name.split('/')[-1]
