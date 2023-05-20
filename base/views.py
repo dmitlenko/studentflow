@@ -21,7 +21,7 @@ from .mixins import PageTitleViewMixin
 class IndexView(PageTitleViewMixin, ListView):
     title = 'Головна'
     template_name = 'base/home.html'
-    paginate_by = 9
+    paginate_by = 6
     model = Post
     
     def get_context_data(self, **kwargs):
