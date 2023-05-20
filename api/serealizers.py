@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from base.models import PostComment, User, UserFile
 
-class UserDataSerealizer(ModelSerializer):
+class UserDataSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'name', 'email', 'first_name', 'last_name', 'last_login', 'date_joined')
@@ -11,7 +11,7 @@ class UserFileSerializer(ModelSerializer):
     file_name = SerializerMethodField()
     file_path = SerializerMethodField()
     file_size = SerializerMethodField()
-    uploader = UserDataSerealizer(read_only=True)
+    uploader = UserDataSerializer(read_only=True)
 
     class Meta:
         model = UserFile
@@ -28,7 +28,7 @@ class UserFileSerializer(ModelSerializer):
 
 
 class PostCommentSerializer(ModelSerializer):
-    author = UserDataSerealizer(read_only=True)
+    author = UserDataSerializer(read_only=True)
 
     class Meta:
         model = PostComment

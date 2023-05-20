@@ -4,7 +4,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from base.models import Post, User, PostComment, UserFollow
-from .serealizers import PostCommentSerializer, UserDataSerealizer, UserFileSerializer
+from .serealizers import PostCommentSerializer, UserDataSerializer, UserFileSerializer
 from rest_framework.permissions import IsAuthenticated
 from rolepermissions.checkers import has_role
 from studentflow.roles import Teacher
