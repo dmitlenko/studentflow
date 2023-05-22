@@ -1,18 +1,47 @@
 {% extends 'index.html' %} {% block content %}
 
 {% load crispy_forms_tags %}
+{% load permission_tags %}
+{% load static %}
 <div class="row justify-content-md-center my-3">
     <div class="card col-md-5 shadow">
         <div class="card-body">
             <h5 class="card-title">Редагування профілю</h5>
-            <form action="" method="post" enctype="multipart/form-data">
-                {% csrf_token %} {{ form|crispy }}
+            <form action="" method="post" enctype="multipart/form-data" name="userform">
+                {% csrf_token %}
+                {% for field in form %}
+                    {% if field.name != 'review_topics' %}
+                        {{field|as_crispy_field}}
+                    {% endif %}
+                {% endfor %}
+                {% if request.user|has_role:'teacher' %}
+                <div id="div_id_review_topics has-validation" class="mb-3">
+                    <label for="id_review_topics" class="form-label requiredField">
+                        Тематики для розбору<span class="asteriskField">*</span>
+                    </label>
+                    <select name="review_topics" class="selectmultiple form-select" required="" id="id_review_topics" multiple="">
+                        {% for topic in form.fields.review_topics.queryset %}
+                            <option value="{{ topic.id }}" data-sf-reviewers="{{topic.review_topics.count}}" {% if topic in request.user.review_topics.all %}selected{% endif %}>{{topic}} ({{topic.review_topics.count}})</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">
+                        Не повинно бути нульових тем
+                    </div>
+                </div>
+                {% endif %}
                 <div class="input-group mb-3">
-                    <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-save"></i> Зберегти</button>
+                    <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-save"></i>
+                        Зберегти</button>
                     <button type="button" class="btn btn-secondary w-50" onclick="history.back();">Повернутись</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+    {% if request.user|has_role:'teacher' %}
+        <script src="{% static 'js/teacher_profile_edit.js' %}"></script>
+    {% endif %}
 {% endblock %}

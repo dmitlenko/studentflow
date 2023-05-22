@@ -345,6 +345,7 @@ class ReviewPostListView(PageTitleViewMixin, HasRoleMixin, ListView):
             ~Q(author=self.request.user) 
             & Q(reviewed=False)
             & Q(author__is_staff=False)
+            & Q(topic__in=self.request.user.review_topics.all())
         )
 
 

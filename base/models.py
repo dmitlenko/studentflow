@@ -5,11 +5,23 @@ from django.db.models.signals import post_save
 from django.db.models import Count
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from rolepermissions.checkers import has_role
+from studentflow.roles import Teacher
 
 from os import path
 from .validators import validate_file_size
 
-# Create your models here.
+class PostTopic(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def order_by_post_count(self):
+        return self.objects.annotate(post_count=Count('post')).order_by('-post_count')
+
+
 def image_user_directory_path(instance, filename):
     return 'data/user_{0}/image/{1}'.format(instance.id, filename)
 
@@ -19,6 +31,8 @@ class User(AbstractUser):
     image = models.ImageField('Фото', default='default_user.png', upload_to=image_user_directory_path, null=True, validators=[validate_file_size])
     image_banner = models.ImageField('Фон профілю', blank=True, upload_to=image_user_directory_path, null=True, validators=[validate_file_size])
     bio = models.TextField('Біографія', null=True, blank=True)
+
+    review_topics = models.ManyToManyField(PostTopic, verbose_name='Теми перевірки', related_name='review_topics', blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -30,6 +44,19 @@ class User(AbstractUser):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def assign_review_topics(sender, instance=None, created=False, **kwargs):
+    if created and has_role(instance, Teacher):
+        instance.review_topics.add(*PostTopic.objects.all())
+
+@receiver(post_save, sender=PostTopic)
+def assign_new_topic(sender, instance=None, created=False, **kwargs):
+    if created:
+        for user in User.objects.all():
+            if has_role(user, Teacher):
+                user.review_topics.add(instance)
+                user.save()
 
 class UserFollow(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -55,17 +82,6 @@ class UserFile(models.Model):
 
     def __str__(self):
         return path.basename(self.file.name)
-
-
-class PostTopic(models.Model):
-    name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.name
-
-    @classmethod
-    def order_by_post_count(self):
-        return self.objects.annotate(post_count=Count('post')).order_by('-post_count')
     
 
 def post_user_directory_path(instance, filename):

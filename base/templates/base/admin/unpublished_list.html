@@ -5,7 +5,7 @@
 <div class="card my-3 shadow">
     <div class="card-header">
         <h5 class="card-title">
-            Список неопублікованих оголошень
+            {{title}}
         </h5>
     </div>
     <div class="card-body table-responsive">
@@ -15,6 +15,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Заголовок</th>
+                    <th scope="col">Тема</th>
                     <th scope="col">Автор</th>
                     <th scope="col">Дата публікацї</th>
                     <th scope="col">Дії</th>
@@ -24,7 +25,10 @@
                 {% for post in object_list %}
                 <tr data-sf-post="{{post.id}}">
                     <td scope="row">{{forloop.counter}}</td>
-                    <td>{{post}}</td>
+                    <td>{{post|truncatewords:4}}</td>
+                    <td>
+                        <a href="{% url 'home' %}?topic={{post.topic}}">{{post.topic}}</a>
+                    </td>
                     <td>
                         <a href="{% url 'profile' pk=post.author.id %}">
                             {% firstof post.author.name post.author.username %}

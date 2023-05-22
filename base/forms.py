@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Post, User, UserFile
+from .models import Post, User, UserFile, PostTopic
 
 
 class SignupForm(UserCreationForm):
@@ -41,6 +41,8 @@ class PostForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
+    review_topics = forms.ModelMultipleChoiceField(PostTopic.objects, label='Тематики для розбору')
+
     class Meta:
         model = User
-        fields = ['name', 'username','first_name', 'last_name', 'image', 'image_banner', 'bio']
+        fields = ['name', 'username','first_name', 'last_name', 'image', 'image_banner', 'review_topics', 'bio']

@@ -73,8 +73,7 @@
                     <p class="mb-0">{{object|following_count}}</p>
                 </div>
             </div>
-            <p class="mb-2 pb-1 flex-grow-1 text">{{object.bio}}</p>
-            <div class="d-flex pt-1 input-group">
+            <div class="d-flex pt-1 input-group mb-2">
                 {% if request.user == object %}
                 <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Редагувати профіль</a>
                 {% else %}
@@ -97,6 +96,14 @@
                 {% endif %}
                 {% endif %}
             </div>
+            <h5>Про {{object.username}}:</h5>
+            <p class="mb-2 pb-1 flex-grow-1 text">{{object.bio}}</p>
+            {% if object|has_role:'teacher'  %}
+            <h5>Теми, які перевіряє {{object.username}}:</h5>
+            <p>
+                {{ object.review_topics.all|join:', ' }}
+            </p class="mb-2 pb-1 flex-grow-1 text">
+            {% endif %}
         </div>
     </div>
     <div class="col-lg-8">
