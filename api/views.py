@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from rolepermissions.checkers import has_role
 from studentflow.roles import Teacher
 from rest_framework.authentication import TokenAuthentication
+from chat.models import ChatGroup, ChatGroupMessage
+from chat.serializers import ChatGroupMessageSerializer
 
 class LikePostAPIView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -98,3 +100,19 @@ class ApprovePostAPIView(APIView):
         post.save()
         
         return Response(status=status.HTTP_200_OK)
+
+
+class ListChatGroupMessagesAPIView(ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChatGroupMessageSerializer
+
+    def get(self, request, pk):
+        chat_group = get_object_or_404(ChatGroup, pk=pk)
+
+        if not (request.user == chat_group.creator or request.user in chat_group.participants.all()):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        messages = chat_group.chatgroupmessage_set.all()
+        serealizer =  ChatGroupMessageSerializer(messages, many=True)
+        return Response(serealizer.data)

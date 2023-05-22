@@ -11,4 +11,6 @@ urlpatterns = [
     path('comment/<int:pk>/', CreateCommentAPIView.as_view(), name='api_comment_post'),
 
     path('follow/<int:pk>/', FollowUserAPIView.as_view(), name='api_follow_user'),
+
+    path('chat/<int:pk>/messages', ListChatGroupMessagesAPIView.as_view(), name='api_chat_messages'),
 ]
