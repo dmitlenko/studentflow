@@ -3,55 +3,67 @@ const user_token = getCookie('token');
 const chat_id = document.querySelector('[data-sf-chat]').dataset.sfChat;
 
 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-const chatSocket = new WebSocket(`${protocol}//${window.location.host}/ws/chat/${chat_id}/`);
-const chatLog = document.querySelector('#chatLog');
+const chatSocket = new WebSocket(`${protocol}//${window.location.host}/ws/chat/${chat_id}/?token=${user_token}`);
 
-function scrollLogDown() {
-    chatLog.scrollTo(0, chatLog.scrollHeight);
+const messageInputDom = document.querySelector('#chat-message-input');
+const submitButton = document.querySelector('#chat-message-submit');
+const chatLogDom = document.querySelector('#chatLog');
+
+const dateFormatter = new Intl.DateTimeFormat('uk-UA', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+});
+
+const scrollLogDown = () => chatLog.scrollTo(0, chatLog.scrollHeight);
+
+const renderMessage = (data) => {
+    const author = data.author;
+    const isCurrentUser = author.id == user_id;
+    const authorName = isCurrentUser ? 'Ви' : `<a href="/profile/detail/${author.id}">@${author.username}</a>`;
+    const formattedDate = dateFormatter.format(new Date(data.date_created));
+
+    return `
+      <div href="#" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h6 class="mb-1">${authorName}</h6>
+          <small>${formattedDate}</small>
+        </div>
+        <h5 class="mb-1">${data.body}</h5>
+      </div>
+    `;
 }
 
-function renderMessage(userId, username, message, date_created) {
-    let output =
-        `<div href="#" class="list-group-item list-group-item-action" aria-current="true">
-            <div class="d-flex w-100 justify-content-between">` + (
-            userId == user_id ? `<h6 class="mb-1">Ви</a></h6>` :
-                `<h6 class="mb-1"><a href="/profile/detail/${userId}">@${username}</a></h6>`
-        ) + `<small>${date_created}</small>
-            </div>
-            <h5 class="mb-1">${message}</p>
-        </div>`;
-    chatLog.innerHTML += output;
-}
-
-chatSocket.addEventListener('message', function (e) {
+const handleMessage = (e) => {
     const data = JSON.parse(e.data);
-    renderMessage(data.userId, data.username, data.message, data.date_created);
+    console.log(data);
+    chatLogDom.innerHTML += renderMessage(data);
     scrollLogDown();
-});
-
-chatSocket.addEventListener('close', function (e) {
-    // TODO: add closed connection modal
-    console.log('🙀🙀 Chat socket closed unexpectedly');
-});
-
-document.querySelector('#chat-message-input').focus();
-document.querySelector('#chat-message-input').onkeyup = (e) => {
-    if (e.keyCode === 13) {
-        document.querySelector('#chat-message-submit').click();
-    }
 }
 
-document.querySelector('#chat-message-submit').onclick = (e) => {
-    const messageInputDom = document.querySelector('#chat-message-input');
+const handleClose = (e) => {
+    console.log('🙀🙀 Chat socket closed unexpectedly');
+}
+
+const handleKeyUp = (e) => e.keyCode === 13 && submitButton.click();
+
+const handleSubmit = (e) => {
     const body = messageInputDom.value;
     chatSocket.send(JSON.stringify({
-        'author': user_token,
         'chat_group': chat_id,
         'body': body
     }));
     messageInputDom.value = '';
 }
 
-window.addEventListener("DOMContentLoaded", function (e) {
-    scrollLogDown();
-})
+chatSocket.addEventListener('message', handleMessage);
+chatSocket.addEventListener('close', handleClose);
+
+messageInputDom.focus();
+messageInputDom.onkeyup = handleKeyUp;
+submitButton.onclick = handleSubmit;
+
+window.addEventListener('DOMContentLoaded', scrollLogDown);
