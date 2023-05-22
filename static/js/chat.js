@@ -37,55 +37,46 @@ const renderMessage = (data) => {
     `;
 }
 
-const handleMessage = (e) => {
+const fetchMessagesPromise = fetch(`/api/chat/${chat_id}/messages`, {
+    method: 'GET',
+    headers: {
+        'Authorization': 'Token ' + user_token,
+        'Content-Type': 'application/json'
+    }
+}).then(response => response.json());
+
+chatSocket.addEventListener('message', (e) => {
     const data = JSON.parse(e.data);
     console.log(data);
     chatLogDom.innerHTML += renderMessage(data);
     scrollLogDown();
-}
+});
 
-const handleClose = (e) => {
+chatSocket.addEventListener('close', (e) => {
     document.querySelector('[data-sf-chat]').innerHTML = '';
     new bootstrap.Modal(document.querySelector('#errorModal')).show()
-}
+});
 
-const handleKeyUp = (e) => e.keyCode === 13 && submitButton.click();
+messageInputDom.addEventListener('keyup', (e) => e.keyCode === 13 && submitButton.click());
 
-const handleSubmit = (e) => {
+submitButton.addEventListener('click', (e) => {
     const body = messageInputDom.value;
     chatSocket.send(JSON.stringify({
         'chat_group': chat_id,
         'body': body
     }));
     messageInputDom.value = '';
-}
+});
 
-const handleConnect = (e) => {
-    chatLogDom.innerHTML = '';
-    window.messageList.forEach(message => {
-        chatLogDom.innerHTML += renderMessage(message);
+Promise.all([new Promise(resolve => chatSocket.addEventListener('open', resolve)), fetchMessagesPromise])
+    .then(([_, data]) => {
+        chatLogDom.innerHTML = '';
+        data.forEach(message => {
+            chatLogDom.innerHTML += renderMessage(message);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
     });
-    scrollLogDown();
-}
-
-chatSocket.addEventListener('open', handleConnect);
-chatSocket.addEventListener('message', handleMessage);
-chatSocket.addEventListener('close', handleClose);
 
 messageInputDom.focus();
-messageInputDom.onkeyup = handleKeyUp;
-submitButton.onclick = handleSubmit;
-
-window.addEventListener('load', async () => {
-    await fetch(`/api/chat/${chat_id}/messages`, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Token ' + user_token,
-            'Content-Type': 'application/json'
-        }
-    }).then(
-        response => response.json()
-    ).then(data => {
-        window.messageList = data;
-    });
-});
