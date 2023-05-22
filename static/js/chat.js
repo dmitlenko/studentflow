@@ -74,6 +74,7 @@ Promise.all([new Promise(resolve => chatSocket.addEventListener('open', resolve)
         data.forEach(message => {
             chatLogDom.innerHTML += renderMessage(message);
         });
+        scrollLogDown();
     })
     .catch(error => {
         console.error('Error:', error);
