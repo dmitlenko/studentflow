@@ -348,15 +348,6 @@ class ReviewPostListView(PageTitleViewMixin, HasRoleMixin, ListView):
         )
 
 
-class ReviewPostView(HasRoleMixin, RedirectView):
-    allowed_roles = Teacher
-    def get_redirect_url(self, *args, **kwargs):
-        obj = get_object_or_404(Post, pk=kwargs.get('pk'))
-        obj.reviewed = True
-        obj.save()
-        return self.request.META.get('HTTP_REFERER')
-
-
 class GlobalStatsView(PageTitleViewMixin, HasRoleMixin, TemplateView):
     title = 'Загальна статистика'
     allowed_roles = Teacher
