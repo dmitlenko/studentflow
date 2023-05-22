@@ -59,6 +59,15 @@ const handleSubmit = (e) => {
     messageInputDom.value = '';
 }
 
+const handleConnect = (e) => {
+    chatLogDom.innerHTML = '';
+    window.messageList.forEach(message => {
+        chatLogDom.innerHTML += renderMessage(message);
+    });
+    scrollLogDown();
+}
+
+chatSocket.addEventListener('open', handleConnect);
 chatSocket.addEventListener('message', handleMessage);
 chatSocket.addEventListener('close', handleClose);
 
@@ -66,4 +75,16 @@ messageInputDom.focus();
 messageInputDom.onkeyup = handleKeyUp;
 submitButton.onclick = handleSubmit;
 
-window.addEventListener('DOMContentLoaded', scrollLogDown);
+window.addEventListener('load', async () => {
+    await fetch(`/api/chat/${chat_id}/messages`, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Token ' + user_token,
+            'Content-Type': 'application/json'
+        }
+    }).then(
+        response => response.json()
+    ).then(data => {
+        window.messageList = data;
+    });
+});

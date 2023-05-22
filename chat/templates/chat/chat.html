@@ -36,20 +36,11 @@
         {% endif %}
     </div>
     <div class="d-flex flex-grow-1 gap-2 px-2 pt-2 flex-column border-start border-end" id="chatLog" style="margin-top: auto !important; overflow-y: auto;">
-        {% for message in object.chatgroupmessage_set.all %}
-        <div href="#" class="list-group-item list-group-item-action" aria-current="true">
-            <div class="d-flex w-100 justify-content-between">
-                {% if message.author == request.user %}
-                <h6 class="mb-1">Ви</h6>
-                {% else %}
-                <h6 class="mb-1"><a href="{% url 'profile' pk=message.author.id %}">@{{message.author.username}}</a>
-                </h6>
-                {% endif %}
-                <small>{{message.date_created}}</small>
+        <li class="list-group-item d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
-            <h5 class="mb-1">{{message|urlize}}</p>
-        </div>
-        {% endfor %}
+        </li>
     </div>
     <div class="input-group flex-shrink-0 border rounded-0 border-bottom-0" style="height:64px">
         <input type="text" name="message" class="form-control border-0 rounded-0" placeholder="Message..."
