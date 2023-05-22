@@ -45,7 +45,8 @@ const handleMessage = (e) => {
 }
 
 const handleClose = (e) => {
-    console.log('🙀🙀 Chat socket closed unexpectedly');
+    document.querySelector('[data-sf-chat]').innerHTML = '';
+    new bootstrap.Modal(document.querySelector('#errorModal')).show()
 }
 
 const handleKeyUp = (e) => e.keyCode === 13 && submitButton.click();
