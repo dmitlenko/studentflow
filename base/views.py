@@ -278,7 +278,7 @@ class FeedView(PageTitleViewMixin, LoginRequiredMixin, ListView):
     def get_queryset(self):
         current_user = self.request.user
         followed_users = UserFollow.objects.filter(follower=current_user).values_list('user', flat=True)
-        posts = Post.objects.filter(published=True, author__in=followed_users)
+        posts = Post.objects.filter(reviewed=True, archived=False, published=True, author__in=followed_users)
         return search_posts(posts, self.request.GET)
 
 
