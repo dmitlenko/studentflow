@@ -16,16 +16,33 @@
                 {% endfor %}
                 {% if request.user|has_role:'teacher' %}
                 <div id="div_id_review_topics has-validation" class="mb-3">
-                    <label for="id_review_topics" class="form-label requiredField">
-                        Тематики для розбору<span class="asteriskField">*</span>
-                    </label>
-                    <select name="review_topics" class="selectmultiple form-select" required="" id="id_review_topics" multiple="">
+                    <a href="#" class="list-group-item pb-2" data-bs-toggle="collapse" data-bs-target="#review_topics">
+                        <i class="bi bi-chevron-down"></i> Тематики для розбору
+                    </a>
+                    <ul class="list-group collapse {% if form.review_topics.errors %}d-block{% endif %}" id="review_topics">
                         {% for topic in form.fields.review_topics.queryset %}
-                            <option value="{{ topic.id }}" data-sf-reviewers="{{topic.review_topics.count}}" {% if topic in request.user.review_topics.all %}selected{% endif %}>{{topic}} ({{topic.review_topics.count}})</option>
+                        <li class="list-group-item d-flex justify-content-between"
+                            data-sf-topic="{{topic}}"
+                            data-sf-reviewers="{{topic.review_topics.count}}">
+                            <input class="form-check-input me-1" type="checkbox" value="{{topic.id}}" id="firstCheckbox" {% if topic in request.user.review_topics.all %}checked{% endif %}>
+                            <label class="form-check-label text-start flex-grow-1 px-1" for="firstCheckbox">{{topic}}</label>
+                            <span class="badge bg-primary rounded-pill" title="Кількість перевіряючих">{{topic.review_topics.count}}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <select name="review_topics" class="d-none" required="" id="id_review_topics" multiple="">
+                        {% for topic in form.fields.review_topics.queryset %}
+                            <option value="{{topic.id}}" {% if topic in request.user.review_topics.all %}selected{% endif %}>{{topic}}</option>
                         {% endfor %}
                     </select>
-                    <div class="invalid-feedback">
-                        Не повинно бути нульових тем
+                    <div class="invalid-feedback {% if form.review_topics.errors %}d-block{% endif %}">
+                        {% if form.review_topics.errors %}
+                            {% for error in form.review_topics.errors %}
+                                <p>{{error}}</p>
+                            {% endfor %}
+                        {% else %}
+                            Не повинно бути нульових тем
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
