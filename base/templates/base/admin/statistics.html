@@ -1,5 +1,6 @@
 {% extends 'index.html' %}
 
+{% load static %}
 {% block content %}
 <div class="card my-3 shadow">
     <div class="card-header">
@@ -16,14 +17,9 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="table-group-divider">
+            <tbody>
                 <tr>
-                    <td>
-                        Загальна кількість оголошень
-                    </td>
-                    <td>
-                        {{post_count}}
-                    </td>
+                    <td colspan="2"><canvas id="postsChart" style="height: 200px!important;"></canvas></td>
                 </tr>
                 <tr>
                     <td>
@@ -50,6 +46,8 @@
                     </td>
                 </tr>
             </tbody>
+        </table>
+        <table class="table table-sm">
             <thead>
                 <tr>
                     <th class="text-center" colspan="2">
@@ -59,12 +57,7 @@
             </thead>
             <tbody class="table-group-divider">
                 <tr>
-                    <td>
-                        Загальна кількість користувачів
-                    </td>
-                    <td>
-                        {{user_count}}
-                    </td>
+                    <td colspan="2"><canvas id="usersChart" style="height: 200px!important;"></canvas></td>
                 </tr>
                 <tr>
                     <td>
@@ -83,6 +76,8 @@
                     </td>
                 </tr>
             </tbody>
+        </table>
+        <table class="table table-sm">
             <thead>
                 <tr>
                     <th class="text-center" colspan="2">
@@ -124,6 +119,8 @@
                     </td>
                 </tr>
             </tbody>
+        </table>
+        <table class="table table-sm">
             <thead>
                 <tr>
                     <th class="text-center" colspan="2">
@@ -144,4 +141,12 @@
         </table>
     </div>
 </div>
+{% endblock %}
+
+{% block head_script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/admin_statistics.js' %}"></script>
 {% endblock %}

@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
     <script src="{% static 'js/cookies.js' %}"></script>
+    {% block head_script %}
+    {% endblock %}
 </head>
 
 <body class="bg-body h-100 d-flex flex-column">

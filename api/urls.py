@@ -13,4 +13,7 @@ urlpatterns = [
     path('follow/<int:pk>/', FollowUserAPIView.as_view(), name='api_follow_user'),
 
     path('chat/<int:pk>/messages', ListChatGroupMessagesAPIView.as_view(), name='api_chat_messages'),
+
+    path('stats/posts', PostsStatisticsAPIView.as_view(), name='api_stat_posts'),
+    path('stats/users', UsersStatisticsAPIView.as_view(), name='api_stat_users'),
 ]

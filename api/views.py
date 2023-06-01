@@ -9,8 +9,9 @@ from rest_framework.permissions import IsAuthenticated
 from rolepermissions.checkers import has_role
 from studentflow.roles import Teacher
 from rest_framework.authentication import TokenAuthentication
-from chat.models import ChatGroup, ChatGroupMessage
+from chat.models import ChatGroup
 from chat.serializers import ChatGroupMessageSerializer
+from django.db.models import Count
 
 class LikePostAPIView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -116,3 +117,35 @@ class ListChatGroupMessagesAPIView(ListAPIView):
         messages = chat_group.chatgroupmessage_set.all()
         serealizer =  ChatGroupMessageSerializer(messages, many=True)
         return Response(serealizer.data)
+
+
+class PostsStatisticsAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not has_role(request.user, Teacher):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        published_posts = Post.objects.filter(published=True).values('date_published__date').annotate(total=Count('id')).order_by('-date_published__date')
+
+        return Response([{
+            'date': post['date_published__date'],
+            'total': post['total']
+        } for post in published_posts])
+    
+
+class UsersStatisticsAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not has_role(request.user, Teacher):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        users = User.objects.all().values('date_joined__date').annotate(total=Count('id')).order_by('-date_joined__date')
+
+        return Response([{
+            'date': user['date_joined__date'],
+            'total': user['total']
+        } for user in users])
