@@ -127,7 +127,7 @@ class PostsStatisticsAPIView(APIView):
         if not has_role(request.user, Teacher):
             return Response(status=status.HTTP_403_FORBIDDEN)
         
-        published_posts = Post.objects.filter(published=True).values('date_published__date').annotate(total=Count('id')).order_by('-date_published__date')
+        published_posts = Post.objects.filter(published=True).values('date_published__date').annotate(total=Count('id')).order_by('date_published__date')
 
         return Response([{
             'date': post['date_published__date'],
@@ -143,7 +143,7 @@ class UsersStatisticsAPIView(APIView):
         if not has_role(request.user, Teacher):
             return Response(status=status.HTTP_403_FORBIDDEN)
         
-        users = User.objects.all().values('date_joined__date').annotate(total=Count('id')).order_by('-date_joined__date')
+        users = User.objects.all().values('date_joined__date').annotate(total=Count('id')).order_by('date_joined__date')
 
         return Response([{
             'date': user['date_joined__date'],

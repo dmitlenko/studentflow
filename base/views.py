@@ -363,12 +363,10 @@ class GlobalStatsView(PageTitleViewMixin, HasRoleMixin, TemplateView):
         chat_messages_objects = ChatGroupMessage.objects.all()
         file_objects = UserFile.objects.all()
 
-        context['post_count'] = post_objects.count()
         context['most_liked_post'] = post_objects.annotate(likes_count=Count('likes')).order_by('-likes_count').first()
         context['most_viewed_post'] = post_objects.annotate(views_count=Count('views')).order_by('-views_count').first()
         context['latest_post'] = post_objects.order_by('-date_created').first()
 
-        context['user_count'] = user_objects.count()
         context['active_user'] = user_objects.annotate(num_posts=Count('post')).order_by('-num_posts').first()
         context['latest_user'] = user_objects.order_by('-date_joined').first()
 
