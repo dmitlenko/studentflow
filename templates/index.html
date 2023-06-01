@@ -18,11 +18,11 @@
     <link href="{% static 'css/themes/default.min.css' %}" rel="stylesheet">
     {% endif %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
     <script src="{% static 'js/cookies.js' %}"></script>
 </head>
 
-<body class="body-bg h-100 d-flex flex-column">
+<body class="bg-body h-100 d-flex flex-column">
     {% if request.user.is_authenticated or is_auth %}
     {% include 'navbar.html' %}
     <div class="container-fluid flex-container {% block flex_container_class %}{% endblock %}">
@@ -31,69 +31,119 @@
         </div>
     </div>
     {% else %}
-    <div class="container-fluid h-100 p-0">
-        <div class="row bg-light h-100 m-0 p-0">
-            <div class="col-lg-7 d-flex flex-column justify-content-center align-items-center" id="title">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">StudentFlow</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#plans">Плани</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#about">Про проєкт</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="d-flex flex-column justify-content-center align-items-center">
                 <h1 class="mb-4">
                     StudentFlow
                 </h1>
-                <p class="col-lg-6 text-justify px-4">
-                    Ласкаво просимо до нашої <a href="#about">спільноти</a>! Ми раді бачити вас тут і запрошуємо долучитися
-                    до нашого
-                    інтерактивного середовища, де ви зможете знайти багато корисної інформації, обговорити цікаві теми та
-                    знайти нових друзів. Приєднуйтесь до нас, і ми з радістю поділимося з вами своїм досвідом та знаннями.
-                    Відчуйте себе як вдома в нашій спільноті!
+                <p class="col-lg-6 text-justify px-4 my-5">
+                    StudentFlow - це кросплатформена онлайн-дошка, спеціально розроблена для студентів, щоб вони могли
+                    знаходити та розміщувати оголошення, а також спілкуватися між собою.
                 </p>
-                <a href="{% url 'login' %}" class="btn btn-outline-dark btn-title">Увіти</a>
-            </div>
-            <div class="col-lg-5 d-flex flex-column gap-4 align-items-center justify-content-center">
-                <h1 class="mb-4">
-                    Готові плани
-                </h1>
-                <div class="row gap-4 justify-content-center px-3">
-                    <div class="card col-lg-6 p-0">
-                        <div class="card-header">
-                            <h5 class="card-title">Студент</h5>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Публікуйте нові та переглядайте пости інших користувачів. Спілкуйтесь в
-                                групових та приватних чатах.</p>
-                        </div>
-                        <div class="card-footer">
-                            <a href="{% url 'signup' role=1 %}" class="card-link">Приєднатись</a>
-                        </div>
-                    </div>
-                    <div class="card col-lg-6 p-0">
-                        <div class="card-header">
-                            <h5 class="card-title">Викладач</h5>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Використувайте такі ж можливості як і в студентів, але з додатковими
-                                моживостями, такими як: перевірка неопублікованих оголошень, закріплення оголошень, перегляд загальної статистики тощо.</p>
-                        </div>
-                        <div class="card-footer">
-                            <a href="{% url 'signup' role=2 %}" class="card-link">Приєднатись</a>
-                        </div>
-                    </div>
+                <div class="justify-content-center">
+                    <a href="#plans" class="btn btn-dark btn-title">Приєднатись</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-dark btn-title">Увіти</a>
                 </div>
             </div>
         </div>
-        
-        <div class="d-flex flex-column h-100 justify-content-center align-items-center text-light bg-dark" id="about">
-            <h1 class="app-title text-light">Про нас</h1>
-            <p class="col-lg-6 text-justify px-4">
-                Ми - команда розробників, що створює кросплатформенну онлайн дошку "StudentFlow". Наша мета - створити
-                інтерактивне середовище для студентів, де вони зможуть легко та швидко знайти корисну інформацію,
-                обговорити цікаві теми та знайти нових друзів. Ми прагнемо забезпечити зручну комунікацію між
-                користувачами за допомогою коментарів до оголошень, приватного та групового чатів. Безпека та захист
-                інформації користувачів - наш пріоритет, тому передбачена авторизація користувачів та основні засоби
-                безпеки. Ми раді привітати вас у нашій спільноті та з радістю поділимося з вами своїм досвідом та
-                знаннями. Приєднуйтесь до нас та відчуйте себе як вдома в "StudentFlow"!
-            </p>
-            <div class="d-flex gap-4">
-                <a href="#about" class="btn btn-light btn-title">Instagram</a>
-                <a href="#about" class="btn btn-outline-light btn-title text-light">Telegram</a>
-                <a href="#about" class="btn btn-light btn-title">Facebook</a>
+        <div class="row h-100" id="plans">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h1 class="mb-4">
+                    Готові плани
+                </h1>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="row"></th>
+                            <th scope="row">Студент</th>
+                            <th scope="row">Викладач</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Публікація оголошень</td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Створення чатів</td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Профіль користувача</td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Публікація оголошень без перевірки</td>
+                            <td><i class="bi bi-x text-danger"></i></td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Перевірка оголошень</td>
+                            <td><i class="bi bi-x text-danger"></i></td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Закріплення оголошень</td>
+                            <td><i class="bi bi-x text-danger"></i></td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Загальна статистика</td>
+                            <td><i class="bi bi-x text-danger"></i></td>
+                            <td><i class="bi bi-check text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><a href="{% url 'signup' role=1 %}" class="card-link">Обрати</a></td>
+                            <td><a href="{% url 'signup' role=2 %}" class="card-link">Обрати</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row h-100" id="about">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h1 class="mb-4">
+                    Про нас
+                </h1>
+                <p class="col-lg-6 text-justify px-4 my-5">
+                    Ми - команда розробників, що створює кросплатформенну онлайн дошку "StudentFlow". Наша мета - створити
+                    інтерактивне середовище для студентів, де вони зможуть легко та швидко знайти корисну інформацію,
+                    обговорити цікаві теми та знайти нових друзів. Ми прагнемо забезпечити зручну комунікацію між
+                    користувачами за допомогою коментарів до оголошень, приватного та групового чатів. Безпека та захист
+                    інформації користувачів - наш пріоритет, тому передбачена авторизація користувачів та основні засоби
+                    безпеки. Ми раді привітати вас у нашій спільноті та з радістю поділимося з вами своїм досвідом та
+                    знаннями. Приєднуйтесь до нас та відчуйте себе як вдома в "StudentFlow"!
+                </p>
+                <div class="justify-content-center">
+                    <a href="#about" class="btn btn-dark btn-title">Instagram</a>
+                    <a href="#about" class="btn btn-outline-dark btn-title">Telegram</a>
+                    <a href="#about" class="btn btn-dark btn-title">Facebook</a>
+                </div>
             </div>
         </div>
     </div>
