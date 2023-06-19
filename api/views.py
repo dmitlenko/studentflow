@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
@@ -12,6 +12,9 @@ from rest_framework.authentication import TokenAuthentication
 from chat.models import ChatGroup
 from chat.serializers import ChatGroupMessageSerializer
 from django.db.models import Count
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import login
+from django.urls import reverse
 
 class LikePostAPIView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -149,3 +152,13 @@ class UsersStatisticsAPIView(APIView):
             'date': user['date_joined__date'],
             'total': user['total']
         } for user in users])
+    
+
+class TokenAuthAPIView(APIView):
+    def get(self, request, token):
+        if request.user.is_authenticated:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        
+        login(request, get_object_or_404(Token, key=token).user)
+
+        return redirect(reverse('home'))

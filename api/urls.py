@@ -16,4 +16,6 @@ urlpatterns = [
 
     path('stats/posts', PostsStatisticsAPIView.as_view(), name='api_stat_posts'),
     path('stats/users', UsersStatisticsAPIView.as_view(), name='api_stat_users'),
+
+    path('login/<str:token>', TokenAuthAPIView.as_view(), name='api_login'),
 ]
