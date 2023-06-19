@@ -41,7 +41,7 @@ class PostForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
-    review_topics = forms.ModelMultipleChoiceField(PostTopic.objects, label='Тематики для розбору')
+    review_topics = forms.ModelMultipleChoiceField(PostTopic.objects, label='Тематики для розбору', required=False)
 
     class Meta:
         model = User
