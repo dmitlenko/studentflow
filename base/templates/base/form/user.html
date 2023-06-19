@@ -30,7 +30,7 @@
                         </li>
                         {% endfor %}
                     </ul>
-                    <select name="review_topics" class="d-none" required="" id="id_review_topics" multiple="">
+                    <select name="review_topics" class="d-none" id="id_review_topics" multiple="">
                         {% for topic in form.fields.review_topics.queryset %}
                             <option value="{{topic.id}}" {% if topic in request.user.review_topics.all %}selected{% endif %}>{{topic}}</option>
                         {% endfor %}
