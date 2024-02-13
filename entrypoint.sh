@@ -1,16 +1,17 @@
 #!/bin/sh
 
-until cd /opt/app
-do
-    echo "Waiting for server volume..."
-done
+if [ "$DATABASE" = "postgres" ]
+then
+    echo "Waiting for postgres..."
 
-until python -m studentflow.manage migrate
-do
-    echo "Waiting for postgres ready..."
-    sleep 2
-done
+    while ! nc -z $SQL_HOST $SQL_PORT; do
+        sleep 0.1
+    done
 
+    echo "PostgreSQL started"
+fi
+
+python -m studentflow.manage migrate
 python -m studentflow.manage collectstatic --noinput
 
-daphne -b 0.0.0.0 -p 8000 studentflow.project.asgi:application
+exec "$@"
