@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from base.models import PostComment, User, UserFile
+from studentflow.base.models import PostComment, User, UserFile
 
 class UserDataSerializer(ModelSerializer):
     class Meta:

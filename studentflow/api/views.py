@@ -3,14 +3,14 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from base.models import Post, User, PostComment, UserFollow
+from studentflow.base.models import Post, User, PostComment, UserFollow
 from .serealizers import PostCommentSerializer, UserDataSerializer, UserFileSerializer
 from rest_framework.permissions import IsAuthenticated
 from rolepermissions.checkers import has_role
-from studentflow.roles import Teacher
+from studentflow.project.roles import Teacher
 from rest_framework.authentication import TokenAuthentication
-from chat.models import ChatGroup
-from chat.serializers import ChatGroupMessageSerializer
+from studentflow.chat.models import ChatGroup
+from studentflow.chat.serializers import ChatGroupMessageSerializer
 from django.db.models import Count
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login

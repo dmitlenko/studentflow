@@ -14,8 +14,8 @@ from django.db.models import Q, Count, Sum
 from rolepermissions.mixins import HasRoleMixin
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role
-from studentflow.roles import Teacher, Student
-from chat.models import ChatGroup, ChatGroupMessage
+from studentflow.project.roles import Teacher, Student
+from studentflow.chat.models import ChatGroup, ChatGroupMessage
 from .mixins import PageTitleViewMixin
 
 class IndexView(PageTitleViewMixin, ListView):

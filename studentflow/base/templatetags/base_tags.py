@@ -1,7 +1,7 @@
 from django import template
-from base.models import UserFollow, Post
+from studentflow.base.models import UserFollow, Post
 from django.template.loader import render_to_string
-from base.utils import themes_list
+from studentflow.base.utils import themes_list
 
 register = template.Library()
 

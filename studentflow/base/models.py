@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from rolepermissions.checkers import has_role
-from studentflow.roles import Teacher
+from studentflow.project.roles import Teacher
 
 from os import path
 from .validators import validate_file_size

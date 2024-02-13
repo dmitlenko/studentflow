@@ -5,9 +5,9 @@ from django.views.generic import DetailView, UpdateView, CreateView, DeleteView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ChatGroup
 from .forms import ChatGroupForm
-from base.models import User
+from studentflow.base.models import User
 from django.db.models import Count, Q
-from base.mixins import PageTitleViewMixin
+from studentflow.base.mixins import PageTitleViewMixin
 
 # Create your views here.
 class HomeView(PageTitleViewMixin, LoginRequiredMixin, ListView):

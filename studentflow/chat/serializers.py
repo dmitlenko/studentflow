@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import ChatGroupMessage
-from api.serealizers import UserDataSerializer
+from studentflow.api.serealizers import UserDataSerializer
 
 class ChatGroupMessageSerializer(ModelSerializer):
     author = UserDataSerializer(read_only=True)

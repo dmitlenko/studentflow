@@ -1,7 +1,7 @@
-from base.models import User
+from studentflow.base.models import User
 from django.db import models
 from django.core.exceptions import ValidationError
-from base.validators import validate_file_size
+from studentflow.base.validators import validate_file_size
 
 # Create your models here.
 class ChatGroup(models.Model):        

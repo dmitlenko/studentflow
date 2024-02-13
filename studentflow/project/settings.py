@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'daphne',
-    'base',
-    'chat',
-    'api',
+    'studentflow.base',
+    'studentflow.chat',
+    'studentflow.api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,10 +60,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 AUTH_USER_MODEL = 'base.User'
 
 # Role permissons settings
-ROLEPERMISSIONS_MODULE = 'studentflow.roles'
+ROLEPERMISSIONS_MODULE = 'studentflow.project.roles'
 LOGIN_URL = reverse_lazy('login')
 
-ASGI_APPLICATION = 'studentflow.asgi.application'
+ASGI_APPLICATION = 'studentflow.project.asgi.application'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -90,7 +90,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-ROOT_URLCONF = 'studentflow.urls'
+ROOT_URLCONF = 'studentflow.project.urls'
 
 TEMPLATES = [
     {
@@ -110,7 +110,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'studentflow.wsgi.application'
+WSGI_APPLICATION = 'studentflow.project.wsgi.application'
 
 
 # Database
@@ -163,8 +163,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = '/media/' 
+MEDIA_URL = 'media/'
+
+MEDIA_ROOT = '/vol/media'
+STATIC_ROOT = '/vol/static'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
