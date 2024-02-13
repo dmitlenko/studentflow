@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  nginx:
+    restart: unless-stopped
+    build: 
+      context: ./nginx/
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/vol/static
+      - media_volume:/vol/media
+    depends_on:
+      - wsgiserver
+      - asgiserver
+  wsgiserver:
+    restart: unless-stopped
+    build:
+      context: .
+    entrypoint: /opt/app/entrypoint.sh
+    command: gunicorn studentflow.project.wsgi:application --bind 0.0.0.0:8000 
+    volumes:
+      - static_volume:/vol/static
+      - media_volume:/vol/media
+    expose:
+      - 8000
+    env_file:
+      - .env
+  asgiserver:
+    restart: unless-stopped
+    build:
+      context: .
+    entrypoint: /opt/app/entrypoint.sh
+    command: daphne -b 0.0.0.0 -p 9000 studentflow.project.asgi:application
+    volumes:
+      - static_volume:/vol/static
+      - media_volume:/vol/media
+    expose:
+      - 9000
+    env_file:
+      - .env
+  redis:
+    image: redis:5
+    restart: unless-stopped
+    expose:
+      - 6379
+  db:
+    image: postgres:alpine
+    restart: unless-stopped
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/vol/postgres
+
+volumes:
+  static_volume: {}
+  media_volume: {}
+  postgres_data: {}
