@@ -5,7 +5,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 
 os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'studentflow.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'studentflow.project.settings')
 
 django_asgi_application = get_asgi_application()
 
