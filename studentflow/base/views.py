@@ -17,6 +17,7 @@ from rolepermissions.checkers import has_role
 from studentflow.project.roles import Teacher, Student
 from studentflow.chat.models import ChatGroup, ChatGroupMessage
 from .mixins import PageTitleViewMixin
+from datetime import datetime
 
 class IndexView(PageTitleViewMixin, ListView):
     title = 'Головна'
@@ -106,6 +107,10 @@ class PostCreateView(PageTitleViewMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+
+        if form.instance.date_published is None:
+            form.instance.date_published = datetime.now()
+            form.instance.published = True
 
         if super().form_valid(form):
             self.object = form.save(commit=False)
