@@ -1,4 +1,4 @@
-import chat.routing
+from studentflow.chat import routing
 import os
 
 from django.core.asgi import get_asgi_application
@@ -15,6 +15,6 @@ django_asgi_application = get_asgi_application()
 application = ProtocolTypeRouter({
     'http': django_asgi_application,
     'websocket': AllowedHostsOriginValidator(
-        TokenAuthMiddleware(URLRouter(chat.routing.websocket_urlpatterns))
+        TokenAuthMiddleware(URLRouter(routing.websocket_urlpatterns))
     ),
 })
