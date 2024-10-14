@@ -1,149 +1,144 @@
-# StudentFlow
-StudentFlow - це кросплатформена онлайн-дошка, спеціально розроблена для студентів, щоб вони могли знаходити та розміщувати оголошення, а також спілкуватися між собою.
+#StudentFlow
+StudentFlow is a cross-platform online whiteboard specifically designed for students to find and post announcements and communicate with each other.
 
-## Вимоги до системи
-Серверні вимоги:
-- Операційна система: Linux, Windows або macOS.
-- Мова програмування: Python (версія 3.10+).
-- База даних: PostgreSQL.
-- Кеш-система: Redis (версія 3.0+)
+## System requirements
+Server requirements:
+- Operating system: Linux, Windows or macOS.
+- Programming language: Python (version 3.10+).
+- Database: PostgreSQL.
+- Cache system: Redis (version 3.0+)
 
-Клієнтські вимоги:
-- Веб-браузер: Сучасний веб-браузер, такий як Google Chrome, Mozilla Firefox, Safari або Microsoft Edge.
-- Підтримка JavaScript: Браузер повинен підтримувати виконання JavaScript.
+Client requirements:
+- Web browser: A modern web browser such as Google Chrome, Mozilla Firefox, Safari or Microsoft Edge.
+- JavaScript support: The browser must support JavaScript execution.
 
-Мобільні вимоги:
-- Операційна система: Android або iOS.
-- Версія ОС: Мінімум Android 6.0 або iOS 12.
+Mobile requirements:
+- Operating system: Android or iOS.
+- OS version: Minimum Android 6.0 or iOS 12.
 
-Інші вимоги:
-- Інтернет-з'єднання: Для користування онлайн дошкою "StudentFlow" потрібне активне підключення до Інтернету.
+Other requirements:
+- Internet connection: An active Internet connection is required to use the StudentFlow online whiteboard.
 
-## Конфігурація
-Для налаштування параметрів проєкту "StudentFlow" можна використовувати файл `.env`. Цей файл є текстовим файлом, який зберігає конфігураційні змінні середовища.
+## Configuration.
+To configure the parameters of the StudentFlow project, you can use the `.env' file. This file is a text file that stores the configuration variables of the environment.
 
-Щоб налаштувати проєкт, створіть файл з назвою `.env` у кореневій директорії проекту та додайте в нього рядки наступного формату:
-
+To configure the project, create a file named `.env' in the root directory of the project and add lines of the following format:
 ```
-# Налаштування фреймворку Django
-DJANGO_SECRET_KEY='<секретний ключ Django>'
-DJANGO_ALLOWED_HOSTS=<домен сайту> # наприклад 'example.com'
-DJANGO_CSRF_TRUSTED_ORIGINS=<домен сайту з протоколом> # наприклад 'https://example.com'
+# Configure the Django framework
+DJANGO_SECRET_KEY='<Django secret key>'
+DJANGO_ALLOWED_HOSTS=<site domain> # for example 'example.com'
+DJANGO_CSRF_TRUSTED_ORIGINS=<site domain with protocol> # for example 'https://example.com'
 
-# Налаштування кеш-системи Redis
-REDIS_HOST=<хост кеш-системи> # 127.0.0.1 за замовчуванням
-REDIS_PORT=<порт кеш-системи> # 6379 за замовчуванням
+# Setting up the Redis cache system
+REDIS_HOST=<cache system host> # 127.0.0.1 by default
+REDIS_PORT=<cache port> # 6379 by default
 
-# Налаштування бази даних PostgreSQL
-POSTGRES_DB=<назва БД>
-POSTGRES_USER=<користувач БД>
-POSTGRES_PASSWORD=<пароль користувача БД>
-POSTGRES_HOST=<хост БД> # 127.0.0.1 за замовчуванням
-POSTGRES_PORT=<порт БД> # 5432 за замовчуванням
+# Setting up the PostgreSQL database
+POSTGRES_DB=<database name>
+POSTGRES_USER=<database user>
+POSTGRES_PASSWORD=<database user password>
+POSTGRES_HOST=<database host> # 127.0.0.1 by default
+POSTGRES_PORT=<database port> # 5432 by default
 ```
 
-Щоб отримати секретний ключ Django, необхідно виконанти наступну команду:
+Translated with DeepL.com (free version)
+
+To get the Django secret key, run the following command:
 ```
 python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
 ```
-В її результаті на екран буде виведено секретний ключ, який потім можна вставити в файл `.env`.
+This will print the secret key, which can then be inserted into the `.env` file.
 
-## Інструкція першого запуску
+## First run instructions
 
-### Крок 0: Встановлення віртуального середовища
+### Step 0: Setting up the virtual environment
 
-1. Переконайтесь, що у вас встановлено Python версії 3.10+. Якщо ні, завантажте та встановіть Python з [офіційного сайту](https://www.python.org/).
-2. Відкрийте командний рядок (термінал) на вашому комп'ютері.
-3. Перейдіть до папки проєкту, використовуючи команду `cd /шлях/до/папки/проєкту`.
-4. Створіть нове віртуальне середовище, використувуючи команду:
+1. Make sure you have Python version 3.10+ installed. If not, download and install Python from the [official website] (https://www.python.org/).
+2. Open a command prompt (terminal) on your computer.
+3. Change to the project folder using the command `cd /path/to/project/folder`.
+4. Create a new virtual environment using the command:
 
     ```
     python3 -m venv venv
     ```
 
-5. Активуйте віртуальне середовище:
+5. Activate the virtual environment:
 
-    - для Windows:
+    - for Windows:
 
         ```
         /venv/Scripts/activate
         ```
     
-    - для Linux:
+    - for Linux:
 
         ```
         source /venv/bin/activate
         ```
 
-### Крок 1: Встановлення необхідних залежностей
+### Step 1: Install the necessary dependencies
 
-1. Переконайтесь, що у вас активовано віртуальне середовище
-2. Перейдіть до папки проєкту, використовуючи команду `cd /шлях/до/папки/проєкту`.
-3. Встановіть необхідні пакети з файлу `requirements.txt`, використовуючи команду:
+1. Make sure that you have activated the virtual environment
+2. Navigate to the project folder using the command `cd /path/to/project/folder`.
+3. Install the necessary packages from the `requirements.txt` file using the command:
 
     ```
     pip install -r requirements.txt
     ```
 
-    Ця команда встановить всі залежності, необхідні для проєкту, зазначені в файлі requirements.txt.
+    This command will install all the dependencies required for the project specified in the requirements.txt file.
 
-### Крок 2: Розгортання бази даних PostgreSQL
+### Step 2: Deploy the PostgreSQL database
 
-1. Переконайтесь, що PostgreSQL сервер встановлений на вашому комп'ютері. Якщо ні, завантажте та встановіть PostgreSQL з [офіційного сайту](https://www.postgresql.org/)
-2. Відкрийте командний рядок (термінал) на вашому комп'ютері.
-3. Перейдіть до папки проєкту, використовуючи команду `cd /шлях/до/папки/проєкту`.
-4. Запустіть сервер PostgreSQL, якщо він ще не запущений.
-5. Виконайте міграції бази даних, використовуючи команду:
+1. Make sure that the PostgreSQL server is installed on your computer. If not, download and install PostgreSQL from the [official website](https://www.postgresql.org/).
+2. Open a command prompt (terminal) on your computer.
+3. Change to the project folder using the command `cd /path/to/project/folder`.
+4. Start the PostgreSQL server if it is not already running.
+5. Perform the database migration using the command:
 
     ```
     python3 manage.py migrate
     ```
 
-    Ця команда створить необхідні таблиці та структуру бази даних на основі визначених моделей проєкту.
+    This command will create the necessary tables and database structure based on the defined project models.
 
-### Крок 3: Запуск Redis-сервера
-1. Переконайтесь, що Redis-сервер встановлений на вашому комп'ютері. Якщо ні, завантажте та встановіть Redis з [офіційного сайту](https://redis.io/)
-2. Відкрийте командний рядок (термінал) на вашому комп'ютері.
-3. Перейдіть до папки проєкту, використовуючи команду `cd /шлях/до/папки/проєкту`.
-4. Запустіть Redis-сервер, використовуючи команду:
+### Step 3: Start the Redis server
+1. Make sure that the Redis server is installed on your computer. If not, download and install Redis from the [official website] (https://redis.io/).
+2. Open a command prompt (terminal) on your computer.
+3. Change to the project folder using the command `cd /path/to/project/folder`.
+4. Start the Redis server using the command:
 
     ```
     sh run_redis.sh
     ```
 
-    Ця команда виконає скрипт run_redis.sh, який повинен міститися в кореневій директорії проєкту. Скрипт запустить Redis-сервер з налаштуваннями, визначеними у файлі.
+    This command will execute the script run_redis.sh, which must be located in the root directory of the project. The script will start the Redis server with the settings defined in the file.
 
-### Крок 4: Створення нового адміністратора
-1. У командному рядку перейдіть до папки, де міститься файл manage.py.
-2. Виконайте наступну команду:
+### Step 4: Create a new administrator
+1. In the command prompt, change to the folder where the manage.py file is located.
+2. Run the following command:
    
     ```
     python3 manage.py createsuperuser
     ```
 
-3. Виконуйте вказівки на екрані.
+3. Follow the instructions on the screen.
 
-### Крок 5: Запуск проєкту Django
+### Step 5: Run the Django project
 
-1. У командному рядку перейдіть до папки, де міститься файл manage.py.
-2. Запустіть локальний сервер проєкту, використовуючи команду:
+1. At the command prompt, change to the folder where the manage.py file is located.
+2. Start the local project server using the command:
 
     ```
     python3 manage.py runserver
     ```
 
-    Ця команда запустить сервер на локальному комп'ютері за адресою http://127.0.0.1:8000/. Також, щоб запустити проєкт глобально можна виконати команду:
+    This command will start the server on the local computer at http://127.0.0.1:8000/. You can also run the command to start the project globally:
 
     ```
     python3 manage.py runserver 0.0.0.0:80
     ```
 
-    Після цього можна буде перейти по домену сайту, який вказано в файлі `.env`.
+    After that, you will be able to navigate to the site domain, which is specified in the file `.env`.
 
-## Автори
-
-Автор: Денис Мітленко
-Електронна пошта: softonka@gmail.com
-Заклад: Дніпровський фаховий коледж зварювання та електроніки імені Є.О. Патона
-Група^ ПЗ-19-1/9
-Рік:** 2023
+Translated with DeepL.com (free version)
