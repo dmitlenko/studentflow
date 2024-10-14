@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load base_tags %}
+{% block content %}
+<div class="card my-3 shadow">
+    <div class="card-header">
+        <h5 class="card-title">
+            Список ваших оголошень
+        </h5>
+    </div>
+    <div class="card-body table-responsive">
+        {% if object_list %}
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col">Перевірено</th>
+                    <th scope="col">Опубліковано</th>
+                    <th scope="col">Архівовано</th>
+                    <th scope="col">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in object_list %}
+                <tr>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td><a href="{% url 'detail_post' pk=post.id %}">{{post}}</a></td>
+                    <td>{{post.reviewed|yesno:'✔️,❌'}}</td>
+                    <td>{{post.published|yesno:'✔️,❌'}}</td>
+                    <td>{{post.archived|yesno:'✔️,❌'}}</td>
+                    <td>
+                        <a href="{% url 'stats_post' pk=post.id %}" class="text-decoration-none">
+                            <i class="bi bi-bar-chart-fill"></i>
+                        </a>
+                        <a href="{% url 'delete_post' pk=post.id %}" class="text-decoration-none">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                        <a href="{% url 'update_post' pk=post.id %}" class="text-decoration-none">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h5 class="text-center">Ви ще не створили жодного оголошення</h5>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

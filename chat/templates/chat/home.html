@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+
+{% block flex_container_class %}h-100{% endblock %}
+{% block container_class %}h-100{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_tags %}
+<div class="d-flex flex-column border-start border-end h-100 p-0 shadow-sm">
+    <div class="list-group rounded-0 h-100" style="overflow-y: auto;">
+        {% for chat in object_list %}
+        <a href="{% url 'chat' pk=chat.id %}"
+            class="list-group-item list-group-item-action border-end-0 border-start-0" aria-current="true">
+            <div class="d-flex gap-3">
+                <div class="flex-shrink-0">
+                    {% if chat.private %}
+                        {% with other_participant=chat|other_participant:request.user %}
+                            {% if other_participant %}
+                            <img src="{% get_media_prefix %}{{ other_participant.image}}" class="w-auto rounded-circle border"
+                                style="height: 96px; width: 96px!important;object-fit: cover;" alt="">
+                            {% endif %}
+                        {% endwith %}
+                    {% elif chat.image %}
+                    <img src="{% get_media_prefix %}{{ chat.image }}" class="w-auto rounded-circle border"
+                        style="height: 96px; width: 96px!important;object-fit: cover;" alt="">
+                    {% endif %}
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex w-100 justify-content-between">
+                        {% if chat.private %}
+                            {% with other_participant=chat|other_participant:request.user %}
+                                {% if other_participant %}
+                                    <h5 class="mb-1">{% firstof other_participant.name other_participant.username %}</h5>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                        <h5 class="mb-1">{{chat}}</h5>
+                        {% endif %}
+                    </div>
+                    {% if chat.chatgroupmessage_set.exists %}
+                    <p class="mb-1">@{{chat.chatgroupmessage_set.last.author.username}}</p>
+                    <small>{{chat.chatgroupmessage_set.last.body|truncatechars:23}}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

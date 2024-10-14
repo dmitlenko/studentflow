@@ -1,0 +1,77 @@
+{% load static %}
+{% load base_tags %}
+<div class="col{{prefix}}">
+    <div class="post-card card mb-4 shadow-sm" data-sf-post="{{post.id}}">
+        {% if post.image %}
+        <img src="{% get_media_prefix %}{{ post.image }}" class="card-img-top" alt="{{post.title}} thumbnail"
+            style="height: 260px; object-fit: cover;" loading="lazy"/>
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">
+                {% if post.pinned %}
+                <a href="?q={% firstof request.GET.q %} pinned:&quot;{{post.pinned}}&quot;" class="text-body"><i class="bi bi-pin-angle-fill"></i></a>
+                {% endif %}
+                {{post.title|truncatechars:22}}
+                {% if post.author == request.user %}
+                <span class="fs-6 text">
+                    <a href="{% url 'stats_post' pk=post.id %}" class="text-decoration-none">
+                        <i class="bi bi-bar-chart-fill"></i>
+                    </a>
+                    <a href="{% url 'delete_post' pk=post.id %}" class="text-decoration-none">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                    <a href="{% url 'update_post' pk=post.id %}" class="text-decoration-none">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                </span>
+                {% endif %}
+            </h5>
+            <span>
+                <a href="{% url 'profile' pk=post.author.id %}"
+                    class="card-title">@{{post.author.username}}</a>
+                {{post.date_created}}
+            </span>
+            <p class="card-text">
+                {{post.body|truncatechars:40 }}
+                <div class="fst-italic">
+                    <a href="?q=topic:&quot;{{post.topic}}&quot;" class="text-body">{{post.topic}}</a>
+                </div>
+            </p>
+            <div class="input-group d-flex">
+                {% if post|is_liked:request.user %}
+                <a href="#"
+                    class="btn btn-outline-danger flex-shrink-0" data-sf-likes="{{ post.likes.count }}" data-sf-liked="true">
+                    <i class="bi bi-heart-fill"></i>
+                    <span class="value">
+                        {% firstof post.likes.count %}
+                    </span>
+                </a>
+                {% else %}
+                <a href="#"
+                    class="btn btn-danger flex-shrink-0" data-sf-likes="{{ post.likes.count }}" data-sf-liked="false">
+                    <i class="bi bi-heart"></i>
+                    <span class="value">
+                        {% firstof post.likes.count %}
+                    </span>
+                </a>
+                {% endif %}
+                <a href="{% url 'detail_post' pk=post.id %}" class="btn btn-primary flex-grow-1">
+                    <i class="bi bi-book-half"></i>
+                    Читати
+                </a>
+                <a href="#" class="btn btn-primary flex-shrink-0" data-sf-views="{{ post.views.count }}" data-sf-viewed="{{ request.user|user_in:post.views|yesno:'true,false' }}">
+                    <i class="bi bi-eye"></i>
+                    <span class="value">
+                        {{ post.views.count }}
+                    </span>
+                </a>
+                <a href="{% url 'detail_post' pk=post.id %}#comments" class="btn btn-primary flex-shrink-0">
+                    <i class="bi bi-chat-left-text"></i>
+                    <span class="value">
+                        {{ post.postcomment_set.all.count }}
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

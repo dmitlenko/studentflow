@@ -1,0 +1,12 @@
+{% load topic_tags %}
+
+{% if topic.name in request.GET.topic %}
+<a class="list-group-item d-flex justify-content-between align-items-center border-0 active" 
+    href="{{request.GET.topic|without_topic:topic.name}}">
+{% else %}
+<a class="list-group-item d-flex justify-content-between align-items-center border-0" 
+    href="{{request.GET.topic|with_topic:topic.name}}">
+{% endif %}
+    {{topic}}
+    <span class="badge bg-primary rounded-pill">{{topic.post_set.count}}</span>
+</a>

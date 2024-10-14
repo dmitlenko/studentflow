@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load base_tags %}
+{% block content %}
+<div class="card my-3 shadow">
+    <div class="card-header">
+        <h5 class="card-title">
+            Файли користувача {% firstof request.user.name request.user.username %}
+        </h5>
+        <div class="progress" role="progressbar" aria-valuenow="{{object_list.count}}" aria-valuemin="0" aria-valuemax="20">
+            <div class="progress-bar" style="width: {{ object_list.count|percent:20 }}%;">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if object_list %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Назва файлу</th>
+                        <th scope="col">Розмір</th>
+                        <th scope="col">Дата завантаження</th>
+                        <th scope="col">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in object_list %}
+                    <tr>
+                        <td scope="row">{{forloop.counter}}</td>
+                        <td>{{file}}</td>
+                        <td>{{file.file.size|filesizeformat}}</td>
+                        <td>{{file.date_created|date}}</td>
+                        <td>
+                            <a href="{% get_media_prefix %}{{file.file.name}}" download><i
+                                    class="bi bi-file-earmark-arrow-down-fill"></i></a>
+                            <a href="{% url 'delete_file' pk=file.id %}"><i class="bi bi-trash-fill"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        <div class="text-center">
+            <a href="{% url 'upload_file' %}">Завантажити файл</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

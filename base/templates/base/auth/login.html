@@ -1,0 +1,15 @@
+{% extends 'index.html' %} {% block content %}
+
+{% load crispy_forms_tags %}
+<div class="row justify-content-md-center my-3">
+    <div class="card col-md-5 shadow">
+        <div class="card-body">
+            <h5 class="card-title">Авторизація</h5>
+            <form action="" method="post">
+                {% csrf_token %} {{ form|crispy }}
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Увійти</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

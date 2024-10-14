@@ -1,0 +1,22 @@
+{% extends 'index.html' %} {% block content %}
+
+{% load crispy_forms_tags %}
+<div class="row justify-content-center my-3">
+    <div class="card col-md-5">
+        <div class="card-body">
+            <h5 class="card-title">{{title}}</h5>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %} 
+                {{ form.name|as_crispy_field }}
+                {{ form.description|as_crispy_field }}
+                {{ form.participants|as_crispy_field }}
+                {{ form.image|as_crispy_field }}
+                <div class="input-group mb-3 w-100">
+                    <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-send-fill"></i> Відправити</button>
+                    <button type="button" class="btn btn-secondary w-50" onclick="history.back();">Повернутись</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

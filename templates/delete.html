@@ -1,0 +1,20 @@
+{% extends 'index.html' %} {% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="row justify-content-center my-3">
+    <div class="card col-md-5">
+        <div class="card-body">
+            <h5 class="card-title">Підтвердження видалення</h5>
+            <p>Ви дійсно хочете видалити "{{object}}"</p>
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <button type="submit" class="btn btn-outline-danger w-50"><i class="bi bi-trash-fill"></i> Так</button>
+                    <button type="button" class="btn btn-primary w-50" onclick="history.back();">Ні</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

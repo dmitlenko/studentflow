@@ -1,0 +1,142 @@
+{% extends 'index.html' %} {% block content %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+{% load markdown_extras %}
+{% load base_tags %}
+<style>
+    .body-bg {
+        background: url("{% get_media_prefix %}{{ object.image }}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        backdrop-filter: blur(10px) brightness(40%);
+    }
+
+    .card-text > p {
+        margin: 0!important;
+        padding: 0 !important;
+    }
+</style>
+
+<div class="card my-3 shadow-lg" data-sf-post="{{post.id}}" data-sf-author="{{post.author.id}}">
+    {% if object.image %}
+    <a href="{% get_media_prefix %}{{ object.image }}">
+        <img src="{% get_media_prefix %}{{ object.image }}" class="card-img-top" style="max-height: 640px; object-fit: cover;">
+    </a>
+    {% endif %}
+    <div class="card-header">
+        <div>
+            <a href="{% url 'profile' pk=object.author.id %}">@{{object.author.username}}</a> опублікувано
+            {{object.date_edited|date}}
+        </div>
+        {% if object.author == request.user %}
+        <div class="mt-3">
+            <a href="{% url 'stats_post' pk=object.id %}"><i class="bi bi-bar-chart-fill"></i> Статистика</a>
+            <a href="{% url 'update_post' pk=object.id %}"><i class="bi bi-pencil-fill"></i> Редагувати</a>
+            <a href="{% url 'delete_post' pk=object.id %}"><i class="bi bi-trash-fill"></i> Видалити</a>
+        </div>
+        {% endif %}
+        <div class="mt-3 input-group">
+            <a class="btn btn-primary">
+                <i class="bi bi-eye"></i>
+                {{ object.views.count }}
+            </a>
+            {% if object|is_liked:request.user %}
+            <a class="btn btn-outline-danger flex-shrink-0" data-sf-likes="{{ object.likes.count }}" data-sf-liked="true">
+                <i class="bi bi-heart-fill"></i>
+                <span class="value">
+                    {% firstof object.likes.count %}
+                </span>
+            </a>
+            {% else %}
+            <a class="btn btn-danger flex-shrink-0" data-sf-likes="{{ object.likes.count }}" data-sf-liked="false">
+                <i class="bi bi-heart"></i>
+                <span class="value">
+                    {% firstof object.likes.count %}
+                </span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{object.title}}</h5>
+        <div class="card-text" style="white-space: pre-line;">
+            {{object.body|markdown|safe}}
+        </div>
+        <ul class="list-group list-group-flush mb-3" data-sf-files="{% get_media_prefix %}">
+            <li class="list-group-item d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </li>
+        </ul>
+        <h5 class="card-title">Коментарі:</h5>
+        <div class="list-group" id="comments">
+            <li class="list-group-item d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </li>
+        </div>
+        <form id="commentForm">
+            <div class="input-group mt-3">
+                <input type="text" class="form-control" placeholder="Текст коментаря..." aria-label="Текст коментаря"
+                    aria-describedby="button-addon2" required name="body">
+                <button class="btn btn-primary" type="submit" id="button-addon2"><i class="bi bi-chat-left-text-fill"></i> Коментувати</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal fade" id="fileDataModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTitle">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <td class="fw-bold">
+                            Назва
+                        </td>
+                        <td id="fileName"></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">
+                            Розмір
+                        </td>
+                        <td id="fileSize"></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">
+                            Дата завантаження
+                        </td>
+                        <td id="fileDate"></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">
+                            Автор
+                        </td>
+                        <td>
+                            <a href="" id="author"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <a class="btn btn-primary" href="#" id="downloadButton">Завантажити</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/post_page.js' %}"></script>
+<script src="{% static 'js/post_files.js' %}"></script>
+<script src="{% static 'js/post_comments.js' %}"></script>
+{% endblock %}

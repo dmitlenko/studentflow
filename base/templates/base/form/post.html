@@ -1,0 +1,131 @@
+{% extends 'index.html' %} {% block content %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+{% load permission_tags %}
+{% load static %}
+<div class="justify-content-center my-3 h-100">
+    <div class="card col-md h-100 shadow">
+        <h5 class="card-header">{{title}}</h5>
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="row card-body">
+                {% csrf_token %}
+                <div class="col-lg-8 d-flex flex-column">
+                    {{form.title|as_crispy_field}}
+                    <div class="mb-3 flex-grow-1 d-flex flex-column">
+                        <label for="{{ form.date_published.id_for_label }}" class="form-label requiredField">
+                            {{form.body.label.strip}}
+                            <span class="asteriskField">*</span>
+                        </label>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-light" type="button" data-sf-styling-pattern="**||**">
+                                <i class="bi bi-type-bold"></i>
+                            </button>
+                            <button class="btn btn-light" type="button" data-sf-styling-pattern="*||*">
+                                <i class="bi bi-type-italic"></i>
+                            </button>
+                            <button class="btn btn-light" type="button" data-sf-styling-pattern="[текст посилання](||посилання)">
+                                <i class="bi bi-link"></i>
+                            </button>
+                            <button class="btn btn-light" type="button" data-sf-styling-pattern="![опис фото](||посилання на фото)">
+                                <i class="bi bi-card-image"></i> Вставити фото
+                            </button>
+                        </div>
+                        {% if form.body.errors %}
+                            {% crispy_field form.body 'class' 'flex-grow-1 textarea form-control is-invalid' %}
+                        {% else %}
+                            {% crispy_field form.body 'class' 'flex-grow-1 teatarea form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4 d-flex flex-column">
+                    {{form.image|as_crispy_field}}
+                    {{form.files|as_crispy_field}}
+                    <div class="mb-3">
+                        <div>
+                            <label for="{{ form.date_published.id_for_label }}" class="form-label">
+                                {{ form.date_published.label }}
+                            </label>
+                            {% if form.date_published.errors %}
+                                {% crispy_field form.date_published 'class' 'form-control is-invalid' %}
+                            {% else %}
+                                {% crispy_field form.date_published 'class' 'form-control' %}
+                            {% endif %}
+                        </div>
+                        <div class="mt-1">
+                            {% crispy_field form.published 'class' 'form-check-input' %}
+                            <label for="{{ form.published.id_for_label }}" class="form-check-label">
+                                {{ form.published.label }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="mt-1">
+                            {% crispy_field form.archived 'class' 'form-check-input' %}
+                            <label for="{{ form.archived.id_for_label }}" class="form-check-label">
+                                {{ form.archived.label }}
+                            </label>
+                        </div>
+                        <div class="mt-1">
+                            {% if form.date_archive.errors %}
+                                {% crispy_field form.date_archive 'class' 'form-control is-invalid' %}
+                            {% else %}
+                                {% crispy_field form.date_archive 'class' 'form-control' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if request.user|has_role:'teacher' %}
+                        <div class="mb-3">
+                            <div class="mt-1">
+                                {% crispy_field form.pinned 'class' 'form-check-input' %}
+                                <label for="{{ form.pinned.id_for_label }}" class="form-check-label">
+                                    {{ form.pinned.label }}
+                                </label>
+                            </div>
+                            <div class="mt-1">
+                                {% if form.date_unpinned.errors %}
+                                    {% crispy_field form.date_unpinned 'class' 'form-control is-invalid' %}
+                                {% else %}
+                                    {% crispy_field form.date_unpinned 'class' 'form-control' %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div id="div_id_title" class="mb-3 flex-grow-1">
+                        <label for="id_title" class="form-label requiredField">
+                            Тема<span class="asteriskField">*</span>
+                        </label>
+                        <input type="text" name="topic" maxlength="150" class="textinput form-control" required
+                            id="id_topic" list="topics_input" value="{% firstof object.topic %}" pattern="^[\p{L}\p{Pd}0-9\s]+$">
+                        <datalist id="topics_input">
+                            {% for topic in topics %}
+                            <option value="{{topic.name}}">{{topic.name}}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="input-group mb-3 w-100">
+                        <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-send-fill"></i>
+                            Відправити</button>
+                        <button type="button" class="btn btn-secondary w-50"
+                            onclick="history.back();">Повернутись</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{% static 'js/post_form.js' %}"></script>
+<script src="{% static 'js/post_form_styling.js' %}"></script>
+{% if request.user|has_role:'teacher' %}
+<script>
+    const pinnedCheck = document.querySelector('input[name="pinned"]');
+    const pinnedDate = document.querySelector('input[name="date_unpinned"]');
+
+    let pinnedDateDisable = e => pinnedDate.disabled = !e.checked;
+
+    pinnedDateDisable(pinnedCheck);
+
+    pinnedCheck.addEventListener('change', event => pinnedDateDisable(event.currentTarget));
+</script>
+{% endif %}
+{% endblock %}

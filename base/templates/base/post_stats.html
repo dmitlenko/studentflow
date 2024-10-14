@@ -1,0 +1,102 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+<div class="card my-3 shadow" data-sf-post="{{post.id}}" data-sf-author="{{post.author.id}}">
+    {% if object.image %}
+    <img src="{% get_media_prefix %}{{ object.image }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title">Статистика "{{object.title}}"</h5>
+        <div class="card-text">
+            <div class="p-2">
+                <a href="{% url 'detail_post' pk=object.id %}"><i class="bi bi-eye-fill"></i> Переглянути</a>
+                <a href="{% url 'update_post' pk=object.id %}"><i class="bi bi-pencil-fill"></i> Редагувати</a>
+                <a href="{% url 'delete_post' pk=object.id %}"><i class="bi bi-trash-fill"></i> Видалити</a>
+            </div>
+            <table class="table table-sm">
+                <tbody>
+                    <tr>
+                        <td>Дата й час створення</td>
+                        <td>{{object.date_created}}</td>
+                    </tr>
+                    <tr>
+                        <td>Дата й час останнього редагування</td>
+                        <td>{{object.date_edited}}</td>
+                    </tr>
+                    <tr>
+                        <td>Перегляди</td>
+                        <td>
+                            <a data-bs-toggle="collapse" href="#viewsCollapse" role="button" aria-expanded="false"
+                                aria-controls="viewsCollapse"><i class="bi bi-eye"></i> {{object.views.count}}</a>
+                            <div class="collapse" id="viewsCollapse">
+                                {% for user in object.views.all %}
+                                <a href="{% url 'profile' pk=user.id %}" class="d-block">{% firstof user.name user.username %}</a>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Вподобайки</td>
+                        <td>
+                            <a data-bs-toggle="collapse" href="#likesCollapse" role="button" aria-expanded="false"
+                                aria-controls="likesCollapse"><i class="bi bi-heart"></i> {{object.likes.count}}</a>
+                            <div class="collapse" id="likesCollapse">
+                                {% for user in object.likes.all %}
+                                <a href="{% url 'profile' pk=user.id %}" class="d-block">{% firstof user.name user.username %}</a>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Коментарі</td>
+                        <td>
+                            <a href="#comments" role="button"><i class="bi bi-chat-left-text"></i> {{object.postcomment_set.count}}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Закріплене</td>
+                        <td>
+                            {{ object.pinned|yesno:'Так,Ні' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Перевірене</td>
+                        <td>
+                            {{ object.reviewed|yesno:'Так,Ні' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Архівоване</td>
+                        <td>
+                            {{ object.archived|yesno:'Так,Ні' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Тема</td>
+                        <td>
+                            <a href="{% url 'home' %}?q=topic:&quot;{{ object.topic }}&quot;">{{ object.topic }}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <span>Дата й час публікації: </span>
+            <div class="card-text" style="white-space: pre-line;">
+                {{object.body}}
+            </div> -->
+        </div>
+        <h5 class="card-title">Коментарі:</h5>
+        <ul class="list-group" id="comments">
+            <li class="list-group-item d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/post_comments.js' %}"></script>
+{% endblock %}

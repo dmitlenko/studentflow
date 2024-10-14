@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load base_tags %}
+{% block content %}
+<div class="card my-3 shadow">
+    <div class="card-header">
+        <h5 class="card-title">
+            {{ title }}
+        </h5>
+    </div>
+    <div class="card-body table-responsive">
+        {% if object_list %}
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col">Автор</th>
+                    <th scope="col">Дата публікацї</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in object_list %}
+                <tr>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>
+                        <a href="{% url 'detail_post' pk=post.id %}">
+                            {{post}}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'profile' pk=post.author.id %}">
+                            {% firstof post.author.name post.author.username %}
+                        </a>
+                    </td>
+                    <td>{{post.date_created|date}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h5 class="text-center">Збережених оголошень немає 🍃</h5>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

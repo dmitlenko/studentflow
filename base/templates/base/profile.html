@@ -1,0 +1,131 @@
+{% extends 'index.html' %} 
+
+{% block flex_container_class %}d-flex my-0{% endblock %}
+{% block container_class %}d-flex flex-grow-1 flex-column my-0{% endblock %}
+
+{% block content %}
+
+{% load static %}
+{% load permission_tags %}
+{% load base_tags %}
+
+{% if object.image %}
+<style>
+    .card-background {
+        background: url('{% get_media_prefix %}{% if object.image_banner %}{{ object.image_banner }}{% else %}{{ object.image }}{% endif %}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        {% if not object.image_banner %}
+        background-position: center;
+        {% else %}
+        background-position: top;
+        {% endif %}
+    }
+</style>
+{% endif %}
+<div class="card w-100 shadow-none p-0 border-top-0 rounded-0 card-background" data-sf-profile="{{object.id}}">
+    <div class="card-body px-3" {% if not object.image_banner %} style="backdrop-filter: blur(10px) brightness(40%);"{% endif %}>
+        <div class="d-flex text-black">
+            {% if object.image %}
+            <div class="flex-shrink-0 p-3">
+                <img src="{% get_media_prefix %}{{ object.image }}" alt="Generic placeholder image"
+                    class="img-fluid rounded-circle" style="width: 180px; height:180px; object-fit: cover;">
+            </div>
+            {% endif %}
+            <div class="d-flex flex-column flex-grow-1 ms-3">
+                <div class="d-flex flex-column">
+                    <h4 class="text-light bg-dark p-2 mb-1" style="--bs-bg-opacity: .5; width: fit-content;">
+                        {% firstof object.name object.username %}
+                        <span class="fs-6 text fs-light fst-italic text-light">
+                            {% if object.is_staff %}
+                            <a href="#" data-bs-toggle="tooltip" data-bs-title="Користувач належить до персоналу додатку"><i class="bi bi-person-badge-fill"></i></a>
+                            {% elif object|has_role:'student' %}
+                            Студент
+                            {% elif object|has_role:'teacher'  %}
+                            Викладач
+                            {% endif %}
+                        </span>
+                    </h4>
+                    {% if object.first_name or object.last_name %}
+                    <h6 class="text-light bg-dark p-1 mb-1" style="--bs-bg-opacity: .5; font-size: 11pt; width: fit-content;">
+                        {{object.first_name }} {{object.last_name}}
+                    </h6>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row flex-row-reverse border-start border-end flex-grow-1 py-3 mx-0">
+    <div class="col-lg-4 mb-3">
+        <div class="affix d-flex flex-column flex-grow-1">
+            <div class="d-flex justify-content-start rounded-3 p-2 mb-2 gap-3">
+                <div class="flex-fill border-end">
+                    <p class="small mb-1">Оголошення</p>
+                    <p class="mb-0">{{posts.count}}</p>
+                </div>
+                <div class="flex-fill border-end">
+                    <p class="small mb-1">Слідкують</p>
+                    <p class="mb-0">{{object|followers_count}}</p>
+                </div>
+                <div class="flex-fill">
+                    <p class="small mb-1">Слідкує</p>
+                    <p class="mb-0">{{object|following_count}}</p>
+                </div>
+            </div>
+            <div class="d-flex pt-1 input-group mb-2">
+                {% if request.user == object %}
+                <a class="btn btn-primary flex-grow-1" href="{% url 'update_profile' pk=user.id %}">Редагувати профіль</a>
+                {% else %}
+                <a href="{% url 'chat_with' user_id=object.id %}" class="btn btn-primary w-50">
+                    <i class="bi bi-chat"></i> Чат</a>
+                {% if object|is_followed:request.user %}
+                <a class="btn btn-secondary w-50" data-sf-following="true">
+                    <i class="bi bi-person-fill-dash"></i>
+                    <span class="value">
+                        Відписатися
+                    </span>
+                </a>
+                {% else %}
+                <a class="btn btn-outline-secondary w-50" data-sf-following="false">
+                    <i class="bi bi-person-fill-add"></i>
+                    <span class="value">
+                        Підписатися
+                    </span>
+                </a>
+                {% endif %}
+                {% endif %}
+            </div>
+            <h5>Про {{object.username}}:</h5>
+            <p class="mb-2 pb-1 flex-grow-1 text">{{object.bio}}</p>
+            {% if object|has_role:'teacher'  %}
+            <h5>Теми, які перевіряє {{object.username}}:</h5>
+            <p>
+                {{ object.review_topics.all|join:', ' }}
+            </p class="mb-2 pb-1 flex-grow-1 text">
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-8">
+        {% if posts %}
+        <div class="d-flex flex-column gap-1 mb-3 align-items-center">
+            {% for post in posts %}
+                {% include 'base/items/post_card.html' with prefix=' w-100' post=post %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <h5 class="text-center mt-3">Нажаль користувач <i>{% firstof object.name object.username %}</i> ще не опублікував жодного оголошення 😔</h5>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
+<script src="{% static 'js/profile_page.js' %}"></script>
+<script src="{% static 'js/post_card.js' %}"></script>
+{% endblock %}

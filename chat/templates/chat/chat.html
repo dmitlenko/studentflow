@@ -1,0 +1,118 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block flex_container_class %}h-100{% endblock %}
+{% block container_class %}h-100{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-column h-100 p-0 shadow-sm" data-sf-chat="{{object.id}}">
+    <div class="d-flex border border-top-0 rounded-0">
+        <div class="d-flex flex-grow-1 p-2 ">
+            {% if object.private %}
+                {% with other_participant=object|other_participant:request.user %}
+                    {% if other_participant %}
+                        {% if other_participant.image %}
+                        <img src="{% get_media_prefix %}{{ other_participant.image }}" alt="" style="height:48px;width:48px;object-fit: cover;"
+                            class="border rounded-circle">
+                        {% endif %}
+                        <span class="d-inline-flex ps-3 align-items-center"><a href="{% url 'profile' pk=other_participant.id %}">{% firstof other_participant.name other_participant.username %}</a></span>
+                    {% endif %}
+                {% endwith %}
+            {% else %}
+                {% if object.image %}
+                    <img src="{% get_media_prefix %}{{ object.image }}" alt="" style="height:48px;width:48px;object-fit: cover;"
+                        class="border rounded-circle">
+                {% endif %}
+                <span class="d-inline-flex ps-3 align-items-center">{{object.name}}</span>
+            {% endif %}
+        </div>
+        {% if not object.private %}
+        <button class="btn btn-outline-primary border-0 rounded-0" style="box-shadow: none!important;" data-bs-toggle="modal"
+            data-bs-target="#infoModal">
+            <i class="bi bi-info-circle-fill"></i>
+        </button>
+        {% endif %}
+    </div>
+    <div class="d-flex flex-grow-1 gap-2 px-2 pt-2 flex-column border-start border-end" id="chatLog" style="margin-top: auto !important; overflow-y: auto;">
+        <li class="list-group-item d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </li>
+    </div>
+    <div class="input-group flex-shrink-0 border rounded-0 border-bottom-0" style="height:64px">
+        <input type="text" name="message" class="form-control border-0 rounded-0" placeholder="Текст повідомлення.."
+            id="chat-message-input">
+        <button class="btn btn-primary border-0 rounded-0"
+            id="chat-message-submit"><i class="bi bi-send-fill"></i> Відправити</button>
+    </div>
+</div>
+
+{% if not object.private %}
+<div class="modal fade" tabindex="-1" id="infoModal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header p-0">
+                <img src="{% get_media_prefix %}{{ object.image }}" alt="" class="w-100 img-fluid"
+                    style="height: 240px !important; object-fit: cover;">
+            </div>
+            <div class="modal-body p-0">
+                <h5 class="px-2 pt-2">{{object.name}}</h5>
+                <div class="p-2 border-top">
+                    {{object.description}}
+                </div>
+            </div>
+            
+            <div class="modal-body p-0">
+                <h5 class="px-2 pt-2">Учасники:</h5>
+                <div class="p-2 border-top d-flex gap-3 flex-column">
+                    {% for participant in object.participants.all %}
+                    <a href="{% url 'profile' pk=participant.id %}">{{ participant.username }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="modal-footer p-0">
+                <div class="input-group w-100 d-flex">
+                    <button type="button" class="btn btn-primary flex-grow-1" data-bs-dismiss="modal"
+                        style="box-shadow: none!important;">Закрити</button>
+                    {% if request.user == object.creator %}
+                    <a class="btn btn-danger" href="{% url 'chat_delete' pk=object.id %}"
+                        style="box-shadow: none!important;">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                    <a class="btn btn-secondary" href="{% url 'chat_update' pk=object.id %}"
+                        style="box-shadow: none!important;">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="modal fade" tabindex="-1" id="errorModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Помилка 😥</h5>
+            </div>
+            <div class="modal-body">
+                <p>Виникла помилка при завантаженні модулю чату.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Повернутись</button>
+                <button type="button" class="btn btn-primary" onclick="window.location.reload();">Перезавантажити сторінку</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/chat.js' %}"></script>
+{% endblock %}

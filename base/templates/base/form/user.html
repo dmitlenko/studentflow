@@ -1,0 +1,64 @@
+{% extends 'index.html' %} {% block content %}
+
+{% load crispy_forms_tags %}
+{% load permission_tags %}
+{% load static %}
+<div class="row justify-content-md-center my-3">
+    <div class="card col-md-5 shadow">
+        <div class="card-body">
+            <h5 class="card-title">Редагування профілю</h5>
+            <form action="" method="post" enctype="multipart/form-data" name="userform">
+                {% csrf_token %}
+                {% for field in form %}
+                    {% if field.name != 'review_topics' %}
+                        {{field|as_crispy_field}}
+                    {% endif %}
+                {% endfor %}
+                {% if request.user|has_role:'teacher' %}
+                <div id="div_id_review_topics has-validation" class="mb-3">
+                    <a href="#" class="list-group-item pb-2" data-bs-toggle="collapse" data-bs-target="#review_topics">
+                        <i class="bi bi-chevron-down"></i> Тематики для розбору
+                    </a>
+                    <ul class="list-group collapse {% if form.review_topics.errors %}d-block{% endif %}" id="review_topics">
+                        {% for topic in form.fields.review_topics.queryset %}
+                        <li class="list-group-item d-flex justify-content-between"
+                            data-sf-topic="{{topic}}"
+                            data-sf-reviewers="{{topic.review_topics.count}}">
+                            <input class="form-check-input me-1" type="checkbox" value="{{topic.id}}" id="firstCheckbox" {% if topic in request.user.review_topics.all %}checked{% endif %}>
+                            <label class="form-check-label text-start flex-grow-1 px-1" for="firstCheckbox">{{topic}}</label>
+                            <span class="badge bg-primary rounded-pill" title="Кількість перевіряючих">{{topic.review_topics.count}}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <select name="review_topics" class="d-none" id="id_review_topics" multiple="">
+                        {% for topic in form.fields.review_topics.queryset %}
+                            <option value="{{topic.id}}" {% if topic in request.user.review_topics.all %}selected{% endif %}>{{topic}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback {% if form.review_topics.errors %}d-block{% endif %}">
+                        {% if form.review_topics.errors %}
+                            {% for error in form.review_topics.errors %}
+                                <p>{{error}}</p>
+                            {% endfor %}
+                        {% else %}
+                            Не повинно бути нульових тем
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="input-group mb-3">
+                    <button type="submit" class="btn btn-outline-primary w-50"><i class="bi bi-save"></i>
+                        Зберегти</button>
+                    <button type="button" class="btn btn-secondary w-50" onclick="history.back();">Повернутись</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    {% if request.user|has_role:'teacher' %}
+        <script src="{% static 'js/teacher_profile_edit.js' %}"></script>
+    {% endif %}
+{% endblock %}

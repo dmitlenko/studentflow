@@ -1,0 +1,21 @@
+.flex-container {
+    flex: 1 1 auto; 
+    min-height: 0px; 
+    overflow-y: auto;
+}
+
+html {
+    scroll-behavior:smooth;
+}
+
+.app-title {
+    font-size:clamp(10vw, 50%, 18em);
+}
+
+.btn-title {
+    width: 140px;
+}
+
+.text-justify {
+    text-align: justify;
+}

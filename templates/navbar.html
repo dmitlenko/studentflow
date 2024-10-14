@@ -1,0 +1,125 @@
+{% load base_tags %}
+{% load permission_tags %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">StudentFlow</a>
+        {% if request.user.is_authenticated %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'home' %}">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'feed' %}">Підписки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'create_post' %}">Створити оголошення</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" id="chatDropdown">
+                        Чат
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" aria-current="page" href="{% url 'chat_home' %}">Відкрити
+                                список</a></li>
+                        <li><a class="dropdown-item" aria-current="page" href="{% url 'chat_create' %}">Створити
+                                новий</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <form role="search" id="search">
+                <div class="input-group shadow-sm px-2">
+                    <input class="form-control" type="text" placeholder="Пошук" aria-label="Пошук" name="q"
+                        value="{{request.GET.q}}" list="topics" multiple>
+                    <datalist id="topics">
+                        {% for user in request.user|following %}
+                        <option value="author:&quot;{{user.user.username}}&quot;">Автор "@{{user.user.username}}"
+                        </option>
+                        {% endfor %}
+                    </datalist>
+                    <button class="btn btn-success" type="submit">Пошук</button>
+                </div>
+            </form>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    {% if request.user.is_authenticated %}
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" id="profileDropdown">
+                        @{{ request.user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="{% url 'profile' pk=request.user.id %}">Профіль</a></li>
+                        <li><a class="dropdown-item" href="{% url 'update_profile' pk=request.user.id %}">Редагувати
+                                профіль</a></li>
+                        <li><a class="dropdown-item" href="{% url 'files' %}">Мої файли</a></li>
+                        <li>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#themeModal">Тема</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'user_posts' %}">Мої оголошення</a></li>
+                        <li><a class="dropdown-item" href="{% url 'user_likes' %}">Вподобані оголошення</a></li>
+                        <li><a class="dropdown-item" href="{% url 'user_views' %}">Переглянуті оголошення</a></li>
+                        {% if request.user|has_role:'teacher' %}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        {% if request.user.is_staff or request.user.is_superuser %}
+                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">Адміністрування</a></li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="{% url 'unpublished_posts' %}">Перевірка оголошень</a></li>
+                        <li><a class="dropdown-item" href="{% url 'global_stats' %}">Загальна статистика</a></li>
+                        {% endif %}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Вийти</a></li>
+                    </ul>
+                    {% else %}
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" id="profileDropdown">
+                        Профіль
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="{% url 'login' %}">Увійти</a></li>
+                    </ul>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    </div>
+</nav>
+<div class="modal fade" id="themeModal" tabindex="-1" aria-labelledby="themeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="themeModalLabel">Вибір теми</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group" id="themeList">
+                    {% for theme in 'themes'|get_themes_list %}
+                    <li href="#"
+                        class="list-group-item list-group-item-action text-capitalize{% if theme == request.COOKIES.theme %} active{% endif %}" 
+                        data-theme-name="{{ theme }}">
+                            {{ theme }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-primary" id="selectThemeButton">Вибрати</button>
+            </div>
+        </div>
+    </div>
+</div>

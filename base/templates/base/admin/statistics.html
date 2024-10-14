@@ -1,0 +1,152 @@
+{% extends 'index.html' %}
+
+{% load static %}
+{% block content %}
+<div class="card my-3 shadow">
+    <div class="card-header">
+        <h5 class="card-title text-center">
+            Загальна статистика
+        </h5>
+    </div>
+    <div class="card-body p-0 py-3 table-responsive">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th class="text-center" colspan="2">
+                        Оголошення
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2"><canvas id="postsChart" style="height: 200px!important;"></canvas></td>
+                </tr>
+                <tr>
+                    <td>
+                        Найпопулярніше оголошення (за вподобайками)
+                    </td>
+                    <td>
+                        <a href="{% url 'detail_post' pk=most_liked_post.id %}">{{most_liked_post}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Найпопулярніше оголошення (за переглядами)
+                    </td>
+                    <td>
+                        <a href="{% url 'detail_post' pk=most_viewed_post.id %}">{{most_viewed_post}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Останнє оголошення
+                    </td>
+                    <td>
+                        <a href="{% url 'detail_post' pk=latest_post.id %}">{{latest_post}}</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th class="text-center" colspan="2">
+                        Користувачі
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr>
+                    <td colspan="2"><canvas id="usersChart" style="height: 200px!important;"></canvas></td>
+                </tr>
+                <tr>
+                    <td>
+                        Найактивніший користувач
+                    </td>
+                    <td>
+                        <a href="{% url 'profile' pk=active_user.id %}">{{active_user}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Останній зареєстрований користувач
+                    </td>
+                    <td>
+                        <a href="{% url 'profile' pk=latest_user.id %}">{{latest_user}}</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th class="text-center" colspan="2">
+                        Чати
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr>
+                    <td>
+                        Загальна кількість чатів
+                    </td>
+                    <td>
+                        {{chat_count}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Найпопулярніший чат
+                    </td>
+                    <td>
+                        <a href="{% url 'chat' pk=chat_popular.id %}">{{chat_popular}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Найактивнішийчат
+                    </td>
+                    <td>
+                        <a href="{% url 'chat' pk=chat_active.id %}">{{chat_active}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Всього надіслано повідомлень
+                    </td>
+                    <td>
+                        {{chat_messages_count}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th class="text-center" colspan="2">
+                        Файли
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr>
+                    <td>
+                        Загальна кількість файлів
+                    </td>
+                    <td>
+                        {{file_count}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block head_script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/admin_statistics.js' %}"></script>
+{% endblock %}
